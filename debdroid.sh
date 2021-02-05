@@ -244,10 +244,6 @@ install_debian(){
             fi
         echo "${GREEN}I: Extracting the Image file. This may take some time${NOATTR}"
         proot --link2symlink -0 tar --delay-directory-restore --preserve-permissions -xf "$CACHE_DIR/$DEBIAN_NAME-$RN_STRING.tar.xz" -C "$DESIRED_LOCATION" --exclude dev ||:
-        # Add an indication if it's installed under custom directory 
-            if [ ! -z "$CHROOT_NAME" ]; then
-                echo "$CHROOT_NAME" > "$DESIRED_LOCATION/.customdir_spec"
-            fi
         propagate_spec
         echo "${GREEN}I: Configuring the Base System (TIP: If the reconfiguration is interrupted, you may reconfigure it with ${YELLOW}debdroid setup${GREEN})${NOATTR}"
         if config_debian; then
