@@ -241,6 +241,11 @@ launch-debian(){
             echo "${RED}E: The Debian Container Isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
             exit 2
         fi
+    # Check for an ongoing setup
+    if [ -e "${DEBIAN_FS}/.setup_has_not_done"]; then
+        echo "${RED}N: An Ongoing Setup is running, please finish the configuration first before continuing${NOATTR}"
+        exit 2
+    fi
     # Source the file
     source "${DEBIAN_FS}/var/debdroid/libdebdroid.so"
     # Define External Command
@@ -261,6 +266,11 @@ launch-debian-asroot(){
             echo "${RED}E: The Debian Container Isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
             exit 2
         fi
+    # Check for an ongoing setup
+    if [ -e "${DEBIAN_FS}/.setup_has_not_done"]; then
+        echo "${RED}N: An Ongoing Setup is running, please finish the configuration first before continuing${NOATTR}"
+        exit 2
+    fi
     # Source the file
     source "${DEBIAN_FS}/var/debdroid/libdebdroid.so"
     # Define External Command
