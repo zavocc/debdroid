@@ -64,6 +64,13 @@ sigtrap(){
 
 trap 'sigtrap' HUP INT KILL QUIT TERM
 
+# Check if dependencies are installed
+if [ ! -e "$(command -v proot)" ] && [ ! -e "$(command -v curl)" ]; then
+    echo "${GREEN}I: Installing ${YELLOW}proot, curl${GREEN} if necessary${NOATTR}"
+    pkg update
+    pkg install proot curl -yy
+fi
+
 # Function to show help
 show_help(){
     echo "${GREEN}DebDroid: Debian Installer for Android OS"
@@ -125,6 +132,8 @@ perform_configuration(){
         echo "${RED}E: The Debian Container is invalid, Aborting!!!${NOATTR}"
         exit 2
     fi
+    curl --silent --fail --location --output "${DEBIAN_FS}/var/debdroid/libreconf.so" "${URL_REPO}/debian_config.sh"
+        chmod 755 "${DEBIAN_FS}/var/debdroid/libreconf.so"
     # Add Proper /run/shm binding
     mkdir -p "${DEBIAN_FS}/run/shm" 
     # Setup Android Groups if necessary
@@ -140,11 +149,6 @@ perform_configuration(){
 install_debian(){
     local DEBIAN_SUITE
     DEBIAN_SUITE="$@"
-    if [ ! -e "$(command -v proot)" ] && [ ! -e "$(command -v curl)" ]; then
-        echo "${GREEN}I: Installing ${YELLOW}proot, curl${GREEN} if necessary${NOATTR}"
-        pkg update
-        pkg install proot curl -yy
-    fi
     # Check if the rootfs exists
     if [ -e "${DEBIAN_FS}" ]; then
         echo "${RED}E: The Debian Container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${GREEN}?${NOATTR}"
@@ -186,8 +190,6 @@ install_debian(){
     proot --link2symlink -0 tar --preserve-permissions --delay-directory-restore --warning=no-unknown-keyword -xf "${TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz" --exclude dev -C "${DEBIAN_FS}" ||:
     echo "${GREEN}I: Configuring the base system, this may take some time${NOATTR}"
     mkdir "${DEBIAN_FS}/var/debdroid/binds" -p
-    curl --silent --fail --location --output "${DEBIAN_FS}/var/debdroid/libreconf.so" "${URL_REPO}/debian_config.sh"
-    chmod 755 "${DEBIAN_FS}/var/debdroid/libreconf.so"
     if perform_configuration; then
         echo "${GREEN}I: The Debian Container Installed Successfully, you can run it by typing ${YELLOW}debdroid launch${NOATTR}"
         exit 0
