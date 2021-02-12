@@ -2,7 +2,7 @@
 # A Sourcefile to launch debian container within DebDroid
 # This is not a launch command, this is required by the debdroid launch script
 DEBIAN_FS="/data/data/com.termux/files/debian"
-DEBIAN_HOSTNAME="/data/data/com.termux/files/debian/etc/hostname"
+DEBIAN_HOSTNAME="$(cat /data/data/com.termux/files/debian/etc/hostname)"
 DEBIAN_USER_INFO="$(cat /data/data/com.termux/files/debian/var/debdroid/userinfo.rc)"
 DEBIAN_MOUNTPOINTS_INFO="/data/data/com.termux/files/debian/var/debdroid/mountpoints.conf"
 
@@ -149,7 +149,42 @@ EOM
 cat > "${DEBIAN_FS}/var/debdroid/binds/floadavg" <<- EOM
 0.02 0.03 0.00 1/107 281
 EOM
+# /proc/uptime
 cat > "${DEBIAN_FS}/var/debdroid/binds/fuptume" <<- EOM
 9694.45 28998.24
 EOM
 }
+
+# Fill /etc/hosts file if necessary and sync it with user-defined hostname
+cat > "${DEBIAN_FS}/etc/hosts" <<- EOM
+127.0.0.1	localhost
+::1         localhost
+127.0.1.1   ${DEBIAN_HOSTNAME}.localdomain  ${DEBIAN_HOSTNAME}
+EOM
+
+# Define kompat_source for overriding uname
+kompat_source="-k '\\$(uname -s)\\${DEBIAN_HOSTNAME}\\5.4.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\'"
+
+# Process Arguments
+prootargs="--root-id -L -H -p"
+# Check for Android Version
+case "$(getprop ro.build.version.release)" in
+    5*|6*) ;;
+    *)
+    prootargs+=" --sysvipc"
+    ;;
+esac
+prootargs+=" --rootfs=${DEBIAN_FS}"
+prootargs+=" --cwd=/root"
+prootargs+=" --bind=/dev --bind=/proc --bind=/sys"
+prootargs+=" --bind=${DEBIAN_FS}/run/shm:/dev/shm"
+
+# Source Mountpoint Configuration File
+source "${DEBIAN_FS}/var/debdroid/mountpoints.conf"
+
+# Define Variables (Fallback)
+prootargs+=" /usr/bin/env -i"
+prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
+prootargs+=" HOME=/root"
+prootargs+=" TERM=$TERM"
+prootargs+=" USER=root"
