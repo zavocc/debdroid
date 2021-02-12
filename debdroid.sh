@@ -100,7 +100,7 @@ show_help(){
     echo ""
     echo "To perform reconfiguration (Interrupted Install, Updating the Container) you may enter ${YELLOW}debdroid reconfigure${GREEN}"
     echo ""
-    echo "To launch your debian container, you may type ${YELLOW}debdroid launch${GREEN} or ${YELLOW}debdroid launch${GREEN}"
+    echo "To launch your debian container, you may type ${YELLOW}debdroid launch${GREEN} or ${YELLOW}debdroid launch-asroot${GREEN}"
     echo "See ${YELLOW}debdroid launch --help${GREEN} for details"
     echo ""
     echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
