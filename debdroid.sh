@@ -43,6 +43,9 @@ if [ "$(whoami)" == "root" ]; then
     exit 2
 fi
 
+# Create Temporary Directory (We don't use mktemp as to be used for update delay caching)
+mkdir -p "${TEMPDIR}"
+
 # Function to check updates
 check_update_cache(){
     if [ ! "$(curl --silent --fail --location ${URL_REPO}/version.txt)" == "${SCRIPT_VER}" ]; then
@@ -133,16 +136,16 @@ perform_configuration(){
         exit 2
     fi
     curl --silent --fail --location --output "${DEBIAN_FS}/var/debdroid/libreconf.so" "${URL_REPO}/debian_config.sh"
-        chmod 755 "${DEBIAN_FS}/var/debdroid/libreconf.so"
+    chmod 755 "${DEBIAN_FS}/var/debdroid/libreconf.so"
     # Add Proper /run/shm binding
     mkdir -p "${DEBIAN_FS}/run/shm" 
     # Setup Android Groups if necessary
-    if [ ! -e "${DEBIAN_FS}/var/debdroid/group-setupdone.lock"]; then
+    if [ ! -e "${DEBIAN_FS}/var/debdroid/group-setupdone.lock" ]; then
         debdroid_setup_groups
         touch "${DEBIAN_FS}/var/debdroid/group-setupdone.lock"
     fi
     # Run Configuration Wizard
-    run-proot-cmd "${DEBIAN_FS}/var/debdroid/libreconf.so"
+    run-proot-cmd "/var/debdroid/libreconf.so"
 }
 
 # Function to install debian
@@ -176,8 +179,8 @@ install_debian(){
             source <(curl -sSL ${URL_REPO}/suite/dlmirrors/stretch)
             ;;
     esac
-    echo "${GREEN}I: The following distribution was requested: ${DEBIAN_NAME}${NOATTR}"
-    echo "${GREEN}I: Downloading the Image file"
+    echo "${GREEN}I: The following distribution was requested: ${YELLOW}${DEBIAN_NAME}${NOATTR}"
+    echo "${GREEN}I: Downloading the Image file${NOATTR}"
     curl --output "${TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" --location --fail "${CURL_DOWNLOAD_LINK}"
         if [ -e "${TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" ]; then
             mv "${TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" "${TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz"
@@ -241,8 +244,21 @@ launch-debian(){
             echo "${RED}E: The Debian Container Isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
             exit 2
         fi
+    # Show help subcommand if help was invoked
+    if [ "$1" == "--help" ] || [ "$1" == "help" ]; then
+        echo "${GREEN}This command will launch Debian System as regular user"
+        echo ""
+        echo "The Basic Syntax follows as:"
+        echo "${YELLOW} debdroid launch${GREEN}"
+        echo ""
+        echo "To run commands other than shell, you can specify external command by doing:"
+        echo "${YELLOW} debdroid launch [command]${GREEN}"
+        echo ""
+        echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
+        exit 0
+    fi
     # Check for an ongoing setup
-    if [ -e "${DEBIAN_FS}/.setup_has_not_done"]; then
+    if [ -e "${DEBIAN_FS}/.setup_has_not_done" ]; then
         echo "${RED}N: An Ongoing Setup is running, please finish the configuration first before continuing${NOATTR}"
         exit 2
     fi
@@ -266,8 +282,21 @@ launch-debian-asroot(){
             echo "${RED}E: The Debian Container Isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
             exit 2
         fi
+    # Show help if help was invoked
+    if [ "$1" == "--help" ] || [ "$1" == "help" ]; then
+        echo "${GREEN}This command will launch Debian System as regular user"
+        echo ""
+        echo "The Basic Syntax follows as:"
+        echo "${YELLOW} debdroid launch-asroot${GREEN}"
+        echo ""
+        echo "To run commands other than shell, you can specify external command by doing:"
+        echo "${YELLOW} debdroid launch-asroot [command]${GREEN}"
+        echo ""
+        echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
+        exit 0
+    fi
     # Check for an ongoing setup
-    if [ -e "${DEBIAN_FS}/.setup_has_not_done"]; then
+    if [ -e "${DEBIAN_FS}/.setup_has_not_done" ]; then
         echo "${RED}N: An Ongoing Setup is running, please finish the configuration first before continuing${NOATTR}"
         exit 2
     fi
@@ -301,6 +330,13 @@ case "${argument}" in
         ;;
     launch-asroot|login-asroot|launch-su)
         launch-debian-asroot "$@"
+        ;;
+    help|show-help|h)
+        show_help
+        ;;
+    *)
+        echo "${RED}Unknown Option: ${argument}${NOATTR}"
+        show_help
         ;;
 esac
 
