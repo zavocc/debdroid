@@ -193,6 +193,7 @@ install_debian(){
     proot --link2symlink -0 tar --preserve-permissions --delay-directory-restore --warning=no-unknown-keyword -xf "${TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz" --exclude dev -C "${DEBIAN_FS}" ||:
     echo "${GREEN}I: Configuring the base system, this may take some time${NOATTR}"
     mkdir "${DEBIAN_FS}/var/debdroid/binds" -p
+    echo "${DEBIAN_NAME}" > "${DEBIAN_FS}/etc/debian_chroot"
     if perform_configuration; then
         echo "${GREEN}I: The Debian Container Installed Successfully, you can run it by typing ${YELLOW}debdroid launch${NOATTR}"
         exit 0
