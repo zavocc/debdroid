@@ -6,6 +6,9 @@ DEBIAN_HOSTNAME="$(cat /data/data/com.termux/files/debian/etc/hostname)"
 DEBIAN_USER_INFO="$(cat /data/data/com.termux/files/debian/var/debdroid/userinfo.rc)"
 DEBIAN_MOUNTPOINTS_INFO="/data/data/com.termux/files/debian/var/debdroid/mountpoints.conf"
 
+# Unset LD_PRELOAD which it redefines termux-exec() hook
+unset LD_PRELOAD
+
 # Generate procfiles
 gen_proc_files(){
 # /proc/stat
@@ -150,12 +153,15 @@ cat > "${DEBIAN_FS}/var/debdroid/binds/floadavg" <<- EOM
 0.02 0.03 0.00 1/107 281
 EOM
 # /proc/uptime
-cat > "${DEBIAN_FS}/var/debdroid/binds/fuptume" <<- EOM
+cat > "${DEBIAN_FS}/var/debdroid/binds/fuptime" <<- EOM
 9694.45 28998.24
 EOM
 # /proc/sys/kernel/cap_last_cap (needed for dbus)
 echo 0 > "${DEBIAN_FS}/var/debdroid/binds/fcap_last_cap" 
 }
+
+# Load procfiles
+gen_proc_files
 
 # Fill /etc/hosts file if necessary and sync it with user-defined hostname
 cat > "${DEBIAN_FS}/etc/hosts" <<- EOM
@@ -165,10 +171,11 @@ cat > "${DEBIAN_FS}/etc/hosts" <<- EOM
 EOM
 
 # Define kompat_source for overriding uname
-kompat_source="-k '\\$(uname -s)\\${DEBIAN_HOSTNAME}\\5.4.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\'"
+kompat_source="\\$(uname -s)\\${DEBIAN_HOSTNAME}\\5.4.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\"
 
 # Process Arguments
-prootargs="--root-id=0 -L -H -p"
+prootargs="--link2symlink --kill-on-exit"
+prootargs+="--root-id -L -H -p"
 # Check for Android Version
 case "$(getprop ro.build.version.release)" in
     5*|6*) ;;
