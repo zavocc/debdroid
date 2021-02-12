@@ -36,7 +36,7 @@ echo "${GREEN}I: Updating Packages if necessary, This may take several minutes, 
 apt update
 apt upgrade -yy
 echo "${GREEN}I: Installing some packages${NOATTR}"
-apt install nano sudo tzdata procps curl dialog -yy --no-install-recommends
+apt install nano sudo tzdata procps curl dialog apt-utils command-not-found -yy --no-install-recommends
 echo "${GREEN}I: Perfoming Necessary fixes${NOATTR}"
 dpkg --configure -a ||:
 apt install -f -y ||:
