@@ -88,6 +88,7 @@ show_help(){
     echo " launch-asroot"
     echo ""
     echo "${GREEN}You can install Debian Stable by typing ${YELLOW}debdroid install${GREEN} or ${YELLOW}debdroid install stable${GREEN}"
+    echo "You can list the recognized releases with ${YELLOW}debdroid install list${GREEN} command"
     echo ""
     echo "To perform reconfiguration (Interrupted Install, Updating the Container) you may enter ${YELLOW}debdroid reconfigure${GREEN}"
     echo ""
@@ -151,6 +152,14 @@ perform_configuration(){
 # Function to install debian
 install_debian(){
     local DEBIAN_SUITE
+    # If Possible, List recognized releases
+    if [ "$1" == "--list" ] || [ "$1" == "list" ]; then
+        echo "${GREEN}Recognized Debian Releases:${YELLOW}"
+        echo "oldstable/stretch, stable/buster, bullseye, testing, unstable/sid"
+        echo ""
+        echo "${GREEN}If the releases marked with * then it is EOL'd, yet still supported under DebDroid${NOATTR}"
+        exit 0
+    fi
     DEBIAN_SUITE="$@"
     # Check if the rootfs exists
     if [ -e "${DEBIAN_FS}" ]; then
