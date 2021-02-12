@@ -54,9 +54,17 @@ check_update_cache(){
     fi
 }
 
-# Check for Updates
+check_update(){
+    if curl https://google.com --fail --silent --insecure >/dev/null; then
+        check_update_cache
+    else
+        echo "${YELLOW}N: Cannot Perform Update: Network is down. Skipping....."
+    fi
+}
+
+# Check for Updates but check if network connection is present
 if [ ! -e "${TEMPDIR}/update-cache-lock" ]; then
-    check_update_cache
+    check_update
 fi
 
 # Function to handle signal trap
