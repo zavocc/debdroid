@@ -138,7 +138,7 @@ perform_configuration(){
     curl --silent --fail --location --output "${DEBIAN_FS}/var/debdroid/libreconf.so" "${URL_REPO}/debian_config.sh"
     chmod 755 "${DEBIAN_FS}/var/debdroid/libreconf.so"
     # Add Proper /run/shm binding
-    mkdir -p "${DEBIAN_FS}/run/shm" 
+    mkdir -p "${DEBIAN_FS}/run/shm"
     # Setup Android Groups if necessary
     if [ ! -e "${DEBIAN_FS}/var/debdroid/group-setupdone.lock" ]; then
         debdroid_setup_groups
@@ -315,6 +315,11 @@ launch-debian-asroot(){
 
 argument="$1"
 shift 1
+
+if [ -z "${argument}" ]; then
+    show_help
+    exit 2
+fi
 
 case "${argument}" in
     install)
