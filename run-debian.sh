@@ -153,11 +153,13 @@ EOM
 cat > "${DEBIAN_FS}/var/debdroid/binds/fuptume" <<- EOM
 9694.45 28998.24
 EOM
+# /proc/sys/kernel/cap_last_cap (needed for dbus)
+echo 0 > "${DEBIAN_FS}/var/debdroid/binds/fcap_last_cap" 
 }
 
 # Fill /etc/hosts file if necessary and sync it with user-defined hostname
 cat > "${DEBIAN_FS}/etc/hosts" <<- EOM
-127.0.0.1	localhost
+127.0.0.1   localhost
 ::1         localhost
 127.0.1.1   ${DEBIAN_HOSTNAME}.localdomain  ${DEBIAN_HOSTNAME}
 EOM
