@@ -100,17 +100,14 @@ fi
 
 # Add a user
 echo "${GREEN}Adding a user \${ARGUMENT} and adding a sudoers file for a user to use administrative commands${NOATTR}"
-useradd -m "\${ARGUMENT}" -s /bin/bash
-passwd "\${ARGUMENT}"
-echo "\${ARGUMENT}  ALL=(ALL:ALL)   NOPASSWD:ALL" > "/etc/sudoers.d/99-debdroid-user-\${ARGUMENT}"
-
-if [ "$?" == "0" ]; then
-echo "${GREEN}Successfully added a user \${ARGUMENT}${NOATTR}"
-exit 0
-else
-echo "${RED}The User Account Creation has failed, please try again later..${NOATTR}"
+if ! useradd -m "\${ARGUMENT}" -s /bin/bash; then
 exit 2
 fi
+if ! passwd "\${ARGUMENT}"; then
+exit 2
+fi
+echo "\${ARGUMENT}  ALL=(ALL:ALL)   NOPASSWD:ALL" > "/etc/sudoers.d/99-debdroid-user-\${ARGUMENT}"
+echo "${GREEN}Successfully added a user \${ARGUMENT}${NOATTR}"
 EOM
 
 chmod 755 /usr/local/bin/addusers

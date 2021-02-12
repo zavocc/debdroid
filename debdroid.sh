@@ -8,7 +8,7 @@
 # Also you will need to comply the GPLv3 license as some components use that
 # All Rights Reserved (2020, 2021-2022) made by @marcusz
 #############################################
-# Default Debian Location 
+# Default Debian Location
 # This will be placed outside the 'usr' directory when 'termux-reset' is invoked, then all the preferences will be saved
 DEBIAN_FS="/data/data/com.termux/files/debian"
 
@@ -154,7 +154,7 @@ install_debian(){
     DEBIAN_SUITE="$@"
     # Check if the rootfs exists
     if [ -e "${DEBIAN_FS}" ]; then
-        echo "${RED}E: The Debian Container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${GREEN}?${NOATTR}"
+        echo "${RED}E: The Debian Container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${RED}?${NOATTR}"
         exit 2
     fi
     echo "${GREEN}I: Retrieving Download Links needed for installation${NOATTR}"
@@ -176,7 +176,7 @@ install_debian(){
             ;;
         *)
             echo "${YELLOW}I: Unknown Distribution was requested, choosing stable${NOATTR}"
-            source <(curl -sSL ${URL_REPO}/suite/dlmirrors/stretch)
+            source <(curl -sSL ${URL_REPO}/suite/dlmirrors/buster)
             ;;
     esac
     echo "${GREEN}I: The following distribution was requested: ${YELLOW}${DEBIAN_NAME}${NOATTR}"
@@ -269,9 +269,9 @@ launch-debian(){
     extcmd="$@"
     # Launch PRoot
     if [ ! -z "${extcmd}" ]; then
-        proot "${kompat_source}" "${prootargs}" su -l "${userinfo}" -c "${extcmd}"
+        proot -k "${kompat_source}" ${prootargs} su -l "${DEBIAN_USER_INFO}" -c "${extcmd}"
     else
-        proot "${kompat_source}" "${prootargs}" su -l "${userinfo}"
+        proot -k "${kompat_source}" ${prootargs} su -l "${DEBIAN_USER_INFO}"
     fi
 }
 
@@ -307,9 +307,9 @@ launch-debian-asroot(){
     extcmd="$@"
     # Launch PRoot
     if [ ! -z "${extcmd}" ]; then
-        proot "${kompat_source}" "${prootargs}" su -l -c "${extcmd}"
+        proot -k "${kompat_source}" ${prootargs} su -l -c "${extcmd}"
     else
-        proot "${kompat_source}" "${prootargs}" su -l
+        proot -k "${kompat_source}" ${prootargs} su -l
     fi
 }
 
@@ -324,7 +324,13 @@ case "${argument}" in
         uninstall-debian "$@"
         ;;
     reconfigure|configure)
-        perform_configuration
+        if perform_configuration; then
+            echo "${GREEN}I: Done Configuring the Debian Container${NOATTR}"
+            exit 0
+        else
+            echo "${RED}W: An error has occured during the reconfiguration${NOATTR}"
+            exit 2
+        fi
         ;;
     launch|login)
         launch-debian "$@"
