@@ -175,7 +175,7 @@ kompat_source="\\$(uname -s)\\${DEBIAN_HOSTNAME}\\5.4.0-debdroid\\$(uname -v)\\$
 
 # Process Arguments
 prootargs="--link2symlink --kill-on-exit"
-prootargs+="--root-id -L -H -p"
+prootargs+=" --root-id -L -H -p"
 # Check for Android Version
 case "$(getprop ro.build.version.release)" in
     5*|6*) ;;

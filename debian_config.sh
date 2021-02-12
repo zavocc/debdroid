@@ -66,6 +66,7 @@ echo ""
 echo "We hope you enjoy DebDroid, share your experience via Discord or make an issue report in"
 echo "${YELLOW}https://github.com/WMCB-Tech/debdroid-ng/issues${NOATTR}"
 touch /var/debdroid/.hushlogin
+fi
 
 export PATH="/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
 export PULSE_SERVER="127.0.0.1"
