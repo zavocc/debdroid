@@ -75,7 +75,48 @@ export MOZ_DISABLE_GMP_SANDBOX="1"
 export MOZ_DISABLE_CONTENT_SANDBOX="1"
 EOM
 
-curl --fail --silent --output /var/debdroid/libdebdroid.so "${URL_REPO}/run-debian.sh"
+# Create 'addusers' script
+cat > /usr/local/bin/addusers <<- EOM
+#!/bin/bash
+########################################################################
+# This Script allows to create one or more users easily
+# And can be granted with sudo access automatically
+# 
+# For Changing Users, user must value a username within echo from file:
+# /var/debdroid/userinfo.rc
+########################################################################
+ARGUMENT="\$@"
+
+if [ ! "\$(whoami)" == "root" ]; then
+echo "${RED}Please run me as root to use this tool${NOATTR}"
+exit 2
+fi
+
+# Check for zero argument
+if [ -z "\$ARGUMENT" ]; then
+echo "${RED}Please specify a user to add! this script only takes few arguments${NOATTR}"
+exit 2
+fi
+
+# Add a user
+echo "${GREEN}Adding a user \${ARGUMENT} and adding a sudoers file for a user to use administrative commands${NOATTR}"
+useradd -m "\${ARGUMENT}" -s /bin/bash
+passwd "\${ARGUMENT}"
+echo "\${ARGUMENT}  ALL=(ALL:ALL)   NOPASSWD:ALL" > "/etc/sudoers.d/99-debdroid-user-\${ARGUMENT}"
+
+if [ "$?" == "0" ]; then
+echo "${GREEN}Successfully added a user \${ARGUMENT}${NOATTR}"
+exit 0
+else
+echo "${RED}The User Account Creation has failed, please try again later..${NOATTR}"
+exit 2
+fi
+EOM
+
+chmod 755 /usr/local/bin/addusers
+
+curl --insecure --fail --silent --output /var/debdroid/libdebdroid.so "${URL_REPO}/run-debian.sh"
+curl --insecure --fail --silent --output /var/debdroid/mountpoints.conf "${URL_REPO}/mountpoints.conf"
 
 # Perform Final Configuration
 echo "${GREEN}I: Performing Final Configuration${NOATTR}"
@@ -84,13 +125,14 @@ dpkg-reconfigure tzdata ||:
 # Implementation of hostname, this feature uniquely identifies your container, see https://github.com/termux/proot/issues/80 issue for more details
 hostname_info=$(
         dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
-            --nocancel --inputbox "Enter your hostname to uniquely identify your container, you may leave it blank for defaults, you may customize it again later by editing /etc/hostname" 20 40 \
+            --nocancel --inputbox "Enter your hostname to uniquely identify your container, you may leave it blank for defaults, you may customize it again later by editing /etc/hostname" 12 40 \
             3>&1 1>&2 2>&3 3>&- 
     )
 
 if [ ! -z "${hostname_info}" ]; then
     echo "${hostname_info}" > /etc/hostname
 else
+    echo "${YELLOW}N: Falling Back to hostname: termux-debian${NOATTR}"
     echo "termux-debian" > /etc/hostname
 fi
 
@@ -105,7 +147,9 @@ if [ ! -e /var/debdroid/userinfo.rc ]; then
         useradd -s /bin/bash -m "${env_username}"
     else
         echo "${RED}N: No username is specified, falling back to defaults${NOATTR}"
+        sleep 5
         echo "user" > /var/debdroid/userinfo.rc
+        useradd -s /bin/bash -m "user"
     fi
     echo "$(cat /var/debdroid/userinfo.rc)   ALL=(ALL:ALL)   NOPASSWD:ALL" > /etc/sudoers.d/99-debdroid-user
     env_password=$(
@@ -117,9 +161,11 @@ if [ ! -e /var/debdroid/userinfo.rc ]; then
         echo "$(cat /var/debdroid/userinfo.rc)":"${env_password}" | chpasswd
     else
         echo "${RED}N: No password is specified, the default password is ${YELLOW}passw0rd${NOATTR}"
-        sleep 3.1
+        sleep 5
         echo "$(cat /var/debdroid/userinfo.rc)":"passw0rd" | chpasswd
     fi
+else
+    echo "${YELLOW}I: The User Account is already been set up... Skipping${NOATTR}"
 fi
 
 rm /.setup_has_not_done
