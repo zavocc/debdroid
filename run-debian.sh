@@ -168,7 +168,7 @@ EOM
 kompat_source="-k '\\$(uname -s)\\${DEBIAN_HOSTNAME}\\5.4.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\'"
 
 # Process Arguments
-prootargs="--root-id -L -H -p"
+prootargs="--root-id=0 -L -H -p"
 # Check for Android Version
 case "$(getprop ro.build.version.release)" in
     5*|6*) ;;
