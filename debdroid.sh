@@ -76,7 +76,7 @@ sigtrap(){
 trap 'sigtrap' HUP INT KILL QUIT TERM
 
 # Check if dependencies are installed
-if [ ! -e "$(command -v proot)" ] && [ ! -e "$(command -v curl)" ]; then
+if ! [ -e "$(command -v proot)" ] && [ -e "$(command -v curl)" ]; then
     echo "${GREEN}I: Installing ${YELLOW}proot, curl${GREEN} if necessary${NOATTR}"
     pkg update
     pkg install proot curl -yy
