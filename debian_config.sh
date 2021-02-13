@@ -36,7 +36,7 @@ echo "${GREEN}I: Updating Packages if necessary, This may take several minutes, 
 apt update
 apt upgrade -yy
 echo "${GREEN}I: Installing some packages${NOATTR}"
-apt install nano sudo tzdata procps curl dialog apt-utils command-not-found -yy --no-install-recommends
+apt install nano sudo tzdata procps curl dialog apt-utils command-not-found lsb-release -yy --no-install-recommends
 echo "${GREEN}I: Perfoming Necessary fixes${NOATTR}"
 dpkg --configure -a ||:
 apt install -f -y ||:
@@ -45,6 +45,10 @@ install -m 755 /dev/null /usr/local/bin/udevadm
 install -m 755 /dev/null /usr/local/bin/dpkg-statoverride
 echo "${GREEN}I: Trying to reconfigure it once again: fixes dpkg errors${NOATTR}"
 dpkg --configure -a
+
+# Update command-not-found database
+echo "${GREEN}I: Updating command-not-found Database${NOATTR}"
+update-command-not-found
 
 # Setup Environment Variables
 echo "${GREEN}I: Setting up Environment Variables${NOATTR}"
