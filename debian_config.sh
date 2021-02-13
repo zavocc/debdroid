@@ -47,8 +47,9 @@ echo "${GREEN}I: Trying to reconfigure it once again: fixes dpkg errors${NOATTR}
 dpkg --configure -a
 
 # Update command-not-found database
-echo "${GREEN}I: Updating command-not-found Database${NOATTR}"
+echo "${GREEN}I: Populating ${YELLOW}command-not-found${GREEN} Database${NOATTR}"
 update-command-not-found
+apt update
 
 # Setup Environment Variables
 echo "${GREEN}I: Setting up Environment Variables${NOATTR}"
