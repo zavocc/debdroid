@@ -57,5 +57,5 @@ tigervncserver -SecurityTypes none -xstartup /usr/bin/startlxde -fg -autokill -g
 EOM
 chmod 755 /usr/local/bin/startlxde
 
-echo "${GREEN}I: Successfully Installed ${YELLOW}lxde-desktop${GREEN}, You can start the session by typing ${YELLOW}startxfce4${NOATTR}"
+echo "${GREEN}I: Successfully Installed ${YELLOW}lxde-desktop${GREEN}, You can start the session by typing ${YELLOW}startlxde${NOATTR}"
 exit 0
