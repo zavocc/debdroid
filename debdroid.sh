@@ -14,7 +14,7 @@ DEBIAN_FS="/data/data/com.termux/files/debian"
 
 # URL Link
 # Used for portability and can be used for branch testing
-URL_REPO="https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/testing"
+URL_REPO="https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master"
 
 # Tempdir
 # Used to place temporary files and all downloaded cache will be stored and will be updated once it flushed
