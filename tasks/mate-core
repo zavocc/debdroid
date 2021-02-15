@@ -1,6 +1,6 @@
 prep_install_desktop(){
     echo "${GREEN}I: Installing the MATE Desktop Package, This may take some time, (NOTE: This will replace ${YELLOW}mate-desktop${GREEN})${NOATTR}"
-    sudo apt install mate firefox tigervnc-standalone-server tigervnc-xorg-extension -yy || :
+    sudo apt install mate firefox-esr tigervnc-standalone-server tigervnc-xorg-extension -yy || :
 }
 
 prep_install_desktop
