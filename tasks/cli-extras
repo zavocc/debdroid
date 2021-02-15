@@ -1,0 +1,22 @@
+prep_install_desktop(){
+    echo "${GREEN}I: Installing the CLI Extras needed for your CLI needs and some recommended tools that is used by me${NOATTR}"
+    sudo apt install nmap git wget byobu zsh htop qemu-system-x86 lynx man rsync openssh-client openssh-server vim emacs tor -yy || :
+}
+
+prep_install_desktop
+
+echo "${GREEN}I: Doing Pending Configuration${NOATTR}"
+dpkg --configure -a
+
+# Check if dependencies installed (Base)
+check_deps(){
+for d in /usr/bin/{nmap,git,wget,byobu,htop,qemu-system-i386,lynx,man,rsync,ssh,vim,emacs,tor}; do test -e ${d}; done
+}
+
+if ! check_deps; then
+    echo "${RED}W: An Error Has Occurred during the installation, please try again${NOATTR}"
+    exit 2
+fi
+
+echo "${GREEN}I: Successfully Installed ${YELLOW}cli-extras${GREEN} Packages include for Web Browsing, Network Scanning, SSH, Editors, Emulators, and Git${NOATTR}"
+exit 0

@@ -1,0 +1,22 @@
+prep_install_desktop(){
+    echo "${GREEN}I: Installing the CLI Developer Tools needed for your Development Needs and for Compiling Needs${NOATTR}"
+    sudo apt install build-essential gcc make autoconf automake dpkg-dev git cmake bison flex python vim libtoolize fakeroot -yy || :
+}
+
+prep_install_desktop
+
+echo "${GREEN}I: Doing Pending Configuration${NOATTR}"
+dpkg --configure -a
+
+# Check if dependencies installed (Base)
+check_deps(){
+for d in /usr/bin/{gcc,make,automake,git,python,vim,cmake,fakeroot}; do test -e ${d}; done
+}
+
+if ! check_deps; then
+    echo "${RED}W: An Error Has Occurred during the installation, please try again${NOATTR}"
+    exit 2
+fi
+
+echo "${GREEN}I: Successfully Installed ${YELLOW}cli-developer${GREEN} Packages include for Compiling C Programs, Python, and Make/CMake tools. Other tools must be installed manually${NOATTR}"
+exit 0
