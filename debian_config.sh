@@ -125,6 +125,10 @@ curl --insecure --fail --silent --output /var/debdroid/mountpoints.conf "${URL_R
 curl --insecure --fail --silent --output /usr/local/bin/debianize "${URL_REPO}/debianize"
 chmod 755 /usr/local/bin/debianize
 
+# Preload libdisableselinux.so library to avoid messing up Debian from Android Security Features
+rm -rf /usr/local/lib/libdisableselinux.so
+rm -rf /etc/ld.so.preload
+
 case $(dpkg --print-architecture) in
     arm64|aarch64)
         curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/arm64/libdisableselinux.so"
