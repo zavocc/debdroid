@@ -6,7 +6,7 @@ prep_install_desktop(){
 prep_install_desktop
 
 echo "${GREEN}I: Doing Pending Configuration${NOATTR}"
-dpkg --configure -a
+sudo dpkg --configure -a
 
 # Check if dependencies installed (Base)
 check_deps(){
