@@ -66,6 +66,8 @@ echo "You can switch users by using ${YELLOW}su${GREEN} command"
 echo ""
 echo "To Update your debian system in just a tap, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
 echo ""
+echo "You can also setup your debian needs with the command ${YELLOW}debianize${GREEN}. this script will automate the entire process of installing your needs"
+echo ""
 echo "All of your files are living outside the Termux's Prefix Directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container"
 echo ""
 echo "We hope you enjoy DebDroid, share your experience via Discord or make an issue report in"
@@ -120,6 +122,26 @@ chmod 755 /usr/local/bin/addusers
 
 curl --insecure --fail --silent --output /var/debdroid/libdebdroid.so "${URL_REPO}/run-debian.sh"
 curl --insecure --fail --silent --output /var/debdroid/mountpoints.conf "${URL_REPO}/mountpoints.conf"
+curl --insecure --fail --silent --output /usr/local/bin/debianize "${URL_REPO}/debianize"
+chmod 755 /usr/local/bin/debianize
+
+case $(dpkg --print-architecture) in
+    arm64|aarch64)
+        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/arm64/libdisableselinux.so"
+        ;;
+    armhf)
+        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/armhf/libdisableselinux.so"
+        ;;
+    i*86|x86)
+        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/i386/libdisableselinux.so"
+        ;;
+    amd64|x86_64)
+        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/amd64/libdisableselinux.so"
+        ;;
+esac
+
+chmod 755 /usr/local/lib/libdisableselinux.so
+echo "/usr/local/lib/libdisableselinux.so" > /etc/ld.so.preload
 
 # Perform Final Configuration
 echo "${GREEN}I: Performing Final Configuration${NOATTR}"
