@@ -47,7 +47,7 @@ echo "${GREEN}Starting VNC Server with Session: ${YELLOW}Openbox${NOATTR}"
 echo "${GREEN}Running at port ${YELLOW}:51${NOATTR}"
 
 if [ ! -e /var/debdroid/vnc-resolution ]; then
-    set_resolution=$(
+    set_resolution=\$(
         dialog --title "Setup VNC Resolution" \
             --inputbox "Enter your Resolution for your VNC Display (WxH), You can change settings later, you may leave it blank for defaults" 11 40 \
             3>&1 1>&2 2>&3 3>&-
