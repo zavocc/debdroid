@@ -62,7 +62,7 @@ list_packages(){
     echo "${YELLOW} cli-developer:${GREEN} CLI Development Tools and C Compilers, And Configure Tools"
     echo "Approx: 600MB"
     echo ""
-    echo "To Install it, simply do ${YELLOW}debianize <package>${NOATTR}"
+    echo "${GREEN}To Install it, simply do ${YELLOW}debianize <package>${NOATTR}"
 }
 
 show_help(){
