@@ -1,5 +1,5 @@
 prep_install_desktop(){
-    echo "${GREEN}I: Installing the XFCE Desktop Package, This may take some time, (NOTE: This will replace xfce4-desktop)${NOATTR}"
+    echo "${GREEN}I: Installing the XFCE Desktop Package, This may take some time, (NOTE: This will replace ${YELLOW}xfce4-desktop${GREEN})${NOATTR}"
     sudo apt install xfce4 xfce4-terminal firefox tigervnc-standalone-server tigervnc-xorg-extension -yy || :
 }
 

@@ -1,6 +1,6 @@
 prep_install_desktop(){
-    echo "${GREEN}I: Installing the XFCE Desktop Package, This may take some time, (NOTE: This will replace ${YELLOW}xfce4-core${GREEN} and you need a lot of storage space)${NOATTR}"
-    sudo apt install xfce4 xfce4-goodies vlc chromium firefox gimp libreoffice tigervnc-standalone-server tigervnc-xorg-extension -yy || :
+    echo "${GREEN}I: Installing the MATE Desktop Package, This may take some time, (NOTE: This will replace ${YELLOW}mate-core${GREEN} and you need a lot of storage space)${NOATTR}"
+    sudo apt install mate vlc chromium firefox gimp libreoffice tigervnc-standalone-server tigervnc-xorg-extension -yy || :
 }
 
 prep_install_desktop
@@ -10,7 +10,7 @@ dpkg --configure -a
 
 # Check if dependencies installed (Base)
 check_deps(){
-for d in /usr/bin/{chromium,firefox,vlc,gimp,libreoffice,xfce4-session,mousepad,xfce4-taskmanager,tigervncserver}; do test -e ${d}; done
+for d in /usr/bin/{chromium,firefox,vlc,gimp,libreoffice,mate-session,tigervncserver}; do test -e ${d}; done
 }
 
 if ! check_deps; then
@@ -31,7 +31,7 @@ fi
 
 # Create Start Script
 echo "${GREEN}I: Creating Start Script${NOATTR}"
-cat > /usr/local/bin/startxfce4 <<- EOM
+cat > /usr/local/bin/mate-session <<- EOM
 #!/bin/bash
 
 check_lock_files(){
@@ -43,7 +43,7 @@ if check_lock_files; then
     exit 2
 fi
 
-echo "${GREEN}Starting VNC Server with Session: ${YELLOW}XFCE${NOATTR}"
+echo "${GREEN}Starting VNC Server with Session: ${YELLOW}MATE${NOATTR}"
 echo "${GREEN}Running at port ${YELLOW}:51${NOATTR}"
 
 if [ ! -e /var/debdroid/vnc-resolution ]; then
@@ -64,9 +64,9 @@ fi
 echo "${GREEN}Running in the foreground. to terminate it hit Ctrl-C"
 echo "However the safest option is to log-out from the Menu${NOATTR}"
 
-tigervncserver -SecurityTypes none -xstartup /usr/bin/startxfce4 -fg -autokill -geometry "\$(cat /var/debdroid/vnc-resolution)" -localhost no --I-KNOW-THIS-IS-INSECURE :51
+tigervncserver -SecurityTypes none -xstartup /usr/bin/mate-session -fg -autokill -geometry "\$(cat /var/debdroid/vnc-resolution)" -localhost no --I-KNOW-THIS-IS-INSECURE :51
 EOM
-chmod 755 /usr/local/bin/startxfce4
+chmod 755 /usr/local/bin/mate-session
 
-echo "${GREEN}I: Successfully Installed ${YELLOW}xfce4-desktop${GREEN}, You can start the session by typing ${YELLOW}startxfce4${NOATTR}"
+echo "${GREEN}I: Successfully Installed ${YELLOW}mate-desktop${GREEN}, You can start the session by typing ${YELLOW}mate-session${NOATTR}"
 exit 0
