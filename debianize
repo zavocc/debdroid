@@ -86,28 +86,28 @@ fi
 
 case "${argument}" in
     xfce-desktop|xfce4-desktop)
-        source <(curl -sSL ${URL_REPO}/tasks/xfce4-desktop)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/xfce4-desktop)
         ;;
     xfce-core|xfce4-core)
-        source <(curl -sSL ${URL_REPO}/tasks/xfce4-core)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/xfce4-core)
         ;;
     lxde|lxde-desktop)
-        source <(curl -sSL ${URL_REPO}/tasks/lxde-desktop)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/lxde-desktop)
         ;;
     mate-desktop)
-        source <(curl -sSL ${URL_REPO}/tasks/mate-desktop)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/mate-desktop)
         ;;
     mate-core)
-        source <(curl -sSL ${URL_REPO}/tasks/mate-core)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/mate-core)
         ;;
     x11-basic|x11-core)
-        source <(curl -sSL ${URL_REPO}/tasks/x11-basic)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/x11-basic)
         ;;
     cli-extras)
-        source <(curl -sSL ${URL_REPO}/tasks/cli-extras)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/cli-extras)
         ;;
     cli-dev*|build-essential)
-        source <(curl -sSL ${URL_REPO}/tasks/cli-development)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/cli-development)
         ;;
     help)
         show_help
