@@ -21,7 +21,7 @@ fi
 # Patch Chromium
 echo "${GREEN}I: Defaulting chromium to use no sandbox${NOATTR}"
 if [ ! -e "/usr/bin/chromium.bak" ]; then
-mv /usr/bin/chromium /usr/bin/chromium.bak
+cp /usr/bin/chromium /usr/bin/chromium.bak
 cat > /usr/bin/chromium <<- EOM
 #!/bin/bash
 
