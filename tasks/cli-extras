@@ -10,7 +10,7 @@ sudo dpkg --configure -a
 
 # Check if dependencies installed (Base)
 check_deps(){
-for d in /usr/bin/{nmap,git,wget,byobu,htop,qemu-system-i386,lynx,man,rsync,ssh,vim,emacs,tor}; do test -e ${d}; done
+for d in /usr/bin/{nmap,git,wget,byobu,htop,qemu-system-i386,lynx,man,rsync,ssh,vim,emacs,tor,zsh}; do test -e ${d}; done
 }
 
 if ! check_deps; then
