@@ -1,6 +1,6 @@
 prep_install_desktop(){
     echo "${GREEN}I: Installing the XFCE Desktop Package, This may take some time, (NOTE: This will replace ${YELLOW}xfce4-desktop${GREEN})${NOATTR}"
-    sudo apt install xfce4 xfce4-terminal firefox-esr tigervnc-standalone-server tigervnc-xorg-extension -yy || :
+    sudo apt install xfce4 xfce4-terminal dbus-x11 firefox-esr tigervnc-standalone-server tigervnc-xorg-extension -yy || :
 }
 
 prep_install_desktop
@@ -10,7 +10,7 @@ sudo dpkg --configure -a
 
 # Check if dependencies installed (Base)
 check_deps(){
-for d in /usr/bin/{firefox,xfce4-session,xfce4-terminal,tigervncserver}; do test -e ${d}; done
+for d in /usr/bin/{firefox,dbus-launch,xfce4-session,xfce4-terminal,tigervncserver}; do test -e ${d}; done
 }
 
 if ! check_deps; then
