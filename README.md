@@ -4,6 +4,8 @@ DebDroid - Debian for Android OS!
 
 [![Discord](https://img.shields.io/discord/591914197219016707.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://bit.ly/WMCBDiscord) [![made-with-bash](https://img.shields.io/badge/Made%20with-Bash-1f425f.svg)](https://www.gnu.org/software/bash/) [![made-for-VSCode](https://img.shields.io/badge/Made%20for-VSCode-1f425f.svg)](https://code.visualstudio.com/) 
 
+![debdroid](https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master/images/neofetch.png)
+
 # What is DebDroid?
 DebDroid is an Debian Installer for the Android OS, this method of installing Debian on Android does not require root access and you can run your favorite Linux Applications Easily
 
