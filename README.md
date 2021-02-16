@@ -70,6 +70,8 @@ You can list of other tasks with `debianize list` command
 
 If you want to install chromium easily, you can do `debianize chromium` and you can run `chromium` command or launching it via desktop menu without needing to specify `--no-sandbox`
 
+![debianize-demo](https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master/images/debianize-chromium.gif)
+
 Although you will get problems when using it on `armhf` although it may work with some effort
 
 ## Initializing Sounds
