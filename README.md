@@ -77,7 +77,7 @@ You can initialize sounds and transmit it via Termux's Pulseaudio, to enable sou
 
 Although if you want to do it in Termux Way, you need to enter this commands in termux
 ```
-~ $ pulseaudio --start --exit-idle-time=-1!
+~ $ pulseaudio --start --exit-idle-time=-1
 ~ $ pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1
 ```
 If possible, you need to restart the container
