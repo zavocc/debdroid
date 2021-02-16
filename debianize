@@ -38,7 +38,7 @@ fi
 # Package Lists
 list_packages(){
     echo "${GREEN}List of Debianize Packages and Libraries:"
-    echo "${YELLOW} xfce4-desktop:${GREEN} XFCE Desktop with Applications (Gimp, Libreoffice, Firefox, Chromium, Goodies, VLC) (Replaces ${YELLOW}xfce4-core${GREEN})"
+    echo "${YELLOW} xfce4-desktop:${GREEN} XFCE Desktop with Applications (Gimp, Libreoffice, Firefox, Goodies, VLC) (Replaces ${YELLOW}xfce4-core${GREEN})"
     echo "Approx: 2.4GB"
     echo ""
     echo "${YELLOW} xfce4-core:${GREEN} XFCE Desktop Base Packages (Replaces ${YELLOW}xfce4-desktop${GREEN})"
@@ -47,7 +47,7 @@ list_packages(){
     echo "${YELLOW} lxde-desktop:${GREEN} LXDE Core with preferrable applications for low end devices"
     echo "Approx: 1GB"
     echo ""
-    echo "${YELLOW} mate-desktop:${GREEN} MATE Desktop with Applications (Gimp, Libreoffice, Firefox, Chromium, VLC) (Replaces ${YELLOW}mate-core${GREEN})"
+    echo "${YELLOW} mate-desktop:${GREEN} MATE Desktop with Applications (Gimp, Libreoffice, Firefox, VLC) (Replaces ${YELLOW}mate-core${GREEN})"
     echo "Approx: 2.6GB"
     echo ""
     echo "${YELLOW} mate-core:${GREEN} MATE Desktop Base Packages (Replaces ${YELLOW}mate-desktop${GREEN})"
@@ -55,6 +55,9 @@ list_packages(){
     echo ""
     echo "${YELLOW} x11-basic:${GREEN} Basic X11 Desktop with Openbox and some applications (This might be boring but good for low end devices)"
     echo "Approx: 500MB"
+    echo ""
+    echo "${YELLOW} chromium:${GREEN} Chromium Web Browser (This target may not work properly on armhf devices but may work with some effort)"
+    echo "Approx: 300MB"
     echo ""
     echo "${YELLOW} cli-extras:${GREEN} Extra CLI Applications and Libraries"
     echo "Approx: 300MB"
@@ -102,6 +105,9 @@ case "${argument}" in
         ;;
     x11-basic|x11-core)
         source <(curl -sSL --insecure ${URL_REPO}/tasks/x11-basic)
+        ;;
+    chromium|chromium-browser)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/chromium)
         ;;
     cli-extras)
         source <(curl -sSL --insecure ${URL_REPO}/tasks/cli-extras)
