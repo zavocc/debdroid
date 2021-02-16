@@ -18,6 +18,10 @@ touch /.setup_has_not_done
 # Github repo page to fetch files
 URL_REPO="https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master"
 
+# Suppress Some Errors if trying to configure
+rm -rf /etc/ld.so.preload
+rm -rf /usr/local/lib/libdisableselinux.so
+
 # Add 'contrib non-free' componenets
 sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list
 
@@ -126,9 +130,6 @@ curl --insecure --fail --silent --output /usr/local/bin/debianize "${URL_REPO}/d
 chmod 755 /usr/local/bin/debianize
 
 # Preload libdisableselinux.so library to avoid messing up Debian from Android Security Features
-rm -rf /usr/local/lib/libdisableselinux.so
-rm -rf /etc/ld.so.preload
-
 case $(dpkg --print-architecture) in
     arm64|aarch64)
         curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/arm64/libdisableselinux.so"
