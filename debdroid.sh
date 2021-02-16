@@ -21,7 +21,7 @@ URL_REPO="https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master"
 TEMPDIR="/data/data/com.termux/files/usr/tmp/.debdroid-cachedir"
 
 # Script Version
-SCRIPT_VER="3.10"
+SCRIPT_VER="3.12"
 
 # Colored Environment Variables
 if [ -e "$(command -v tput)" ]; then
@@ -102,6 +102,8 @@ show_help(){
     echo ""
     echo "To launch your debian container, you may type ${YELLOW}debdroid launch${GREEN} or ${YELLOW}debdroid launch-asroot${GREEN}"
     echo "See ${YELLOW}debdroid launch --help${GREEN} for details"
+    echo ""
+    echo "You can customize your Debian Needs with command ${YELLOW}debianize${GREEN}. This will allow you to install your desired workstation packages automatically in just a few keystrokes"
     echo ""
     echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
 }

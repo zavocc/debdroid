@@ -1,0 +1,29 @@
+prep_install_desktop(){
+    echo "${GREEN}I: Installing Chromium Browser and Patching it${NOATTR}"
+    sudo apt install chromium -yy || :
+}
+
+prep_install_desktop
+
+echo "${GREEN}I: Doing Pending Configuration${NOATTR}"
+sudo dpkg --configure -a
+
+# Check if dependencies installed
+if [ ! -e "$(command -v chromium)" ]; then
+    echo "${RED}W: An Error Has Occurred during the installation, please try again${NOATTR}"
+    exit 2
+fi
+
+# Patch Chromium
+echo "${GREEN}I: Defaulting chromium to use no sandbox${NOATTR}"
+if [ ! -e "/usr/bin/chromium.bak" ]; then
+cp /usr/bin/chromium /usr/bin/chromium.bak
+cat > /usr/bin/chromium <<- EOM
+#!/bin/bash
+
+/usr/bin/chromium.bak --no-sandbox "\$@"
+EOM
+fi
+
+echo "${GREEN}I: Successfully Installed ${YELLOW}chromium${GREEN} You may run Chromium by typing ${YELLOW}chromium${GREEN} command or by launching it via menu${NOATTR}"
+exit 0

@@ -61,6 +61,27 @@ If you want to enter debian other than shell, you can pass commands by doing:
 debdroid.sh launch [command]
 ```
 
+# Customizing your Debian Container
+You can customize your debian container needs with the command `debianize`, it allows you to install desired packages and desktop environments you need
+
+If you want to install xfce, you can type `debianize xfce4-desktop` although if you want minimal one, you may use `debianize xfce4-core` and you can start the desktop environment with `startxfce4` command, it will ask you for your resolution if running it first time
+
+You can list of other tasks with `debianize list` command
+
+If you want to install chromium easily, you can do `debianize chromium` and you can run `chromium` command or launching it via desktop menu without needing to specify `--no-sandbox`
+
+Although you will get problems when using it on `armhf` although it may work with some effort
+
+## Initializing Sounds
+You can initialize sounds and transmit it via Termux's Pulseaudio, to enable sounds you may open xsdl app and keep it running, no need to configure `PULSE_SERVER` inside the guest
+
+Although if you want to do it in Termux Way, you need to enter this commands in termux
+```
+~ $ pulseaudio --start --exit-idle-time=-1
+~ $ pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1
+```
+If possible, you need to restart the container
+
 # Deleting Debian Container
 If you don't want to use debian anymore, you can do
 ```

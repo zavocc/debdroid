@@ -18,6 +18,10 @@ touch /.setup_has_not_done
 # Github repo page to fetch files
 URL_REPO="https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master"
 
+# Suppress Some Errors if trying to configure
+rm -rf /etc/ld.so.preload
+rm -rf /usr/local/lib/libdisableselinux.so
+
 # Add 'contrib non-free' componenets
 sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list
 
@@ -65,6 +69,8 @@ echo "You can add one or more users with the command ${YELLOW}addusers${GREEN} t
 echo "You can switch users by using ${YELLOW}su${GREEN} command"
 echo ""
 echo "To Update your debian system in just a tap, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
+echo ""
+echo "You can also setup your debian needs with the command ${YELLOW}debianize${GREEN}. this script will automate the entire process of installing your needs"
 echo ""
 echo "All of your files are living outside the Termux's Prefix Directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container"
 echo ""
@@ -120,6 +126,27 @@ chmod 755 /usr/local/bin/addusers
 
 curl --insecure --fail --silent --output /var/debdroid/libdebdroid.so "${URL_REPO}/run-debian.sh"
 curl --insecure --fail --silent --output /var/debdroid/mountpoints.conf "${URL_REPO}/mountpoints.conf"
+curl --insecure --fail --silent --output /usr/local/bin/debianize "${URL_REPO}/debianize"
+chmod 755 /usr/local/bin/debianize
+
+# Preload libdisableselinux.so library to avoid messing up Debian from Android Security Features
+case $(dpkg --print-architecture) in
+    arm64|aarch64)
+        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/arm64/libdisableselinux.so"
+        ;;
+    armhf)
+        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/armhf/libdisableselinux.so"
+        ;;
+    i*86|x86)
+        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/i386/libdisableselinux.so"
+        ;;
+    amd64|x86_64)
+        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/amd64/libdisableselinux.so"
+        ;;
+esac
+
+chmod 755 /usr/local/lib/libdisableselinux.so
+echo "/usr/local/lib/libdisableselinux.so" > /etc/ld.so.preload
 
 # Perform Final Configuration
 echo "${GREEN}I: Performing Final Configuration${NOATTR}"
