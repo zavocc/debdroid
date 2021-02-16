@@ -46,6 +46,8 @@ it will prompt you to enter your required information, this is necessary to capt
 * User: `user`
 * Password: `passw0rd`
 
+![userinput](https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master/images/userinput.png)
+
 In case you interrupted your installation, you can do `debdroid.sh reconfigure` or `debdroid.sh configure` although this can be used to refresh Debian Container or to update it
 
 # Starting Debian
@@ -75,6 +77,14 @@ If you want to install chromium easily, you can do `debianize chromium` and you 
 ![debianize-demo](https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master/images/debianize-chromium.gif)
 
 Although you will get problems when using it on `armhf` although it may work with some effort
+
+## Setting uo User Accounts
+You can add users with the command `addusers` so you can create user account and add the user to sudoers access, syntax is:
+```
+sudo addusers <user>
+```
+
+You can set the default user account by echoing the value of your user `echo <username> > /var/debdroid/userinfo.rc` and restart to switch to new user account, although you may use `adduser` or `useradd` if you want
 
 ## Initializing Sounds
 You can initialize sounds and transmit it via Termux's Pulseaudio, to enable sounds you may open xsdl app and keep it running, no need to configure `PULSE_SERVER` inside the guest
