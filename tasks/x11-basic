@@ -10,7 +10,7 @@ sudo dpkg --configure -a
 
 # Check if dependencies installed (Base)
 check_deps(){
-for d in /usr/bin/{firefox,openbox-session,pcmanfm,chromium,xfce4-terminal,tigervncserver}; do test -e ${d}; done
+for d in /usr/bin/{firefox,openbox-session,pcmanfm,dbus-launch,xfce4-terminal,tigervncserver}; do test -e ${d}; done
 }
 
 if ! check_deps; then
