@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 #############################################
-# DebDroid 3.10 (debdroid-ng) 2020, 2021
+# DebDroid 3.14 (debdroid-ng) 2020, 2021
 # This script will allow you to install Debian on your Device with just a few taps
 # This script is also portable, all links, repos will be read on a single file
 # So to make it easier to fork and to create debdroid-based projects
@@ -94,6 +94,8 @@ show_help(){
     echo " reconfigure"
     echo " launch"
     echo " launch-asroot"
+    echo " backup"
+    echo " restore"
     echo ""
     echo "${GREEN}You can install Debian Stable by typing ${YELLOW}debdroid install${GREEN} or ${YELLOW}debdroid install stable${GREEN}"
     echo "You can list the recognized releases with ${YELLOW}debdroid install list${GREEN} command"
@@ -346,7 +348,7 @@ backup_debian_container(){
         fi
     echo "${GREEN}I: The Tarball will be saved in $(realpath -m ${args})${NOATTR}"
     echo "${YELLOW}I: Backing up the container... this may take some time${NOATTR}"
-        if tar -zcf "${args}" -C "${PREFIX}/.." debian; then
+        if tar --preserve-permissions -zcf "${args}" -C "${PREFIX}/.." debian; then
             echo "${GREEN}I: The Container successfully exported${NOATTR}"
             exit 0
         else
@@ -383,7 +385,7 @@ restore_debian_container(){
                     ;;
             esac
     echo "${YELLOW}I: Restoring the Container...${NOATTR}"
-        if tar -zxf "$(realpath -m ${args})" -C "${PREFIX}/.."; then
+        if tar --recursive-unlink --delay-directory-restore --preserve-permissions -zxf "$(realpath -m ${args})" -C "${PREFIX}/.."; then
             echo "${GREEN}I: The Container successfully imported${NOATTR}"
             exit 0
         else
