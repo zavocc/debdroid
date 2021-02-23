@@ -241,7 +241,7 @@ uninstall-debian(){
                     echo "${GREEN}I: The Debian Container Successfully Deleted${NOATTR}"
                     exit 0
                 else
-                    echo "${RED}E: The Debian Container Isn't deleted successfully${NOATTR}"
+                    echo "${RED}E: The Debian Container isn't deleted successfully${NOATTR}"
                     exit 2
                 fi
             ;;
@@ -261,7 +261,7 @@ launch-debian(){
     local extcmd
     local prootargs
         if [ ! -e "${DEBIAN_FS}/var/debdroid/libdebdroid.so" ]; then
-            echo "${RED}E: The Debian Container Isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
+            echo "${RED}E: The Debian Container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
             exit 2
         fi
     # Show help subcommand if help was invoked
@@ -299,7 +299,7 @@ launch-debian-asroot(){
     local extcmd
     local prootargs
         if [ ! -e "${DEBIAN_FS}/var/debdroid/libdebdroid.so" ]; then
-            echo "${RED}E: The Debian Container Isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
+            echo "${RED}E: The Debian Container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
             exit 2
         fi
     # Show help if help was invoked
@@ -332,6 +332,66 @@ launch-debian-asroot(){
     fi
 }
 
+# Function to Backup the container
+backup_debian_container(){
+    local args
+        if [ ! -e "${DEBIAN_FS}/var/debdroid/libdebdroid.so" ]; then
+            echo "${RED}E: Cannot Backup the Debian Container: The Debian Container isn't Installed${NOATTR}"
+            exit 2
+        fi
+    args="$@"
+        if [ -z "${args}" ]; then
+            echo "${RED}E: Please specify a filename to output the tarball${NOATTR}"
+            exit 2
+        fi
+    echo "${GREEN}I: The Tarball will be saved in $(realpath -m ${args})${NOATTR}"
+    echo "${YELLOW}I: Backing up the container... this may take some time${NOATTR}"
+        if tar -zcf "${args}" -C "${PREFIX}/.." debian; then
+            echo "${GREEN}I: The Container successfully exported${NOATTR}"
+            exit 0
+        else
+            echo "${RED}I: The Container successfully exported with errors${NOATTR}"
+            exit 2
+        fi
+}
+
+# Function to Restore the container
+restore_debian_container(){
+    local args
+    local userinput
+    args="$@"
+        if [ -z "${args}" ]; then
+            echo "${RED}E: Please specify a tarball for restoring the container${NOATTR}"
+            exit 2
+        fi
+    # Check if the tarball exists
+        if [ ! -e "${args}" ]; then
+            echo "${RED}E: The Tarball that you're trying to import dosen't exist${NOATTR}"
+            exit 2
+        fi
+    # User Input
+        read -p "${GREEN}I: Do you want to restore the container? all of the existing state will be lost [y/N]? ${NOATTR}" userinput
+            case "${userinput}" in
+                Y*|y*) ;;
+                N*|n*)
+                    echo "${RED}I: Aborting...${NOATTR}"
+                    exit 2
+                    ;;
+                *)
+                    echo "${RED}I: Aborting...${NOATTR}"
+                    exit 2
+                    ;;
+            esac
+    echo "${YELLOW}I: Restoring the Container...${NOATTR}"
+        if tar -zxf "$(realpath -m ${args})" -C "${PREFIX}/.."; then
+            echo "${GREEN}I: The Container successfully imported${NOATTR}"
+            exit 0
+        else
+            echo "${RED}I: The Container successfully imported with errors${NOATTR}"
+            exit 2
+        fi
+}
+
 argument="$1"
 shift 1
 
@@ -361,6 +421,12 @@ case "${argument}" in
         ;;
     launch-asroot|login-asroot|launch-su)
         launch-debian-asroot "$@"
+        ;;
+    backup|export)
+        backup_debian_container "$@"
+        ;;
+    restore|import)
+        restore_debian_container "$@"
         ;;
     help|show-help|h)
         show_help
