@@ -148,6 +148,12 @@ esac
 chmod 755 /usr/local/lib/libdisableselinux.so
 echo "/usr/local/lib/libdisableselinux.so" > /etc/ld.so.preload
 
+# Enable Interoperability if possible
+if [ ! -e /var/debdroid/binfmt/corrosive-session ]; then
+    mkdir /var/debdroid/binfmt -p
+    echo 1 > /var/debdroid/binfmt/corrosive-session
+fi
+
 # Perform Final Configuration
 echo "${GREEN}I: Performing Final Configuration${NOATTR}"
 dpkg-reconfigure tzdata ||:
