@@ -166,7 +166,7 @@ gen_proc_files
 
 # Synchronize Host Environment (Needed for Executing Programs)
 mkdir "${DEBIAN_FS}/var/debdroid/binfmt" -p
-cat > "${DEBIAN_FS}/etc/profile.d/60-debdroid-gros-interopability.sh" <<- EOM
+cat > "${DEBIAN_FS}/etc/profile.d/60-debdroid-gros-interoperability.sh" <<- EOM
 #!/bin/bash
 # This file is regenerated everytime you launch the session
 # To Disable, echo the value 0 in /var/debdroid/binfmt/corrosive-session
