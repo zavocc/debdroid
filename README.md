@@ -65,7 +65,7 @@ If you want to enter debian other than shell, you can pass commands by doing:
 debdroid.sh launch [command]
 ```
 
-# Customizing your Debian Container
+## Customizing your Debian Container
 You can customize your debian container needs with the command `debianize`, it allows you to install desired packages and desktop environments you need
 
 If you want to install xfce, you can type `debianize xfce4-desktop` although if you want minimal one, you may use `debianize xfce4-core` and you can start the desktop environment with `startxfce4` command, it will ask you for your resolution if running it first time
@@ -99,6 +99,22 @@ Although if you want to do it in Termux Way, you need to enter this commands in 
 ~ $ pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1
 ```
 If possible, you need to restart the container
+
+## Running Termux Commands inside Debian
+It's also possible to run host commands in the guest, and this can be used to run programs which are not available to the debian repositories, this implementation is like from the feature of [WSL](https://docs.microsoft.com/en-us/windows/wsl/interop)
+
+![interoperability](https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master/images/termux-cmds-debian.jpg)
+
+In some cases this may conflict with some dependencies or programs that is optimized for the usage with Termux and may cause some problems like compiling programs and having different libc linker, due to the way on [how they're set up between them](https://wiki.termux.com/wiki/Differences_from_Linux), or may impose security risks, if you don't want to happen, you can disable it by typing:
+```
+echo 0 > /var/debdroid/binfmt/corrosive-session
+```
+And restart your shell,
+
+To Enable it back, type:
+```
+echo 1 > /var/debdroid/binfmt/corrosive-session
+```
 
 # Deleting Debian Container
 If you don't want to use debian anymore, you can do
