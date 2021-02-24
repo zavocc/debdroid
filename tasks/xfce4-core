@@ -53,8 +53,8 @@ fi
 echo "${GREEN}Running in the foreground. to terminate it hit Ctrl-C"
 echo "However the safest option is to log-out from the Menu${NOATTR}"
 
+termux-open vnc://localhost:51 &
 tigervncserver -SecurityTypes none -xstartup /usr/bin/startxfce4 -fg -autokill -geometry "\$(cat /var/debdroid/vnc-resolution)" -localhost no --I-KNOW-THIS-IS-INSECURE :51
-termux-open vnc://localhost:51
 EOM
 chmod 755 /usr/local/bin/startxfce4
 
