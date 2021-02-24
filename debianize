@@ -53,9 +53,6 @@ list_packages(){
     echo "${YELLOW} mate-core:${GREEN} MATE Desktop Base Packages (Replaces ${YELLOW}mate-desktop${GREEN})"
     echo "Approx: 1.4GB"
     echo ""
-    echo "${YELLOW} gnome-flashback:${GREEN} GNOME Flashback base package (beta)"
-    echo "Approx: 1.5GB"
-    echo ""
     echo "${YELLOW} x11-basic:${GREEN} Basic X11 Desktop with Openbox and some applications (This might be boring but good for low end devices)"
     echo "Approx: 500MB"
     echo ""
@@ -105,9 +102,6 @@ case "${argument}" in
         ;;
     mate-core)
         source <(curl -sSL --insecure ${URL_REPO}/tasks/mate-core)
-        ;;
-    gnome|gnome-flashback)
-        source <(curl -sSL --insecure ${URL_REPO}/tasks/gnome-flashback)
         ;;
     x11-basic|x11-core)
         source <(curl -sSL --insecure ${URL_REPO}/tasks/x11-basic)
