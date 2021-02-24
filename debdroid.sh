@@ -94,8 +94,8 @@ show_help(){
     echo " reconfigure"
     echo " launch"
     echo " launch-asroot"
-    echo " backup"
-    echo " restore"
+    echo " backup | export"
+    echo " restore | import"
     echo ""
     echo "${GREEN}You can install Debian Stable by typing ${YELLOW}debdroid install${GREEN} or ${YELLOW}debdroid install stable${GREEN}"
     echo "You can list the recognized releases with ${YELLOW}debdroid install list${GREEN} command"
@@ -352,7 +352,7 @@ backup_debian_container(){
             echo "${GREEN}I: The Container successfully exported${NOATTR}"
             exit 0
         else
-            echo "${RED}I: The Container successfully exported with errors${NOATTR}"
+            echo "${RED}I: The Container isn't successfully exported${NOATTR}"
             exit 2
         fi
 }
@@ -389,7 +389,7 @@ restore_debian_container(){
             echo "${GREEN}I: The Container successfully imported${NOATTR}"
             exit 0
         else
-            echo "${RED}I: The Container successfully imported with errors${NOATTR}"
+            echo "${RED}I: The Container isn't successfully imported${NOATTR}"
             exit 2
         fi
 }
