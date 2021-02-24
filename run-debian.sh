@@ -164,6 +164,30 @@ echo 0 > "${DEBIAN_FS}/var/debdroid/binds/fcap_last_cap"
 # Load procfiles
 gen_proc_files
 
+# Synchronize Host Environment (Needed for Executing Programs)
+mkdir "${DEBIAN_FS}/var/debdroid/binfmt" -p
+cat > "${DEBIAN_FS}/etc/profile.d/60-debdroid-gros-interoperability.sh" <<- EOM
+#!/bin/bash
+# This file is regenerated everytime you launch the session
+# To Disable, echo the value 0 in /var/debdroid/binfmt/corrosive-session
+
+if [ "\$(cat /var/debdroid/binfmt/corrosive-session)" == "1" ]; then
+export PATH=\${PATH}:/data/data/com.termux/files/usr/bin:/system/bin:/system/xbin
+export BOOTCLASSPATH=${BOOTCLASSPATH}
+export DEX2OATBOOTCLASSPATH=${DEX2OATBOOTCLASSPATH}
+export ANDROID_ART_ROOT=${ANDROID_ART_ROOT}
+export ANDROID_TZDATA_ROOT=${ANDROID_TZDATA_ROOT}
+export ANDROID_ROOT=${ANDROID_ROOT}
+export ANDROID_DATA=${ANDROID_DATA}
+export ANDROID_I18N_ROOT=${ANDROID_I18N_ROOT}
+export ANDROID_RUNTIME_ROOT=${ANDROID_RUNTIME_ROOT}
+export EXTERNAL_STORAGE=${EXTERNAL_STORAGE}
+export COLORTERM=${COLORTERM}
+export PREFIX=/data/data/com.termux/files/usr
+export TMPDIR=/tmp
+fi
+EOM
+
 # Fill /etc/hosts file if necessary and sync it with user-defined hostname
 cat > "${DEBIAN_FS}/etc/hosts" <<- EOM
 127.0.0.1   localhost
