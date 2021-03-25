@@ -1,6 +1,6 @@
 prep_install_desktop(){
     echo "${GREEN}I: Installing the LXDE Desktop Package, This may take some time,${NOATTR}"
-    sudo apt install lxde-core lxterminal lxappearance desktop-base dbus-x11 firefox-esr abiword gnumeric tigervnc-xorg-extension -yy || :
+    sudo apt install lxde-core lxterminal lxappearance desktop-base dbus-x11 firefox-esr abiword gnumeric tigervnc-xorg-extension tigervnc-standalone-server -yy || :
 }
 
 prep_install_desktop
