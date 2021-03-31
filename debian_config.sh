@@ -40,7 +40,7 @@ echo "${GREEN}I: Updating Packages if necessary, This may take several minutes, 
 apt update
 apt upgrade -yy
 echo "${GREEN}I: Installing some packages${NOATTR}"
-apt install nano sudo tzdata procps curl dialog apt-utils command-not-found lsb-release -yy --no-install-recommends
+apt install nano sudo tzdata procps curl dialog apt-utils command-not-found lsb-release locales -yy --no-install-recommends
 echo "${GREEN}I: Perfoming Necessary fixes${NOATTR}"
 dpkg --configure -a ||:
 apt install -f -y ||:
@@ -81,7 +81,6 @@ fi
 
 export PATH="/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
 export PULSE_SERVER="127.0.0.1"
-export LANG="C.UTF-8"
 export MOZ_FAKE_NO_SANDBOX="1"
 export MOZ_DISABLE_GMP_SANDBOX="1"
 export MOZ_DISABLE_CONTENT_SANDBOX="1"
@@ -157,6 +156,12 @@ fi
 # Perform Final Configuration
 echo "${GREEN}I: Performing Final Configuration${NOATTR}"
 dpkg-reconfigure tzdata ||:
+
+# Multi-Launguage environment
+if ! dpkg-reconfigure locales; then
+	echo "${GREEN}I: The language environment isn't configured: falling back to C.UTF-8${NOATTR}"
+	echo "export LANG=C.UTF-8" >> /etc/profile.d/50-debdroid-gros-integration.sh
+fi
 
 # Implementation of hostname, this feature uniquely identifies your container, see https://github.com/termux/proot/issues/80 issue for more details
 hostname_info=$(
