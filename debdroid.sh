@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 #############################################
-# DebDroid 3.14 (debdroid-ng) 2020, 2021
+# DebDroid 3.16 (debdroid-ng) 2020, 2021
 # This script will allow you to install Debian on your Device with just a few taps
 # This script is also portable, all links, repos will be read on a single file
 # So to make it easier to fork and to create debdroid-based projects
