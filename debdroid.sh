@@ -21,7 +21,7 @@ URL_REPO="https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master"
 TEMPDIR="/data/data/com.termux/files/usr/tmp/.debdroid-cachedir"
 
 # Script Version
-SCRIPT_VER="3.14"
+SCRIPT_VER="3.16"
 
 # Colored Environment Variables
 if [ -e "$(command -v tput)" ]; then
