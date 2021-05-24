@@ -23,20 +23,22 @@ This script also self-updating so you can update it anytime by downloading it, t
 # Installation
 You can install DebDroid by entering:
 ```
-curl --location https://git.io/Jt68D > debdroid.sh && chmod 777 debdroid.sh
+curl --location https://git.io/Jt68D > debdroid
+mv debdroid $PREFIX/bin
+chmod +x $PREFIX/bin/debdroid
 ```
 
 You can install Debian in just a few keystrokes by doing:
 ```
-debdroid.sh install
+debdroid install
 ```
 This will install Debian Buster, If you want to install other than Debian Buster, you can specify a suite by doing
 ```
-debdroid.sh install sid
+debdroid install sid
 ```
 or
 ```
-debdroid.sh install oldstable
+debdroid install oldstable
 ```
 
 A list of supported releases can be listed by typing `debdroid install list`
@@ -53,16 +55,16 @@ In case you interrupted your installation, you can do `debdroid.sh reconfigure` 
 # Starting Debian
 You can start Debian by typing:
 ```
-debdroid.sh launch
+debdroid launch
 ```
 Or to enter root shell:
 ```
-debdroid.sh launch-asroot
+debdroid launch-asroot
 ```
 
 If you want to enter debian other than shell, you can pass commands by doing:
 ```
-debdroid.sh launch [command]
+debdroid launch [command]
 ```
 
 ## Customizing your Debian Container
@@ -119,7 +121,7 @@ echo 1 > /var/debdroid/binfmt/corrosive-session
 # Deleting Debian Container
 If you don't want to use debian anymore, you can do
 ```
-debdroid.sh purge
+debdroid purge
 ```
 
 Keep in mind that if you do `termux-reset` then your debian container will not be deleted, although the next time you do that will do a dependency install if possible
