@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 #############################################
-# DebDroid 3.16 (debdroid-ng) 2020, 2021
+# DebDroid 3.18 (debdroid-ng) 2020, 2021
 # This script will allow you to install Debian on your Device with just a few taps
 # This script is also portable, all links, repos will be read on a single file
 # So to make it easier to fork and to create debdroid-based projects
@@ -21,7 +21,7 @@ URL_REPO="https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master"
 TEMPDIR="/data/data/com.termux/files/usr/tmp/.debdroid-cachedir"
 
 # Script Version
-SCRIPT_VER="3.16"
+SCRIPT_VER="3.18"
 
 # Colored Environment Variables
 if [ -e "$(command -v tput)" ]; then
@@ -148,6 +148,7 @@ perform_configuration(){
         echo "${RED}E: The Debian Container is invalid, Aborting!!!${NOATTR}"
         exit 2
     fi
+    printf "\e]2;DebDroid - Configuring the Debian Container...\a"
     curl --silent --fail --location --output "${DEBIAN_FS}/var/debdroid/libreconf.so" "${URL_REPO}/debian_config.sh"
     chmod 755 "${DEBIAN_FS}/var/debdroid/libreconf.so"
     # Add Proper /run/shm binding
@@ -200,6 +201,7 @@ install_debian(){
             source <(curl -sSL ${URL_REPO}/suite/dlmirrors/buster)
             ;;
     esac
+    printf "\e]2;DebDroid - Installing the Debian Container...\a"
     echo "${GREEN}I: The following distribution was requested: ${YELLOW}${DEBIAN_NAME}${NOATTR}"
     echo "${GREEN}I: Downloading the Image file${NOATTR}"
     curl --output "${TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" --location --fail "${CURL_DOWNLOAD_LINK}"
@@ -210,6 +212,7 @@ install_debian(){
             exit 2
         fi
     echo "${GREEN}I: Extracting the Image file${NOATTR}"
+    printf "\e]2;DebDroid - Extracting the Image file...\a"
     mkdir -p "${DEBIAN_FS}"
     proot --link2symlink -0 tar --preserve-permissions --delay-directory-restore --warning=no-unknown-keyword -xf "${TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz" --exclude dev -C "${DEBIAN_FS}" ||:
     echo "${GREEN}I: Configuring the base system, this may take some time${NOATTR}"
@@ -234,6 +237,7 @@ uninstall-debian(){
         fi
     case "${userinput}" in
         Y*|y*)
+            printf "\e]2;DebDroid - Uninstalling the Debian Container...\a"
             echo "${YELLOW}I: Deleting the Container (debian)${NOATTR}"
                 if [ ! "${NO_CHMOD}" == "y" ]; then
                     chmod 777 "${DEBIAN_FS}" -R ||:
@@ -348,6 +352,7 @@ backup_debian_container(){
         fi
     echo "${GREEN}I: The Tarball will be saved in $(realpath -m ${args})${NOATTR}"
     echo "${YELLOW}I: Backing up the container... this may take some time${NOATTR}"
+    printf "\e]2;DebDroid - Backing up Debian Container...\a"
         if tar --preserve-permissions -zcf "${args}" -C "${PREFIX}/.." debian; then
             echo "${GREEN}I: The Container successfully exported${NOATTR}"
             exit 0
@@ -385,6 +390,7 @@ restore_debian_container(){
                     ;;
             esac
     echo "${YELLOW}I: Restoring the Container...${NOATTR}"
+    printf "\e]2;DebDroid - Restoring Debian Container...\a"
         if tar --recursive-unlink --delay-directory-restore --preserve-permissions -zxf "$(realpath -m ${args})" -C "${PREFIX}/.."; then
             echo "${GREEN}I: The Container successfully imported${NOATTR}"
             exit 0
