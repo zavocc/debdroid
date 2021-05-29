@@ -115,6 +115,15 @@ case "${argument}" in
     x11-basic|x11-core)
         source <(curl -sSL --insecure ${URL_REPO}/tasks/x11-basic)
         ;;
+    fluxbox)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/fluxbox)
+        ;;
+    twm)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/twm)
+        ;;
+    i3|i3wm)
+        source <(curl -sSL --insecure ${URL_REPO}/tasks/i3wm)
+        ;;
     chromium|chromium-browser)
         source <(curl -sSL --insecure ${URL_REPO}/tasks/chromium)
         ;;
