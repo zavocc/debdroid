@@ -1,6 +1,6 @@
 prep_install_desktop(){
-    echo "${GREEN}I: Installing the Basic X11 Desktop Package, This may take some time${NOATTR}"
-    sudo apt install openbox feh xfce4-terminal dbus-x11 pcmanfm firefox-esr tigervnc-standalone-server tigervnc-xorg-extension -yy || :
+    echo "${GREEN}I: Installing the Fluxbox Desktop Package, This may take some time${NOATTR}"
+    sudo apt install fluxbox feh xfce4-terminal dbus-x11 pcmanfm firefox-esr tigervnc-standalone-server tigervnc-xorg-extension -yy || :
 }
 
 prep_install_desktop
@@ -10,7 +10,7 @@ sudo dpkg --configure -a
 
 # Check if dependencies installed (Base)
 check_deps(){
-for d in /usr/bin/{firefox,openbox-session,feh,pcmanfm,dbus-launch,xfce4-terminal,tigervncserver}; do test -e ${d}; done
+for d in /usr/bin/{firefox,fluxbox,feh,pcmanfm,dbus-launch,xfce4-terminal,tigervncserver}; do test -e ${d}; done
 }
 
 if ! check_deps; then
@@ -20,7 +20,7 @@ fi
 
 # Create Start Script
 echo "${GREEN}I: Creating Start Script${NOATTR}"
-cat > /usr/local/bin/startx11 <<- EOM
+cat > /usr/local/bin/startfluxbox <<- EOM
 #!/bin/bash
 
 check_lock_files(){
@@ -32,7 +32,7 @@ if check_lock_files; then
     exit 2
 fi
 
-echo "${GREEN}Starting VNC Server with Session: ${YELLOW}Openbox${NOATTR}"
+echo "${GREEN}Starting VNC Server with Session: ${YELLOW}Fluxbox${NOATTR}"
 echo "${GREEN}Running at port ${YELLOW}:51${NOATTR}"
 
 if [ ! -e /var/debdroid/vnc-resolution ]; then
@@ -54,9 +54,9 @@ echo "${GREEN}Running in the foreground. to terminate it hit Ctrl-C"
 echo "However the safest option is to log-out from the Menu${NOATTR}"
 
 termux-open vnc://localhost:51 &
-tigervncserver -SecurityTypes none -xstartup /usr/bin/openbox-session -fg -autokill -geometry "\$(cat /var/debdroid/vnc-resolution)" -localhost no --I-KNOW-THIS-IS-INSECURE :51
+tigervncserver -SecurityTypes none -xstartup /usr/bin/fluxbox -fg -autokill -geometry "\$(cat /var/debdroid/vnc-resolution)" -localhost no --I-KNOW-THIS-IS-INSECURE :51
 EOM
-chmod 755 /usr/local/bin/startx11
+chmod 755 /usr/local/bin/startfluxbox
 
-echo "${GREEN}I: Successfully Installed ${YELLOW}x11-basic${GREEN}, You can start the session by typing ${YELLOW}startx11${NOATTR}"
+echo "${GREEN}I: Successfully Installed ${YELLOW}fluxbox${GREEN}, You can start the session by typing ${YELLOW}startfluxbox${NOATTR}"
 exit 0
