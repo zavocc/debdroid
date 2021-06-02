@@ -53,7 +53,7 @@ list_packages(){
     echo "${YELLOW} mate-core:${GREEN} MATE Desktop Base Packages (Replaces ${YELLOW}mate-desktop${GREEN})"
     echo "Approx: 1.4GB"
     echo ""
-    echo "${YELLOW} x11-basic:${GREEN} Basic X11 Desktop with Openbox and some applications (This might be boring but good for low end devices)"
+    echo "${YELLOW} openbox:${GREEN} Basic X11 Desktop with Openbox and some applications (This might be boring but good for low end devices)"
     echo "Approx: 600MB"
     echo ""
     echo "${YELLOW} chromium:${GREEN} Chromium Web Browser (This target may not work properly on armhf devices but may work with some effort)"
@@ -112,7 +112,7 @@ case "${argument}" in
     mate-core)
         source <(curl -sSL --insecure ${URL_REPO}/tasks/mate-core)
         ;;
-    x11-basic|x11-core)
+    x11-basic|x11-core|openbox*)
         source <(curl -sSL --insecure ${URL_REPO}/tasks/x11-basic)
         ;;
     fluxbox)
