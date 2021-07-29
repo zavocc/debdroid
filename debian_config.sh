@@ -45,8 +45,8 @@ echo "${GREEN}I: Perfoming Necessary fixes${NOATTR}"
 dpkg --configure -a ||:
 apt install -f -y ||:
 echo "${GREEN}I: Replacing System Binaries with a stub${NOATTR}"
-ln -fs /dev/null /usr/local/bin/udevadm
-ln -fs /dev/null /usr/local/bin/dpkg-statoverride
+ln -fs /bin/true /usr/local/bin/udevadm
+ln -fs /bin/true /usr/bin/dpkg-statoverride
 echo "${GREEN}I: Trying to reconfigure it once again: fixes dpkg errors${NOATTR}"
 dpkg --configure -a
 
