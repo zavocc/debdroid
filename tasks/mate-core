@@ -16,11 +16,6 @@ for d in firefox dbus-launch mate-session tigervncserver; do
 	fi
 done
 
-if ! check_deps; then
-	echo "${RED}W: An Error Has Occurred during the installation, please try again${NOATTR}"
-	exit 2
-fi
-
 # Create Start Script
 echo "${GREEN}I: Creating Start Script${NOATTR}"
 cat > /usr/local/bin/mate-session <<- EOM
