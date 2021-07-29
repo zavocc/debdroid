@@ -1,6 +1,6 @@
 prep_install_desktop(){
-    echo "${GREEN}I: Installing the XFCE Desktop Package, This may take some time, (NOTE: This will replace ${YELLOW}xfce4-core${GREEN} and you need a lot of storage space)${NOATTR}"
-    sudo apt install xfce4 xfce4-goodies vlc dbus-x11 firefox-esr gimp libreoffice tigervnc-standalone-server tigervnc-xorg-extension -yy || :
+	echo "${GREEN}I: Installing the XFCE Desktop Package, This may take some time, (NOTE: This will replace ${YELLOW}xfce4-core${GREEN} and you need a lot of storage space)${NOATTR}"
+	sudo apt install xfce4 xfce4-goodies vlc dbus-x11 firefox-esr gimp libreoffice tigervnc-standalone-server tigervnc-xorg-extension -yy || :
 }
 
 prep_install_desktop
@@ -14,8 +14,8 @@ for d in /usr/bin/{dbus-launch,firefox,vlc,gimp,libreoffice,xfce4-session,mousep
 }
 
 if ! check_deps; then
-    echo "${RED}W: An Error Has Occurred during the installation, please try again${NOATTR}"
-    exit 2
+	echo "${RED}W: An Error Has Occurred during the installation, please try again${NOATTR}"
+	exit 2
 fi
 
 # Create Start Script
@@ -24,30 +24,30 @@ cat > /usr/local/bin/startxfce4 <<- EOM
 #!/bin/bash
 
 check_lock_files(){
-    for l in /tmp/.X51-lock /tmp/.X11-unix/X51; do test -e "\${l}"; done
+	for l in /tmp/.X51-lock /tmp/.X11-unix/X51; do test -e "\${l}"; done
 }
 
 if check_lock_files; then
-    echo "${RED}E: Another VNC Server is running at port 5951, Please Close it first${NOATTR}"
-    exit 2
+	echo "${RED}E: Another VNC Server is running at port 5951, Please Close it first${NOATTR}"
+	exit 2
 fi
 
 echo "${GREEN}Starting VNC Server with Session: ${YELLOW}XFCE${NOATTR}"
 echo "${GREEN}Running at port ${YELLOW}:51${NOATTR}"
 
 if [ ! -e /var/debdroid/vnc-resolution ]; then
-    set_resolution=\$(
-        dialog --title "Setup VNC Resolution" \
-            --inputbox "Enter your Resolution for your VNC Display (WxH), You can change settings later, you may leave it blank for defaults" 11 40 \
-            3>&1 1>&2 2>&3 3>&-
-    )
+	set_resolution=\$(
+		dialog --title "Setup VNC Resolution" \
+			--inputbox "Enter your Resolution for your VNC Display (WxH), You can change settings later, you may leave it blank for defaults" 11 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
 
-    if [ ! -z "\${set_resolution}" ]; then
-        echo "\${set_resolution}" > /var/debdroid/vnc-resolution
-    else
-        echo "${GREEN}I: Using the Default Desired Resolution: ${YELLOW}1280x720${NOATTR}"
-        echo "1280x720" > /var/debdroid/vnc-resolution
-    fi
+	if [ ! -z "\${set_resolution}" ]; then
+		echo "\${set_resolution}" > /var/debdroid/vnc-resolution
+	else
+		echo "${GREEN}I: Using the Default Desired Resolution: ${YELLOW}1280x720${NOATTR}"
+		echo "1280x720" > /var/debdroid/vnc-resolution
+	fi
 fi
 
 echo "${GREEN}Running in the foreground. to terminate it hit Ctrl-C"

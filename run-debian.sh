@@ -158,7 +158,7 @@ cat > "${DEBIAN_FS}/var/debdroid/binds/fuptime" <<- EOM
 9694.45 28998.24
 EOM
 # /proc/sys/kernel/cap_last_cap (needed for dbus)
-echo 0 > "${DEBIAN_FS}/var/debdroid/binds/fcap_last_cap" 
+echo 0 > "${DEBIAN_FS}/var/debdroid/binds/fcap_last_cap"
 }
 
 # Load procfiles
@@ -203,10 +203,10 @@ prootargs="--link2symlink --kill-on-exit"
 prootargs+=" --root-id -L -H -p"
 # Check for Android Version
 case "$(getprop ro.build.version.release)" in
-    5*|6*) ;;
-    *)
-    prootargs+=" --sysvipc"
-    ;;
+	5*|6*) ;;
+	*)
+	prootargs+=" --sysvipc"
+	;;
 esac
 prootargs+=" --rootfs=${DEBIAN_FS}"
 prootargs+=" --cwd=/root"

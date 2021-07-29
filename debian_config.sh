@@ -1,15 +1,15 @@
 #!/bin/bash
 # Colored Environment Variables
 if [ -e "$(command -v tput)" ]; then
-    RED="$(tput setaf 1)$(tput bold)"
-    GREEN="$(tput setaf 2)$(tput bold)"
-    YELLOW="$(tput setaf 3)$(tput bold)"
-    NOATTR="$(tput sgr0)"
+	RED="$(tput setaf 1)$(tput bold)"
+	GREEN="$(tput setaf 2)$(tput bold)"
+	YELLOW="$(tput setaf 3)$(tput bold)"
+	NOATTR="$(tput sgr0)"
 else
-    RED=""
-    GREEN=""
-    YELLOW=""
-    NOATTR=""
+	RED=""
+	GREEN=""
+	YELLOW=""
+	NOATTR=""
 fi
 
 # Needed to Indicate if the configuration is still ongoing
@@ -92,7 +92,7 @@ cat > /usr/local/bin/addusers <<- EOM
 ########################################################################
 # This Script allows to create one or more users easily
 # And can be granted with sudo access automatically
-# 
+#
 # For Changing Users, user must value a username within echo from file:
 # /var/debdroid/userinfo.rc
 ########################################################################
@@ -130,18 +130,18 @@ chmod 755 /usr/local/bin/debianize
 
 # Preload libdisableselinux.so library to avoid messing up Debian from Android Security Features
 case $(dpkg --print-architecture) in
-    arm64|aarch64)
-        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/arm64/libdisableselinux.so"
-        ;;
-    armhf)
-        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/armhf/libdisableselinux.so"
-        ;;
-    i*86|x86)
-        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/i386/libdisableselinux.so"
-        ;;
-    amd64|x86_64)
-        curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/amd64/libdisableselinux.so"
-        ;;
+	arm64|aarch64)
+		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/arm64/libdisableselinux.so"
+		;;
+	armhf)
+		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/armhf/libdisableselinux.so"
+		;;
+	i*86|x86)
+		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/i386/libdisableselinux.so"
+		;;
+	amd64|x86_64)
+		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/amd64/libdisableselinux.so"
+		;;
 esac
 
 chmod 755 /usr/local/lib/libdisableselinux.so
@@ -149,8 +149,8 @@ echo "/usr/local/lib/libdisableselinux.so" > /etc/ld.so.preload
 
 # Enable Interoperability if possible
 if [ ! -e /var/debdroid/binfmt/corrosive-session ]; then
-    mkdir /var/debdroid/binfmt -p
-    echo 1 > /var/debdroid/binfmt/corrosive-session
+	mkdir /var/debdroid/binfmt -p
+	echo 1 > /var/debdroid/binfmt/corrosive-session
 fi
 
 # Perform Final Configuration
@@ -165,48 +165,48 @@ fi
 
 # Implementation of hostname, this feature uniquely identifies your container, see https://github.com/termux/proot/issues/80 issue for more details
 hostname_info=$(
-        dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
-            --nocancel --inputbox "Enter your hostname to uniquely identify your container, you may leave it blank for defaults, you may customize it again later by editing /etc/hostname" 12 40 \
-            3>&1 1>&2 2>&3 3>&- 
-    )
+		dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
+			--nocancel --inputbox "Enter your hostname to uniquely identify your container, you may leave it blank for defaults, you may customize it again later by editing /etc/hostname" 12 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
 
 if [ ! -z "${hostname_info}" ]; then
-    echo "${hostname_info}" > /etc/hostname
+	echo "${hostname_info}" > /etc/hostname
 else
-    echo "${YELLOW}N: Falling Back to hostname: termux-debian${NOATTR}"
-    echo "termux-debian" > /etc/hostname
+	echo "${YELLOW}N: Falling Back to hostname: termux-debian${NOATTR}"
+	echo "termux-debian" > /etc/hostname
 fi
 
 if [ ! -e /var/debdroid/userinfo.rc ]; then
-    env_username=$(
-        dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
-            --nocancel --inputbox "Enter your desired username for your default user account" 9 40 \
-            3>&1 1>&2 2>&3 3>&-
-    )
-    if [ ! -z "${env_username}" ]; then
-        echo "${env_username}" > /var/debdroid/userinfo.rc
-        useradd -s /bin/bash -m "${env_username}"
-    else
-        echo "${RED}N: No username is specified, falling back to defaults${NOATTR}"
-        sleep 5
-        echo "user" > /var/debdroid/userinfo.rc
-        useradd -s /bin/bash -m "user"
-    fi
-    echo "$(cat /var/debdroid/userinfo.rc)   ALL=(ALL:ALL)   NOPASSWD:ALL" > /etc/sudoers.d/99-debdroid-user
-    env_password=$(
-        dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
-            --nocancel --insecure --passwordbox "Enter your password for your default user account" 9 40 \
-            3>&1 1>&2 2>&3 3>&-
-    )
-    if [ ! -z "${env_password}" ]; then
-        echo "$(cat /var/debdroid/userinfo.rc)":"${env_password}" | chpasswd
-    else
-        echo "${RED}N: No password is specified, the default password is ${YELLOW}passw0rd${NOATTR}"
-        sleep 5
-        echo "$(cat /var/debdroid/userinfo.rc)":"passw0rd" | chpasswd
-    fi
+	env_username=$(
+		dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
+			--nocancel --inputbox "Enter your desired username for your default user account" 9 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+	if [ ! -z "${env_username}" ]; then
+		echo "${env_username}" > /var/debdroid/userinfo.rc
+		useradd -s /bin/bash -m "${env_username}"
+	else
+		echo "${RED}N: No username is specified, falling back to defaults${NOATTR}"
+		sleep 5
+		echo "user" > /var/debdroid/userinfo.rc
+		useradd -s /bin/bash -m "user"
+	fi
+	echo "$(cat /var/debdroid/userinfo.rc)   ALL=(ALL:ALL)   NOPASSWD:ALL" > /etc/sudoers.d/99-debdroid-user
+	env_password=$(
+		dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
+			--nocancel --insecure --passwordbox "Enter your password for your default user account" 9 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+	if [ ! -z "${env_password}" ]; then
+		echo "$(cat /var/debdroid/userinfo.rc)":"${env_password}" | chpasswd
+	else
+		echo "${RED}N: No password is specified, the default password is ${YELLOW}passw0rd${NOATTR}"
+		sleep 5
+		echo "$(cat /var/debdroid/userinfo.rc)":"passw0rd" | chpasswd
+	fi
 else
-    echo "${YELLOW}I: The User Account is already been set up... Skipping${NOATTR}"
+	echo "${YELLOW}I: The User Account is already been set up... Skipping${NOATTR}"
 fi
 
 rm /.setup_has_not_done
