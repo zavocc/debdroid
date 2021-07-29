@@ -9,9 +9,12 @@ echo "${GREEN}I: Doing Pending Configuration${NOATTR}"
 sudo dpkg --configure -a
 
 # Check if dependencies installed (Base)
-check_deps(){
-for d in /usr/bin/{dbus-launch,firefox,vlc,gimp,libreoffice,xfce4-session,mousepad,xfce4-taskmanager,tigervncserver}; do test -e ${d}; done
-}
+for d in dbus-launch firefox vlc gimp libreoffice xfce4-session mousepad xfce4-taskmanager tigervncserver; do
+	if ! command -v ${d} >/dev/null 2>&1; then
+		echo "${RED}W: An Error Has Occurred during the installation, please try again${NOATTR}"
+		exit 2
+	fi
+done
 
 if ! check_deps; then
 	echo "${RED}W: An Error Has Occurred during the installation, please try again${NOATTR}"
@@ -60,3 +63,4 @@ chmod 755 /usr/local/bin/startxfce4
 
 echo "${GREEN}I: Successfully Installed ${YELLOW}xfce4-desktop${GREEN}, You can start the session by typing ${YELLOW}startxfce4${NOATTR}"
 exit 0
+

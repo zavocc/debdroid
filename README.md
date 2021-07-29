@@ -4,7 +4,7 @@ DebDroid - Debian for Android OS!
 
 [![Discord](https://img.shields.io/discord/591914197219016707.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://bit.ly/WMCBDiscord) [![made-with-bash](https://img.shields.io/badge/Made%20with-Bash-1f425f.svg)](https://www.gnu.org/software/bash/) [![made-for-VSCode](https://img.shields.io/badge/Made%20for-VSCode-1f425f.svg)](https://code.visualstudio.com/)
 
-![debdroid](https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master/images/neofetch.png)
+![debdroid](./images/neofetch.png)
 
 # What is DebDroid?
 DebDroid is an Debian Installer for the Android OS, this method of installing Debian on Android does not require root access and you can run your favorite Linux Applications Easily
@@ -48,7 +48,7 @@ it will prompt you to enter your required information, this is necessary to capt
 * User: `user`
 * Password: `passw0rd`
 
-![userinput](https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master/images/userinput.png)
+![userinput](./images/userinput.png)
 
 In case you interrupted your installation, you can do `debdroid.sh reconfigure` or `debdroid.sh configure` although this can be used to refresh Debian Container or to update it
 
@@ -76,7 +76,7 @@ You can list of other tasks with `debianize list` command
 
 If you want to install chromium easily, you can do `debianize chromium` and you can run `chromium` command or launching it via desktop menu without needing to specify `--no-sandbox`
 
-![debianize-demo](https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master/images/debianize-chromium.gif)
+![debianize-demo](./images/debianize-chromium.gif)
 
 Although you will get problems when using it on `armhf` although it may work with some effort
 
@@ -105,7 +105,7 @@ If possible, you need to restart the container
 ## Running Termux Commands inside Debian
 It's also possible to run host commands in the guest, and this can be used to run programs which are not available to the debian repositories, this implementation is like from the feature of [WSL](https://docs.microsoft.com/en-us/windows/wsl/interop)
 
-![interoperability](https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master/images/termux-cmds-debian.jpg)
+![interoperability](./images/termux-cmds-debian.jpg)
 
 In some cases this may conflict with some dependencies or programs that is optimized for the usage with Termux and may cause some problems like compiling programs and having different libc linker, due to the way on [how they're set up between them](https://wiki.termux.com/wiki/Differences_from_Linux), or may impose security risks, if you don't want to happen, you can disable it by typing:
 ```

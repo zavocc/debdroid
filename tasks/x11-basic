@@ -9,9 +9,12 @@ echo "${GREEN}I: Doing Pending Configuration${NOATTR}"
 sudo dpkg --configure -a
 
 # Check if dependencies installed (Base)
-check_deps(){
-for d in /usr/bin/{firefox,openbox-session,feh,pcmanfm,dbus-launch,xfce4-terminal,tigervncserver}; do test -e ${d}; done
-}
+for d in firefox openbox-session feh pcmanfm dbus-launch xfce4-terminal tigervncserver; do
+	if command -v ${d} >/dev/null 2>&1; then
+		echo "${RED}W: An Error Has Occurred during the installation, please try again${NOATTR}"
+		exit 2
+	fi
+done
 
 if ! check_deps; then
 	echo "${RED}W: An Error Has Occurred during the installation, please try again${NOATTR}"

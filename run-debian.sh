@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/env bash
 # A Sourcefile to launch debian container within DebDroid
 # This is not a launch command, this is required by the debdroid launch script
 DEBIAN_FS="/data/data/com.termux/files/debian"

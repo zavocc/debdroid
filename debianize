@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #################################################
 # Debianize - Customize your Debian OS with Debianize
 # This script will allow you to install packages in just a few keystrokes

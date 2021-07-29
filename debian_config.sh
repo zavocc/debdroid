@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Colored Environment Variables
 if [ -e "$(command -v tput)" ]; then
 	RED="$(tput setaf 1)$(tput bold)"

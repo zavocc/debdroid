@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/env bash
 #############################################
 # DebDroid 3.18 (debdroid-ng) 2020, 2021
 # This script will allow you to install Debian on your Device with just a few taps
@@ -21,7 +21,7 @@ URL_REPO="https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master"
 TEMPDIR="/data/data/com.termux/files/usr/tmp/.debdroid-cachedir"
 
 # Script Version
-SCRIPT_VER="3.18"
+SCRIPT_VER="3.19"
 
 # Colored Environment Variables
 if [ -e "$(command -v tput)" ]; then
