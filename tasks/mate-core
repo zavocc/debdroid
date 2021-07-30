@@ -31,7 +31,7 @@ if check_lock_files; then
 fi
 
 echo "${GREEN}Starting VNC Server with Session: ${YELLOW}MATE${NOATTR}"
-echo "${GREEN}Running at port ${YELLOW}:51${NOATTR}"
+echo "${GREEN}Running at port ${YELLOW}:5901${NOATTR}"
 
 if [ ! -e /var/debdroid/vnc-resolution ]; then
 	set_resolution=\$(
@@ -51,8 +51,8 @@ fi
 echo "${GREEN}Running in the foreground. to terminate it hit Ctrl-C"
 echo "However the safest option is to log-out from the Menu${NOATTR}"
 
-termux-open vnc://localhost:51 &
-tigervncserver -SecurityTypes none -xstartup /usr/bin/mate-session -fg -autokill -geometry "\$(cat /var/debdroid/vnc-resolution)" -localhost no --I-KNOW-THIS-IS-INSECURE :51
+termux-open vnc://localhost:5901 &
+tigervncserver -SecurityTypes none -xstartup /usr/bin/mate-session -fg -autokill -geometry "\$(cat /var/debdroid/vnc-resolution)" -localhost no --I-KNOW-THIS-IS-INSECURE :5901
 EOM
 chmod 755 /usr/local/bin/mate-session
 

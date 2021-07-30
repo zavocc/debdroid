@@ -58,7 +58,7 @@ apt update
 # Setup Environment Variables
 echo "${GREEN}I: Setting up Environment Variables${NOATTR}"
 cat > /etc/profile.d/50-debdroid-gros-integration.sh <<- EOM
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ ! -e "/var/debdroid/.hushlogin" ]; then
 echo "${GREEN} Welcome to Debian!"
@@ -73,9 +73,6 @@ echo ""
 echo "You can also setup your debian needs with the command ${YELLOW}debianize${GREEN}. this script will automate the entire process of installing your needs"
 echo ""
 echo "All of your files are living outside the Termux's Prefix Directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container"
-echo ""
-echo "We hope you enjoy DebDroid, share your experience via Discord or make an issue report in"
-echo "${YELLOW}https://github.com/WMCB-Tech/debdroid-ng/issues${NOATTR}"
 touch /var/debdroid/.hushlogin
 fi
 
@@ -88,7 +85,7 @@ EOM
 
 # Create 'addusers' script
 cat > /usr/local/bin/addusers <<- EOM
-#!/bin/bash
+#!/usr/bin/env bash
 ########################################################################
 # This Script allows to create one or more users easily
 # And can be granted with sudo access automatically
