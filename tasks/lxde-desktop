@@ -52,7 +52,7 @@ echo "${GREEN}Running in the foreground. to terminate it hit Ctrl-C"
 echo "However the safest option is to log-out from the Menu${NOATTR}"
 
 termux-open vnc://localhost:5951 &
-tigervncserver -SecurityTypes none -xstartup /usr/bin/startlxde -fg -autokill -geometry "\$(cat /var/debdroid/vnc-resolution)" -localhost no --I-KNOW-THIS-IS-INSECURE :5951
+tigervncserver -SecurityTypes none -xstartup /usr/bin/startlxde -fg -autokill -geometry "\$(cat /var/debdroid/vnc-resolution)" -localhost no --I-KNOW-THIS-IS-INSECURE :51
 EOM
 chmod 755 /usr/local/bin/startlxde
 
