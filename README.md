@@ -4,8 +4,6 @@ DebDroid - Debian for Android OS! \
 
 ![debdroid](./images/neofetch.png)
 
-> **NOTICE:** I do not maintain this project anymore as i don't use it. feel free to fork
-
 # What is DebDroid?
 DebDroid is an Debian Installer for the Android OS, this method of installing Debian on Android does not require root access and you can run your favorite Linux Applications Easily
 
