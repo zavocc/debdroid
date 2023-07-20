@@ -136,7 +136,7 @@ run-proot-cmd(){
 		--cwd=/root \
 		/usr/bin/env -i \
 			PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin \
-			TERM=${TERM} \
+			TERM=${TERM:-xterm-256color} \
 			HOME=/root \
 			USER=root \
 			"$@"
@@ -238,10 +238,12 @@ install_debian(){
 uninstall-debian(){
 	local userinput
 	read -p "${RED}N: Do you want to delete the Debian Container? [y/N] ${NOATTR}" userinput
-		if [ ! -e "${DEBDROID__DEBIAN_FS}" ]; then
-			echo "${YELLOW}I: Debian Container isn't installed, Continuing Anyway...${NOATTR}"
-			NO_CHMOD=y
-		fi
+
+	if [ ! -e "${DEBDROID__DEBIAN_FS}" ]; then
+		echo "${YELLOW}I: Debian Container isn't installed, Continuing Anyway...${NOATTR}"
+		NO_CHMOD=y
+	fi
+	
 	case "${userinput}" in
 		Y*|y*)
 			printf "\e]2;DebDroid - Uninstalling the Debian Container...\a"
@@ -270,27 +272,43 @@ uninstall-debian(){
 }
 
 # Function to run Debian Container (Actually, this is just a wrapper to make it portable)
-launch-debian(){
+launch_debian(){
 	local extcmd
 	local prootargs
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/libdebdroid.so" ]; then
 		echo "${RED}E: The Debian Container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
 		exit 2
 	fi
-	
-	# Show help subcommand if help was invoked
-	if [ "$1" == "--help" ] || [ "$1" == "help" ]; then
-		echo "${GREEN}This command will launch Debian System as regular user"
-		echo ""
-		echo "The Basic Syntax follows as:"
-		echo "${YELLOW} debdroid launch${GREEN}"
-		echo ""
-		echo "To run commands other than shell, you can specify external command by doing:"
-		echo "${YELLOW} debdroid launch [command]${GREEN}"
-		echo ""
-		echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
-		exit 0
-	fi
+
+	 while [ $# -ge 1 ]; do
+		case "$1" in
+			--)
+				shift 1;
+				break;
+				;;
+			--asroot)
+				rootmode=true;
+				shift 1;
+				break;
+				;;
+			-h|--help)
+				echo "${GREEN}This command will launch Debian System as regular user"
+				echo ""
+				echo "The basic syntax follows as:"
+				echo "${YELLOW} debdroid launch${GREEN}"
+				echo ""
+				echo "To run commands other than shell, you can specify external command by doing:"
+				echo "${YELLOW} debdroid launch [command]${GREEN}"
+				echo ""
+				echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
+				exit;
+				;;
+			*)
+				echo "${RED}E: Invalid option... quitting${NOATTR}"
+				exit 1;
+				;;
+		esac
+	done
 
 	# Check for an ongoing setup
 	if [ -e "${DEBDROID__DEBIAN_FS}/.setup_has_not_done" ]; then
@@ -300,10 +318,15 @@ launch-debian(){
 
 	# Source the file
 	source "${DEBDROID__DEBIAN_FS}/var/debdroid/libdebdroid.so"
+
 	# Define External Command
 	extcmd="$@"
 
 	# Launch PRoot
+	if [ "${rootmode:-}" == true ]; then
+		DEBIAN_USER_INFO="root"
+	fi
+
 	if [ ! -z "${extcmd}" ]; then
 		proot -k "${kompat_source}" ${prootargs} su -l "${DEBIAN_USER_INFO}" -c "${extcmd}"
 	else
