@@ -22,7 +22,7 @@ DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid-ng/2.0"
 DEBDROID__TEMPDIR="${TMPDIR}/.debdroid-cachedir"
 
 # Script Version
-SCRIPT_VER="4.0"
+DEBDROID__SCRIPT_VER="4.0"
 
 # Colored Environment Variables
 if [ -e "$(command -v tput)" ]; then
@@ -41,23 +41,18 @@ fi
 # Don't run as root
 if [ "$(id -u)" == 0 ]; then
 	echo "${RED}E: running this script is discouraged and therefore not being used by root user${NOATTR}"
-	exit 2
+	exit 1
 fi
 
 # Create Temporary Directory (We don't use mktemp as to be used for update delay caching)
 mkdir -p "${DEBDROID__TEMPDIR}"
 
-# Function to check updates
-check_update_cache(){
-	if [ ! "$(curl --silent --fail --location ${DEBDROID__URL_REPO}/version.txt)" == "${SCRIPT_VER}" ]; then
-		echo "${YELLOW}I: A New Version of this script is available, you may install a new version over this script${NOATTR}"
-		touch "${DEBDROID__TEMPDIR}/update-cache-lock"
-	fi
-}
-
 check_update(){
 	if curl https://google.com --fail --silent --insecure >/dev/null; then
-		check_update_cache
+		if [ ! "$(curl --silent --fail --location ${DEBDROID__URL_REPO}/version.txt)" == "${DEBDROID__SCRIPT_VER}" ]; then
+			echo "${YELLOW}I: A New Version of this script is available, you may install a new version over this script${NOATTR}"
+			touch "${DEBDROID__TEMPDIR}/update-cache-lock"
+		fi
 	else
 		echo "${YELLOW}N: Cannot Perform Update: Network is down. Skipping....."
 	fi
@@ -110,24 +105,11 @@ show_help(){
 	echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
 }
 
-# Function to Add Android Groups if necessary
-debdroid_setup_groups(){
-	echo "aid_$(id -un):x:$(id -u):$(id -g):Android Groups:/:/usr/sbin/nologin" >> "${DEBDROID__DEBIAN_FS}/etc/passwd"
-	echo "aid_$(id -un):*:18446:0:99999:7:::" >> "${DEBDROID__DEBIAN_FS}/etc/shadow"
-	local g
-		for g in $(id -G); do
-			echo "aid_$(id -gn "$g"):x:${g}:root,aid_$(id -un)" >> "${DEBDROID__DEBIAN_FS}/etc/group"
-			if [ -f "${DEBDROID__DEBIAN_FS}/etc/gshadow" ]; then
-				echo "aid_$(id -gn "$g"):*::root,aid_$(id -un)" >> "${DEBDROID__DEBIAN_FS}/etc/gshadow"
-			fi
-		done
-}
-
 # Function to enter roofs
-run-proot-cmd(){
+run_proot_cmd(){
 	unset LD_PRELOAD
 	proot --link2symlink --kill-on-exit \
-		-0 -p -L -H --kernel-release="5.4.0-debdroid" \
+		-0 -p -L -H --kernel-release="6.2.0-debdroid" \
 		--rootfs="${DEBDROID__DEBIAN_FS}" \
 		--bind="/dev" \
 		--bind="/proc" \
@@ -146,25 +128,37 @@ run-proot-cmd(){
 perform_configuration(){
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
 		echo "${RED}E: The Debian Container is invalid, Aborting!!!${NOATTR}"
-		exit 2
+		exit 1
 	fi
 	printf "\e]2;DebDroid - Configuring the Debian Container...\a"
-	curl --silent --fail --location --output "${DEBDROID__DEBIAN_FS}/var/debdroid/libreconf.so" "${DEBDROID__URL_REPO}/debian_config.sh"
-	chmod 755 "${DEBDROID__DEBIAN_FS}/var/debdroid/libreconf.so"
+	curl --silent --fail --location --output "${DEBDROID__DEBIAN_FS}/var/debdroid/debian_config.sh" "${DEBDROID__URL_REPO}/debian_config.sh"
+	chmod 755 "${DEBDROID__DEBIAN_FS}/var/debdroid/debian_config.sh"
 	# Add Proper /run/shm binding
 	mkdir -p "${DEBDROID__DEBIAN_FS}/run/shm"
+
 	# Setup Android Groups if necessary
-	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/group-setupdone.lock" ]; then
-		debdroid_setup_groups
-		touch "${DEBDROID__DEBIAN_FS}/var/debdroid/group-setupdone.lock"
+	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/.group-setupdone" ]; then
+		echo "aid_$(id -un):x:$(id -u):$(id -g):Android Groups:/:/usr/sbin/nologin" >> "${DEBDROID__DEBIAN_FS}/etc/passwd"
+		echo "aid_$(id -un):*:18446:0:99999:7:::" >> "${DEBDROID__DEBIAN_FS}/etc/shadow"
+		local g
+		for g in $(id -G); do
+			echo "aid_$(id -gn "$g"):x:${g}:root,aid_$(id -un)" >> "${DEBDROID__DEBIAN_FS}/etc/group"
+			if [ -f "${DEBDROID__DEBIAN_FS}/etc/gshadow" ]; then
+				echo "aid_$(id -gn "$g"):*::root,aid_$(id -un)" >> "${DEBDROID__DEBIAN_FS}/etc/gshadow"
+			fi
+		done
+		touch "${DEBDROID__DEBIAN_FS}/var/debdroid/.group-setupdone"
 	fi
-	# Run Configuration Wizard
-	run-proot-cmd "/var/debdroid/libreconf.so"
+
+	# Run Configuration Step
+	run_proot_cmd "/var/debdroid/debian_config.sh"
 }
 
 # Function to install debian
-install_debian(){
-	local DEBIAN_SUITE
+install_debian(){}
+	local curl_download_link
+	local debian_name
+	local debian_suite
 	local thirtytwobit
 
 	while [ $# -ge 1 ]; do
@@ -202,16 +196,16 @@ install_debian(){
 		esac
 	done
 
-	DEBIAN_SUITE="$@"
+	debian_suite="$@"
 
 	# Check if the rootfs exists
 	if [ -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
-		echo "${RED}E: The Debian Container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${RED}?${NOATTR}"
-		exit 2
+		echo "${RED}E: The Debian container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${RED}?${NOATTR}"
+		exit 1
 	fi
 
 	echo "${GREEN}I: Retrieving download Links needed for installation${NOATTR}"
-	case "${DEBIAN_SUITE}" in
+	case "${debian_suite}" in
 		sid|unstable|debian-sid|debian-unstable)
 			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/sid)
 			;;
@@ -237,12 +231,12 @@ install_debian(){
 	esac
 
 	printf "\e]2;DebDroid - Installing the Debian Container...\a"
-	echo "${GREEN}I: The following distribution was requested: ${YELLOW}${DEBIAN_NAME}${NOATTR}"
+	echo "${GREEN}I: The following distribution was requested: ${YELLOW}${debian_name}${NOATTR}"
 
 	echo "${GREEN}I: Downloading the Image file${NOATTR}"
-	curl --output "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" --location --fail "${CURL_DOWNLOAD_LINK}"
-	if [ -e "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" ]; then
-		mv "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz"
+	curl --output "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" --location --fail "${CURL_DOWNLOAD_LINK}"
+	if [ -e "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" ]; then
+		mv "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz"
 	else
 		echo "${RED}E: An Error has occured during the installation: no such file or directory, please try again${NOATTR}"
 		return 1
@@ -251,11 +245,11 @@ install_debian(){
 	echo "${GREEN}I: Extracting the Image file${NOATTR}"
 	printf "\e]2;DebDroid - Extracting the Image file...\a"
 	mkdir -p "${DEBDROID__DEBIAN_FS}"
-	proot --link2symlink -0 tar --preserve-permissions --delay-directory-restore --warning=no-unknown-keyword -xf "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz" --exclude dev -C "${DEBDROID__DEBIAN_FS}" ||:
+	proot --link2symlink -0 tar --preserve-permissions --delay-directory-restore --warning=no-unknown-keyword -xf "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz" --exclude dev -C "${DEBDROID__DEBIAN_FS}" ||:
 
 	echo "${GREEN}I: Configuring the base system, this may take some time${NOATTR}"
 	mkdir "${DEBDROID__DEBIAN_FS}/var/debdroid/binds" -p
-	echo "${DEBIAN_NAME}" > "${DEBDROID__DEBIAN_FS}/etc/debian_chroot"
+	echo "${debian_name}" > "${DEBDROID__DEBIAN_FS}/etc/debian_chroot"
 	if perform_configuration; then
 		echo "${GREEN}I: The Debian Container Installed Successfully, you can run it by typing ${YELLOW}debdroid launch${NOATTR}"
 		return 0
@@ -268,18 +262,20 @@ install_debian(){
 # Function to Delete Debian
 uninstall_debian(){
 	local userinput
+	local no_chmod
+
 	read -p "${RED}N: Do you want to delete the Debian Container? [y/N] ${NOATTR}" userinput
 
 	if [ ! -e "${DEBDROID__DEBIAN_FS}" ]; then
 		echo "${YELLOW}I: Debian Container isn't installed, Continuing Anyway...${NOATTR}"
-		NO_CHMOD=y
+		no_chmod=y
 	fi
 	
 	case "${userinput}" in
 		Y*|y*)
 			printf "\e]2;DebDroid - Uninstalling the Debian Container...\a"
 			echo "${YELLOW}I: Deleting the Container (debian)${NOATTR}"
-			if [ ! "${NO_CHMOD}" == "y" ]; then
+			if [ ! "${no_chmod}" == "y" ]; then
 				chmod 777 "${DEBDROID__DEBIAN_FS}" -R
 			fi
 			
@@ -289,7 +285,7 @@ uninstall_debian(){
 				exit 0
 			else
 				echo "${RED}E: The Debian Container wasn't deleted successfully${NOATTR}"
-				exit 2
+				exit 1
 			fi
 			;;
 		N*|n*)
@@ -307,9 +303,10 @@ uninstall_debian(){
 launch_debian(){
 	local extcmd
 	local prootargs
+	local kompat_source
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/libdebdroid.so" ]; then
 		echo "${RED}E: The Debian container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
-		exit 2
+		exit 1
 	fi
 
 	 while [ $# -ge 1 ]; do
@@ -344,7 +341,7 @@ launch_debian(){
 	# Check for an ongoing setup
 	if [ -e "${DEBDROID__DEBIAN_FS}/.setup_has_not_done" ]; then
 		echo "${RED}N: An ongoing setup is running, please finish the configuration first before continuing${NOATTR}"
-		exit 2
+		exit 1
 	fi
 
 	# Source the file
@@ -372,14 +369,14 @@ backup_debian_container(){
 
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/libdebdroid.so" ]; then
 		echo "${RED}E: Cannot Backup the Debian Container: The Debian Container isn't Installed${NOATTR}"
-		exit 2
+		exit 1
 	fi
 
 	args="$@"
 
 	if [ -z "${args}" ]; then
 		echo "${RED}E: Please specify a filename to output the tarball${NOATTR}"
-		exit 2
+		exit 1
 	fi
 
 	echo "${GREEN}I: The Tarball will be saved in $(realpath -m ${args})${NOATTR}"
@@ -390,7 +387,7 @@ backup_debian_container(){
 		exit 0
 	else
 		echo "${RED}I: The Container isn't successfully exported${NOATTR}"
-		exit 2
+		exit 1
 	fi
 }
 
@@ -398,17 +395,19 @@ backup_debian_container(){
 restore_debian_container(){
 	local args
 	local userinput
+
 	args="$@"
+
 	if [ -z "${args}" ]; then
 		echo "${RED}E: Please specify a tarball for restoring the container${NOATTR}"
-		exit 2
+		exit 1
 	fi
 	
 	# Check if the tarball exists
-		if [ ! -e "${args}" ]; then
-			echo "${RED}E: The Tarball that you're trying to import dosen't exist${NOATTR}"
-			exit 2
-		fi
+	if [ ! -e "$(realpath -m ${args})" ]; then
+		echo "${RED}E: The Tarball that you're trying to import dosen't exist${NOATTR}"
+		exit 1
+	fi
 	
 	# User Input
 		read -p "${GREEN}I: Do you want to restore the container? all of the existing state will be lost [y/N]? ${NOATTR}" userinput
@@ -416,11 +415,11 @@ restore_debian_container(){
 				Y*|y*) ;;
 				N*|n*)
 					echo "${RED}I: Aborting...${NOATTR}"
-					exit 2
+					exit 1
 					;;
 				*)
 					echo "${RED}I: Aborting...${NOATTR}"
-					exit 2
+					exit 1
 					;;
 			esac
 	
@@ -432,10 +431,11 @@ restore_debian_container(){
 		exit 0
 	else
 		echo "${RED}I: The Container isn't successfully imported${NOATTR}"
-		exit 2
+		exit 1
 	fi
 }
 
+# shift chops off first arguments
 if [ $# -ge 1 ]; then
 	case "$1" in
 		install)
@@ -451,7 +451,7 @@ if [ $# -ge 1 ]; then
 				exit 0
 			else
 				echo "${RED}W: An error has occured during the reconfiguration${NOATTR}"
-				exit 2
+				exit 1
 			fi
 			;;
 		launch|login)

@@ -19,7 +19,7 @@ else
 fi
 
 # URL Link
-URL_REPO="https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master"
+DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid-ng/2.0"
 
 # Function to handle signal trap
 sigtrap(){
@@ -32,7 +32,7 @@ trap 'sigtrap' HUP INT KILL QUIT TERM
 # Abort if no curl program is available
 if [ ! -e "$(command -v curl)" ]; then
 	echo "${RED}No ${YELLOW}curl${GREEN} program is installed, Aborting....."
-	exit 2
+	exit 1
 fi
 
 # Package Lists
@@ -93,7 +93,7 @@ show_help(){
 argument="$1"
 if [ -z "${argument}" ]; then
 	show_help
-	exit 2
+	exit 1
 fi
 
 case "${argument}" in
@@ -141,8 +141,6 @@ case "${argument}" in
 		;;
 	*)
 		echo "${RED}E: Unknown Profile: ${YELLOW}${argument}${NOATTR}"
-		exit 2
+		exit 1
 		;;
 esac
-
-# END OF MESSAGE

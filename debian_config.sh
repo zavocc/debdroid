@@ -16,7 +16,7 @@ fi
 touch /.setup_has_not_done
 
 # Github repo page to fetch files
-URL_REPO="https://raw.githubusercontent.com/WMCB-Tech/debdroid-ng/master"
+DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid-ng/2.0"
 
 # Suppress Some Errors if trying to configure
 rm -rf /etc/ld.so.preload
@@ -93,26 +93,26 @@ cat > /usr/local/bin/addusers <<- EOM
 # For Changing Users, user must value a username within echo from file:
 # /var/debdroid/userinfo.rc
 ########################################################################
-ARGUMENT="\$@"
+ARGUMENT="\$1"
 
 if [ ! "\$(whoami)" == "root" ]; then
 echo "${RED}Please run me as root to use this tool${NOATTR}"
-exit 2
+exit 1
 fi
 
 # Check for zero argument
 if [ -z "\$ARGUMENT" ]; then
 echo "${RED}Please specify a user to add! this script only takes few arguments${NOATTR}"
-exit 2
+exit 1
 fi
 
 # Add a user
 echo "${GREEN}Adding a user \${ARGUMENT} and adding a sudoers file for a user to use administrative commands${NOATTR}"
 if ! useradd -m "\${ARGUMENT}" -s /bin/bash; then
-exit 2
+exit 1
 fi
 if ! passwd "\${ARGUMENT}"; then
-exit 2
+exit 1
 fi
 echo "\${ARGUMENT}  ALL=(ALL:ALL)   NOPASSWD:ALL" > "/etc/sudoers.d/99-debdroid-user-\${ARGUMENT}"
 echo "${GREEN}Successfully added a user \${ARGUMENT}${NOATTR}"
@@ -120,24 +120,24 @@ EOM
 
 chmod 755 /usr/local/bin/addusers
 
-curl --insecure --fail --silent --output /var/debdroid/libdebdroid.so "${URL_REPO}/run-debian.sh"
-curl --insecure --fail --silent --output /var/debdroid/mountpoints.conf "${URL_REPO}/mountpoints.conf"
-curl --insecure --fail --silent --output /usr/local/bin/debianize "${URL_REPO}/debianize"
+curl --insecure --fail --silent --output /var/debdroid/run_debian "${DEBDROID__URL_REPO}/run_debian.sh"
+curl --insecure --fail --silent --output /var/debdroid/mountpoints.conf "${DEBDROID__URL_REPO}/mountpoints.conf"
+curl --insecure --fail --silent --output /usr/local/bin/debianize "${DEBDROID__URL_REPO}/debianize"
 chmod 755 /usr/local/bin/debianize
 
 # Preload libdisableselinux.so library to avoid messing up Debian from Android Security Features
 case $(dpkg --print-architecture) in
 	arm64|aarch64)
-		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/arm64/libdisableselinux.so"
+		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${DEBDROID__URL_REPO}/libs/arm64/libdisableselinux.so"
 		;;
 	armhf)
-		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/armhf/libdisableselinux.so"
+		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${DEBDROID__URL_REPO}/libs/armhf/libdisableselinux.so"
 		;;
 	i*86|x86)
-		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/i386/libdisableselinux.so"
+		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${DEBDROID__URL_REPO}/libs/i386/libdisableselinux.so"
 		;;
 	amd64|x86_64)
-		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${URL_REPO}/libs/amd64/libdisableselinux.so"
+		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${DEBDROID__URL_REPO}/libs/amd64/libdisableselinux.so"
 		;;
 esac
 
@@ -152,7 +152,7 @@ fi
 
 # Perform Final Configuration
 echo "${GREEN}I: Performing Final Configuration${NOATTR}"
-dpkg-reconfigure tzdata ||:
+dpkg-reconfigure tzdata || :
 
 # Multi-Launguage environment
 if ! dpkg-reconfigure locales; then
@@ -180,6 +180,7 @@ if [ ! -e /var/debdroid/userinfo.rc ]; then
 			--nocancel --inputbox "Enter your desired username for your default user account" 9 40 \
 			3>&1 1>&2 2>&3 3>&-
 	)
+
 	if [ ! -z "${env_username}" ]; then
 		echo "${env_username}" > /var/debdroid/userinfo.rc
 		useradd -s /bin/bash -m "${env_username}"
@@ -189,12 +190,15 @@ if [ ! -e /var/debdroid/userinfo.rc ]; then
 		echo "user" > /var/debdroid/userinfo.rc
 		useradd -s /bin/bash -m "user"
 	fi
-	echo "$(cat /var/debdroid/userinfo.rc)   ALL=(ALL:ALL)   NOPASSWD:ALL" > /etc/sudoers.d/99-debdroid-user
+
+	echo "$(cat /var/debdroid/userinfo.rc)   ALL=(ALL:ALL)   NOPASSWD:ALL" > /etc/sudoers.d/debdroid-user
+
 	env_password=$(
 		dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
 			--nocancel --insecure --passwordbox "Enter your password for your default user account" 9 40 \
 			3>&1 1>&2 2>&3 3>&-
 	)
+
 	if [ ! -z "${env_password}" ]; then
 		echo "$(cat /var/debdroid/userinfo.rc)":"${env_password}" | chpasswd
 	else
