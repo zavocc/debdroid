@@ -312,6 +312,10 @@ launch_debian(){
 	local extcmd
 	local prootargs
 	local kompat_source
+	local DEBDROID__DEBIAN_HOSTNAME
+	local DEBDROID__DEBIAN_USER_INFO
+	local DEBDROID__DEBIAN_MOUNTPOINTS_INFO
+
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian" ]; then
 		echo "${RED}E: The Debian container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}" >&2
 		exit 1
@@ -360,13 +364,13 @@ launch_debian(){
 
 	# Launch PRoot
 	if [ "${rootmode:-}" == true ]; then
-		DEBIAN_USER_INFO="root"
+		DEBDROID__DEBIAN_USER_INFO="root"
 	fi
 
 	if [ ! -z "${extcmd}" ]; then
-		proot -k "${kompat_source}" ${prootargs} su -l "${DEBIAN_USER_INFO}" -c "${extcmd}"
+		proot -k "${kompat_source}" ${prootargs} su -l "${DEBDROID__DEBIAN_USER_INFO}" -c "${extcmd}"
 	else
-		proot -k "${kompat_source}" ${prootargs} su -l "${DEBIAN_USER_INFO}"
+		proot -k "${kompat_source}" ${prootargs} su -l "${DEBDROID__DEBIAN_USER_INFO}"
 	fi
 }
 
