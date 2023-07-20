@@ -127,7 +127,7 @@ run_proot_cmd(){
 # Function to reconfigure debian
 perform_configuration(){
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
-		echo "${RED}E: The Debian Container is invalid, Aborting!!!${NOATTR}"
+		echo "${RED}E: The Debian Container is invalid, Aborting!!!${NOATTR}" >&2
 		exit 1
 	fi
 	printf "\e]2;DebDroid - Configuring the Debian Container...\a"
@@ -205,7 +205,7 @@ install_debian(){
 
 	# Check if the rootfs exists
 	if [ -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
-		echo "${RED}E: The Debian container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${RED}?${NOATTR}"
+		echo "${RED}E: The Debian container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${RED}?${NOATTR}" >&2
 		exit 1
 	fi
 
@@ -243,7 +243,7 @@ install_debian(){
 	if [ -e "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" ]; then
 		mv "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz"
 	else
-		echo "${RED}E: An Error has occured during the installation: no such file or directory, please try again${NOATTR}"
+		echo "${RED}E: An Error has occured during the installation: no such file or directory, please try again${NOATTR}" >&2
 		return 1
 	fi
 
@@ -289,7 +289,7 @@ uninstall_debian(){
 				echo "${GREEN}I: The Debian Container Successfully Deleted${NOATTR}"
 				exit 0
 			else
-				echo "${RED}E: The Debian Container wasn't deleted successfully${NOATTR}"
+				echo "${RED}E: The Debian Container wasn't deleted successfully${NOATTR}" >&2
 				exit 1
 			fi
 			;;
@@ -310,7 +310,7 @@ launch_debian(){
 	local prootargs
 	local kompat_source
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian" ]; then
-		echo "${RED}E: The Debian container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
+		echo "${RED}E: The Debian container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}" >&2
 		exit 1
 	fi
 
@@ -337,7 +337,7 @@ launch_debian(){
 				exit;
 				;;
 			*)
-				echo "${RED}E: Invalid option... quitting${NOATTR}"
+				echo "${RED}E: Invalid option... quitting${NOATTR}" >&2
 				return 1;
 				;;
 		esac
@@ -373,14 +373,14 @@ backup_debian_container(){
 	local args
 
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian" ]; then
-		echo "${RED}E: Cannot Backup the Debian Container: The Debian Container isn't Installed${NOATTR}"
+		echo "${RED}E: Cannot Backup the Debian Container: The Debian Container isn't Installed${NOATTR}" >&2
 		exit 1
 	fi
 
 	args="$@"
 
 	if [ -z "${args}" ]; then
-		echo "${RED}E: Please specify a filename to output the tarball${NOATTR}"
+		echo "${RED}E: Please specify a filename to output the tarball${NOATTR}" >&2
 		exit 1
 	fi
 
@@ -404,13 +404,13 @@ restore_debian_container(){
 	args="$@"
 
 	if [ -z "${args}" ]; then
-		echo "${RED}E: Please specify a tarball for restoring the container${NOATTR}"
+		echo "${RED}E: Please specify a tarball for restoring the container${NOATTR}" >&2
 		exit 1
 	fi
 	
 	# Check if the tarball exists
 	if [ ! -e "$(realpath -m ${args})" ]; then
-		echo "${RED}E: The Tarball that you're trying to import dosen't exist${NOATTR}"
+		echo "${RED}E: The Tarball that you're trying to import dosen't exist${NOATTR}" >&2
 		exit 1
 	fi
 	
