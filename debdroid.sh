@@ -180,7 +180,6 @@ install_debian(){
 					debian_suite="$2"
 					shift 2
 				else
-					debian_suite="stable"
 					shift 1
 				fi
 				;;
