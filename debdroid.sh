@@ -138,15 +138,25 @@ perform_configuration(){
 
 	# Setup Android Groups if necessary
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/.group-setupdone" ]; then
-		echo "aid_$(id -un):x:$(id -u):$(id -g):Android Groups:/:/usr/sbin/nologin" >> "${DEBDROID__DEBIAN_FS}/etc/passwd"
-		echo "aid_$(id -un):*:18446:0:99999:7:::" >> "${DEBDROID__DEBIAN_FS}/etc/shadow"
-		local g
-		for g in $(id -G); do
-			echo "aid_$(id -gn "$g"):x:${g}:root,aid_$(id -un)" >> "${DEBDROID__DEBIAN_FS}/etc/group"
+		# Imported code from proot-distro
+		chmod u+rw "${DEBDROID__DEBIAN_FS}/etc/passwd" \
+			"${DEBDROID__DEBIAN_FS}/etc/shadow" \
+			"${DEBDROID__DEBIAN_FS}/etc/group" \
+			"${DEBDROID__DEBIAN_FS}/etc/gshadow" >/dev/null 2>&1 || true
+		echo "aid_$(id -un):x:$(id -u):$(id -g):Termux:/:/sbin/nologin" >> \
+			"${DEBDROID__DEBIAN_FS}/etc/passwd"
+		echo "aid_$(id -un):*:18446:0:99999:7:::" >> \
+			"${DEBDROID__DEBIAN_FS}/etc/shadow"
+		local group_name group_id
+		while read -r group_name group_id; do
+			echo "aid_${group_name}:x:${group_id}:root,aid_$(id -un)" \
+				>> "${DEBDROID__DEBIAN_FS}/etc/group"
 			if [ -f "${DEBDROID__DEBIAN_FS}/etc/gshadow" ]; then
-				echo "aid_$(id -gn "$g"):*::root,aid_$(id -un)" >> "${DEBDROID__DEBIAN_FS}/etc/gshadow"
+				echo "aid_${group_name}:*::root,aid_$(id -un)" \
+					>> "${DEBDROID__DEBIAN_FS}/etc/gshadow"
 			fi
-		done
+		done < <(paste <(id -Gn | tr ' ' '\n') <(id -G | tr ' ' '\n'))
+	else
 		touch "${DEBDROID__DEBIAN_FS}/var/debdroid/.group-setupdone"
 	fi
 
