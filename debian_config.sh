@@ -59,7 +59,7 @@ apt update
 cat > /usr/local/bin/addusers <<- EOM
 #!/usr/bin/env bash
 ########################################################################
-# This Script allows to create one or more users easily
+# This script allows to create one or more users easily
 # And can be granted with sudo access automatically
 #
 # For Changing Users, user must value a username within echo from file:
@@ -130,7 +130,6 @@ dpkg-reconfigure tzdata || :
 # Multi-launguage environment
 if ! dpkg-reconfigure locales; then
 	echo "${GREEN}I: The language environment isn't configured: falling back to C.UTF-8${NOATTR}"
-	echo "export LANG=C.UTF-8" >> /etc/profile.d/50-debdroid-gros-integration.sh
 fi
 
 # Implementation of hostname, this feature uniquely identifies your container, see https://github.com/termux/proot/issues/80 issue for more details

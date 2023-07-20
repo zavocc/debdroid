@@ -167,7 +167,7 @@ echo 0 > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fcap_last_cap"
 # Load procfiles
 gen_proc_files
 
-# Synchronize Host Environment (Needed for Executing Programs)
+# Synchronize host environment (needed for executing programs)
 mkdir "${DEBDROID__DEBIAN_FS}/var/debdroid/binfmt" -p
 cat > "${DEBDROID__DEBIAN_FS}/etc/profile.d/debdroid-corrosive.sh" <<- EOM
 #!/usr/bin/env bash
@@ -184,7 +184,7 @@ echo "You can switch users by using ${YELLOW}su${GREEN} command"
 echo ""
 echo "To Update your debian system in just a tap, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
 echo ""
-echo "You can also setup your debian needs with the command ${YELLOW}debianize${GREEN}. this script will automate the entire process of installing your needs"
+echo "You can also setup your debian needs with the command ${YELLOW}debianize${GREEN}, this script will automate the entire process of installing your needs"
 echo ""
 echo "All of your files are living outside the Termux's prefix directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container"
 touch /var/debdroid/.hushlogin
@@ -207,7 +207,7 @@ export ANDROID_DATA=${ANDROID_DATA:-}
 export ANDROID_I18N_ROOT=${ANDROID_I18N_ROOT:-}
 export ANDROID_RUNTIME_ROOT=${ANDROID_RUNTIME_ROOT:-}
 export EXTERNAL_STORAGE=${EXTERNAL_STORAGE:-}
-export COLORTERM=${COLORTERM:-}
+export COLORTERM=${COLORTERM:-truecolor}
 export PREFIX=${PREFIX:-/data/data/com.termux/files/usr}
 export TMPDIR=/tmp
 fi
@@ -243,7 +243,7 @@ prootargs+=" --bind=${DEBDROID__DEBIAN_FS}/run/shm:/dev/shm"
 # Source Mountpoint Configuration File
 source "${DEBDROID__DEBIAN_FS}/var/debdroid/mountpoints.conf"
 
-# Define Variables (Fallback)
+# Default variables
 prootargs+=" /usr/bin/env -i"
 prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
 prootargs+=" HOME=/root"
