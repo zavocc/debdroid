@@ -164,8 +164,13 @@ install_debian(){
 	while [ $# -ge 1 ]; do
 		case "$1" in
 			--suite)
-				shift 1
-				break
+				if [ $# -ge 2 ]; then
+					debian_suite="$2"
+					shift 2
+				else
+					debian_suite="stable"
+					shift 1
+				fi
 				;;
 			--32)
 				thirtytwobit=true
