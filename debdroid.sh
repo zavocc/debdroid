@@ -105,7 +105,7 @@ show_help(){
 	echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
 }
 
-# Function to enter roofs
+# Function to enter rootfs
 run_proot_cmd(){
 	unset LD_PRELOAD
 	proot --link2symlink --kill-on-exit \
@@ -163,7 +163,7 @@ install_debian(){
 
 	while [ $# -ge 1 ]; do
 		case "$1" in
-			*)
+			--suite)
 				shift 1
 				break
 				;;
@@ -185,13 +185,18 @@ install_debian(){
 				echo "${YELLOW} debdroid install${GREEN}"
 				echo ""
 				echo "To install Debian other than stable, specify a suite (use --list argument to list possible suites)"
-				echo "${YELLOW} debdroid install [suite]${GREEN}"
+				echo "${YELLOW} debdroid install --suite [suite]${GREEN}"
 				echo ""
 				echo "To install Debian on 32-bit mode, add --32 argument"
-				echo "${YELLOW} debdroid install --32 [suite]${GREEN}"
+				echo "${YELLOW} debdroid install --32${GREEN}"
+				echo "${YELLOW} debdroid install --32 --suite [suite]${GREEN}"
 				echo ""
 				echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
-				exit;
+				return 0
+				;;
+			*)
+				echo "${RED}E: Invalid option $1, run ${YELLOW}debdroid install --help${RED} to show supported options, or run without arguments${NOATTR}" >&2
+				return 1
 				;;
 		esac
 	done
@@ -226,7 +231,7 @@ install_debian(){
 			;;
 		*)
 			echo "${YELLOW}I: Unknown suite was requested, choosing stable${NOATTR}"
-			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/bullseye)
+			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/bookworm)
 			;;
 	esac
 
