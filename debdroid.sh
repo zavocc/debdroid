@@ -226,7 +226,7 @@ install_debian(){
 			;;
 		*)
 			echo "${YELLOW}I: Unknown suite was requested, choosing stable${NOATTR}"
-			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/buster)
+			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/bullseye)
 			;;
 	esac
 
