@@ -1,6 +1,6 @@
 case $(uname -m) in
 	aarch64|arm64|armv8a|arm64-v8a)
-		if [ ${thirtytwobit:-} == true ]; then
+		if [ "${thirtytwobit:-}" == true ]; then
 			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm32v7/testing/rootfs.tar.xz"
 		else
 			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/testing/rootfs.tar.xz"
@@ -13,7 +13,7 @@ case $(uname -m) in
 		curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-i386/testing/rootfs.tar.xz"
 		;;
 	amd64|x86_64|x64)
-		if [ ${thirtytwobit:-} == true ]; then
+		if [ "${thirtytwobit:-}" == true ]; then
 			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm32v7/testing/rootfs.tar.xz"
 		else
 			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/testing/rootfs.tar.xz"
