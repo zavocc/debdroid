@@ -235,7 +235,7 @@ install_debian(){
 }
 
 # Function to Delete Debian
-uninstall-debian(){
+uninstall_debian(){
 	local userinput
 	read -p "${RED}N: Do you want to delete the Debian Container? [y/N] ${NOATTR}" userinput
 
@@ -289,7 +289,6 @@ launch_debian(){
 			--asroot)
 				rootmode=true;
 				shift 1;
-				break;
 				;;
 			-h|--help)
 				echo "${GREEN}This command will launch Debian System as regular user"
@@ -298,7 +297,7 @@ launch_debian(){
 				echo "${YELLOW} debdroid launch${GREEN}"
 				echo ""
 				echo "To run commands other than shell, you can specify external command by doing:"
-				echo "${YELLOW} debdroid launch [command]${GREEN}"
+				echo "${YELLOW} debdroid launch -- [command]${GREEN}"
 				echo ""
 				echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
 				exit;
@@ -406,12 +405,12 @@ restore_debian_container(){
 }
 
 if [ $# -ge 1 ]; then
-	case "${argument}" in
+	case "$1" in
 		install)
 			shift 1; install_debian "$@"
 			;;
 		uninstall|purge)
-			shift 1; uninstall-debian "$@"
+			shift 1; uninstall_debian "$@"
 			;;
 		reconfigure|configure)
 			shift 1;
@@ -424,7 +423,7 @@ if [ $# -ge 1 ]; then
 			fi
 			;;
 		launch|login)
-			shift 1; launch-debian "$@"
+			shift 1; launch_debian "$@"
 			;;
 		backup|export)
 			shift 1; backup_debian_container "$@"
