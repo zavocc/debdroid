@@ -1,10 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/env bash
 # A Sourcefile to launch debian container within DebDroid
 # This is not a launch command, this is required by the debdroid launch script
-DEBIAN_FS="/data/data/com.termux/files/debian"
-DEBIAN_HOSTNAME="$(cat /data/data/com.termux/files/debian/etc/hostname)"
-DEBIAN_USER_INFO="$(cat /data/data/com.termux/files/debian/var/debdroid/userinfo.rc)"
-DEBIAN_MOUNTPOINTS_INFO="/data/data/com.termux/files/debian/var/debdroid/mountpoints.conf"
+DEBDROID__DEBIAN_FS="/data/data/com.termux/files/debian"
+DEBDROID__DEBIAN_HOSTNAME="$(cat /data/data/com.termux/files/debian/etc/hostname)"
+DEBDROID__DEBIAN_USER_INFO="$(cat /data/data/com.termux/files/debian/var/debdroid/userinfo.rc)"
+DEBDROID__DEBIAN_MOUNTPOINTS_INFO="/data/data/com.termux/files/debian/var/debdroid/mountpoints.conf"
 
 # Unset LD_PRELOAD which it redefines termux-exec() hook
 unset LD_PRELOAD
@@ -12,7 +12,7 @@ unset LD_PRELOAD
 # Generate procfiles
 gen_proc_files(){
 # /proc/stat
-cat > "${DEBIAN_FS}/var/debdroid/binds/fstat" <<- EOM
+cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fstat" <<- EOM
 cpu  4058 0 3089 2779550 170 0 480 0 0 0
 cpu0  4058 0 3089 2779550 170 0 480 0 0 0
 intr 283344 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -23,12 +23,14 @@ procs_running 1
 procs_blocked 0
 softirq 405867 0 111579 0 72119 7205 0 14982 113430 0 86552
 EOM
+
 # /proc/version
-cat > "${DEBIAN_FS}/var/debdroid/binds/fversion" <<- EOM
-Linux version 5.4.0-debdroid (termux@android) (gcc version 8.6.4 (GCC)) #1 SMP Tue Jun 23 12:58:10 UTC 2020
+cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fversion" <<- EOM
+Linux version 6.2.0-debdroid (termux@android) (gcc version 8.6.4 (GCC)) #1 SMP Tue Jun 23 12:58:10 UTC 2020
 EOM
+
 # /proc/vmstat
-cat > "${DEBIAN_FS}/var/debdroid/binds/fvmstat" <<- EOM
+cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fvmstat" <<- EOM
 nr_free_pages 713737
 nr_zone_inactive_anon 2
 nr_zone_active_anon 17697
@@ -149,30 +151,33 @@ balloon_deflate 0
 swap_ra 0
 swap_ra_hit 0
 EOM
+
 # /proc/loadavg
-cat > "${DEBIAN_FS}/var/debdroid/binds/floadavg" <<- EOM
+cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/floadavg" <<- EOM
 0.02 0.03 0.00 1/107 281
 EOM
+
 # /proc/uptime
-cat > "${DEBIAN_FS}/var/debdroid/binds/fuptime" <<- EOM
+cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fuptime" <<- EOM
 9694.45 28998.24
 EOM
+
 # /proc/sys/kernel/cap_last_cap (needed for dbus)
-echo 0 > "${DEBIAN_FS}/var/debdroid/binds/fcap_last_cap"
+echo 0 > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fcap_last_cap"
 }
 
 # Load procfiles
 gen_proc_files
 
 # Synchronize Host Environment (Needed for Executing Programs)
-mkdir "${DEBIAN_FS}/var/debdroid/binfmt" -p
-cat > "${DEBIAN_FS}/etc/profile.d/60-debdroid-gros-interoperability.sh" <<- EOM
+mkdir "${DEBDROID__DEBIAN_FS}/var/debdroid/binfmt" -p
+cat > "${DEBDROID__DEBIAN_FS}/etc/profile.d/60-debdroid-gros-interoperability.sh" <<- EOM
 #!/bin/bash
 # This file is regenerated everytime you launch the session
-# To Disable, echo the value 0 in /var/debdroid/binfmt/corrosive-session
+# To disable, echo the value 0 in /var/debdroid/binfmt/corrosive-session
 
 if [ "\$(cat /var/debdroid/binfmt/corrosive-session)" == "1" ]; then
-export PATH=\${PATH}:/data/data/com.termux/files/usr/bin:/system/bin:/system/xbin
+export PATH=\${PATH}:/data/data/com.termux/files/usr/bin
 export BOOTCLASSPATH=${BOOTCLASSPATH}
 export DEX2OATBOOTCLASSPATH=${DEX2OATBOOTCLASSPATH}
 export ANDROID_ART_ROOT=${ANDROID_ART_ROOT}
@@ -183,20 +188,21 @@ export ANDROID_I18N_ROOT=${ANDROID_I18N_ROOT}
 export ANDROID_RUNTIME_ROOT=${ANDROID_RUNTIME_ROOT}
 export EXTERNAL_STORAGE=${EXTERNAL_STORAGE}
 export COLORTERM=${COLORTERM}
-export PREFIX=/data/data/com.termux/files/usr
+export PREFIX=${PREFIX:-/data/data/com.termux/files/usr}
+export GALLIUM_DRIVER=${GALLIUM_DRIVER:-llvmpipe}
 export TMPDIR=/tmp
 fi
 EOM
 
 # Fill /etc/hosts file if necessary and sync it with user-defined hostname
-cat > "${DEBIAN_FS}/etc/hosts" <<- EOM
+cat > "${DEBDROID__DEBIAN_FS}/etc/hosts" <<- EOM
 127.0.0.1   localhost
 ::1         localhost
-127.0.1.1   ${DEBIAN_HOSTNAME}.localdomain  ${DEBIAN_HOSTNAME}
+127.0.1.1   ${DEBDROID__DEBIAN_HOSTNAME}.localdomain  ${DEBDROID__DEBIAN_HOSTNAME}
 EOM
 
 # Define kompat_source for overriding uname
-kompat_source="\\$(uname -s)\\${DEBIAN_HOSTNAME}\\5.4.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\"
+kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\5.4.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\"
 
 # Process Arguments
 prootargs="--link2symlink --kill-on-exit"
@@ -208,17 +214,17 @@ case "$(getprop ro.build.version.release)" in
 	prootargs+=" --sysvipc"
 	;;
 esac
-prootargs+=" --rootfs=${DEBIAN_FS}"
+prootargs+=" --rootfs=${DEBDROID__DEBIAN_FS}"
 prootargs+=" --cwd=/root"
 prootargs+=" --bind=/dev --bind=/proc --bind=/sys"
-prootargs+=" --bind=${DEBIAN_FS}/run/shm:/dev/shm"
+prootargs+=" --bind=${DEBDROID__DEBIAN_FS}/run/shm:/dev/shm"
 
 # Source Mountpoint Configuration File
-source "${DEBIAN_FS}/var/debdroid/mountpoints.conf"
+source "${DEBDROID__DEBIAN_FS}/var/debdroid/mountpoints.conf"
 
 # Define Variables (Fallback)
 prootargs+=" /usr/bin/env -i"
-prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
+prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/loca/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
 prootargs+=" HOME=/root"
-prootargs+=" TERM=$TERM"
+prootargs+=" TERM=${TERM}"
 prootargs+=" USER=root"
