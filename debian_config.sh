@@ -164,7 +164,7 @@ fi
 hostname_info=$(
 		dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
 			--nocancel --inputbox "Enter your hostname to uniquely identify your container, you may leave it blank for defaults, you may customize it again later by editing /etc/hostname" 12 40 \
-			3>&1 1>&2 2>&3 3>&-
+			--output-fd 1
 	)
 
 if [ ! -z "${hostname_info}" ]; then
@@ -178,7 +178,7 @@ if [ ! -e /var/debdroid/userinfo.rc ]; then
 	env_username=$(
 		dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
 			--nocancel --inputbox "Enter your desired username for your default user account" 9 40 \
-			3>&1 1>&2 2>&3 3>&-
+			--output-fd 1
 	)
 
 	if [ ! -z "${env_username}" ]; then
@@ -196,7 +196,7 @@ if [ ! -e /var/debdroid/userinfo.rc ]; then
 	env_password=$(
 		dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
 			--nocancel --insecure --passwordbox "Enter your password for your default user account" 9 40 \
-			3>&1 1>&2 2>&3 3>&-
+			--output-fd 1
 	)
 
 	if [ ! -z "${env_password}" ]; then

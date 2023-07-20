@@ -138,6 +138,7 @@ perform_configuration(){
 
 	# Setup Android Groups if necessary
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/.group-setupdone" ]; then
+	
 		# Imported code from proot-distro
 		chmod u+rw "${DEBDROID__DEBIAN_FS}/etc/passwd" \
 			"${DEBDROID__DEBIAN_FS}/etc/shadow" \
