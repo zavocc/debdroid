@@ -275,7 +275,7 @@ uninstall_debian(){
 		Y*|y*)
 			printf "\e]2;DebDroid - Uninstalling the Debian Container...\a"
 			echo "${YELLOW}I: Deleting the Container (debian)${NOATTR}"
-			if [ ! "${no_chmod}" == "y" ]; then
+			if [ ! "${no_chmod:-}" == "y" ]; then
 				chmod 777 "${DEBDROID__DEBIAN_FS}" -R
 			fi
 			
