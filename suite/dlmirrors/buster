@@ -16,7 +16,7 @@ case $(uname -m) in
 		if [ "${thirtytwobit:-}" == true ]; then
 			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm32v7/buster/rootfs.tar.xz"
 		else
-			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/buster/rootfs.tar.xz"
+			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/rootfs.tar.xz"
 		fi
 		;;
 esac
