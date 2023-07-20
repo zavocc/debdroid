@@ -13,9 +13,9 @@
 ##########################################################
 # Android Mountpoints (Needed for executing host programs)
 # Check each Android directories if present
-for android_core_dirs in /apex /data /linkerconfig/ld.config.txt /odm /oem \
+for android_core_partitions in /apex /data /linkerconfig/ld.config.txt /odm /oem \
 	/product /system /system_ext /vendor /property_contexts /plat_property_contexts /storage; do
-		if [ -e "${android_core_dirs}" ]; then
+		if [ -e "${android_core_partitions}" ]; then
 			prootargs+=" --bind=${android_core_partitions}"
 		fi
 done
