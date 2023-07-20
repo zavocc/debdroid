@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e -u
 # Colored Environment Variables
 if [ -e "$(command -v tput)" ]; then
 	RED="$(tput setaf 1)$(tput bold)"
@@ -23,7 +24,11 @@ rm -rf /etc/ld.so.preload
 rm -rf /usr/local/lib/libdisableselinux.so
 
 # Add 'contrib non-free' componenets
-sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list
+[ -f /etc/apt/sources.list ] || sources_list="/etc/apt/sources.list.d/debian.sources"
+
+if ! grep -qxF "main contrib non-free" "${sources_list:-/etc/apt/sources.list}"; then
+	sed -i "s/main/main contrib non-free/g" /etc/apt/sources.list
+fi
 
 # Delete Docker Related files as if they're not essential and may cause problems
 rm -rf /etc/apt/apt.conf.d/docker-*

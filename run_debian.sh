@@ -249,3 +249,4 @@ prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/
 prootargs+=" HOME=/root"
 prootargs+=" TERM=${TERM:-xterm-256color}"
 prootargs+=" USER=root"
+prootargs+=" LANG=C.UTF-8"

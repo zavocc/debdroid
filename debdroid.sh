@@ -121,6 +121,7 @@ run_proot_cmd(){
 			TERM=${TERM:-xterm-256color} \
 			HOME=/root \
 			USER=root \
+			LANG=C.UTF-8 \
 			"$@"
 }
 
