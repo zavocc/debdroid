@@ -169,8 +169,8 @@ gen_proc_files
 
 # Synchronize Host Environment (Needed for Executing Programs)
 mkdir "${DEBDROID__DEBIAN_FS}/var/debdroid/binfmt" -p
-cat > "${DEBDROID__DEBIAN_FS}/etc/profile.d/60-debdroid-gros-interoperability.sh" <<- EOM
-#!/bin/bash
+cat > "${DEBDROID__DEBIAN_FS}/etc/profile.d/debdroid-corrosive.sh" <<- EOM
+#!/usr/bin/env bash
 # This file is regenerated everytime you launch the session
 # To disable launching Termux commands to the Debian OS, echo the value 0 in /var/debdroid/binfmt/corrosive-session
 
