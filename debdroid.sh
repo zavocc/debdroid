@@ -225,7 +225,7 @@ install_debian(){
 	fi
 
 	echo "${GREEN}I: Retrieving download Links needed for installation${NOATTR}"
-	case "${debian_suite}" in
+	case "${debian_suite:-stable}" in
 		sid|unstable|debian-sid|debian-unstable)
 			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/sid)
 			;;
