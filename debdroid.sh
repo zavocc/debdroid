@@ -304,7 +304,7 @@ launch_debian(){
 	local extcmd
 	local prootargs
 	local kompat_source
-	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/libdebdroid.so" ]; then
+	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian" ]; then
 		echo "${RED}E: The Debian container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
 		exit 1
 	fi
@@ -345,7 +345,7 @@ launch_debian(){
 	fi
 
 	# Source the file
-	source "${DEBDROID__DEBIAN_FS}/var/debdroid/libdebdroid.so"
+	source "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian"
 
 	# Define External Command
 	extcmd="$@"
@@ -367,7 +367,7 @@ launch_debian(){
 backup_debian_container(){
 	local args
 
-	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/libdebdroid.so" ]; then
+	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian" ]; then
 		echo "${RED}E: Cannot Backup the Debian Container: The Debian Container isn't Installed${NOATTR}"
 		exit 1
 	fi
