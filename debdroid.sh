@@ -206,7 +206,7 @@ install_debian(){
 		esac
 	done
 
-	debian_suite="$@"
+	[ -z ${debian_suite:-} ] || debian_suite="stable"
 
 	# Check if the rootfs exists
 	if [ -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
