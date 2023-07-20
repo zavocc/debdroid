@@ -2,7 +2,7 @@
 # This is not a launch command, this is required by the debdroid launch script
 DEBDROID__DEBIAN_HOSTNAME="$(cat /data/data/com.termux/files/debian/etc/hostname)"
 DEBDROID__DEBIAN_USER_INFO="$(cat /data/data/com.termux/files/debian/var/debdroid/userinfo.rc)"
-DEBDROID__DEBIAN_MOUNTPOINTS_INFO="/data/data/com.termux/files/debian/var/debdroid/mountpoints.conf"
+DEBDROID__DEBIAN_MOUNTPOINTS_INFO="/data/data/com.termux/files/debian/var/debdroid/mountpoints.sh"
 
 # Unset LD_PRELOAD which it redefines termux-exec() hook
 unset LD_PRELOAD
@@ -241,7 +241,7 @@ prootargs+=" --bind=/dev --bind=/proc --bind=/sys"
 prootargs+=" --bind=${DEBDROID__DEBIAN_FS}/run/shm:/dev/shm"
 
 # Source Mountpoint Configuration File
-source "${DEBDROID__DEBIAN_FS}/var/debdroid/mountpoints.conf"
+source "${DEBDROID__DEBIAN_FS}/var/debdroid/mountpoints.sh"
 
 # Default variables
 prootargs+=" /usr/bin/env -i"
