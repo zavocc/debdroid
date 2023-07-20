@@ -156,7 +156,8 @@ perform_configuration(){
 					>> "${DEBDROID__DEBIAN_FS}/etc/gshadow"
 			fi
 		done < <(paste <(id -Gn | tr ' ' '\n') <(id -G | tr ' ' '\n'))
-	else
+
+		# Finish adding groups
 		touch "${DEBDROID__DEBIAN_FS}/var/debdroid/.group-setupdone"
 	fi
 
