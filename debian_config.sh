@@ -135,6 +135,7 @@ dpkg-reconfigure tzdata || :
 # Multi-launguage environment
 if ! dpkg-reconfigure locales; then
 	echo "${GREEN}I: The language environment isn't configured: falling back to C.UTF-8${NOATTR}"
+	echo "LANG=C.UTF-8" >> /etc/default/locale
 fi
 
 # Implementation of hostname, this feature uniquely identifies your container, see https://github.com/termux/proot/issues/80 issue for more details
