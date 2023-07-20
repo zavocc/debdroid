@@ -18,7 +18,7 @@ touch /.setup_has_not_done
 # Github repo page to fetch files
 DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid-ng/2.0"
 
-# Suppress Some Errors if trying to configure
+# Suppress some Errors if trying to configure
 rm -rf /etc/ld.so.preload
 rm -rf /usr/local/lib/libdisableselinux.so
 
@@ -36,7 +36,7 @@ nameserver 8.8.4.4
 EOM
 
 # Perform Installation
-echo "${GREEN}I: Updating Packages if necessary, This may take several minutes, you also need to have a strong network connection and have a sufficient battery power to avoid interruption${NOATTR}"
+echo "${GREEN}I: Updating Packages if necessary, this may take several minutes, you also need to have a strong network connection and have a sufficient battery power to avoid interruption${NOATTR}"
 apt update
 apt upgrade -yy
 echo "${GREEN}I: Installing some packages${NOATTR}"
@@ -76,11 +76,11 @@ echo "All of your files are living outside the Termux's Prefix Directory, so a s
 touch /var/debdroid/.hushlogin
 fi
 
-export PATH="/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
-export PULSE_SERVER="127.0.0.1"
-export MOZ_FAKE_NO_SANDBOX="1"
-export MOZ_DISABLE_GMP_SANDBOX="1"
-export MOZ_DISABLE_CONTENT_SANDBOX="1"
+export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin
+export PULSE_SERVER=127.0.0.1
+export MOZ_FAKE_NO_SANDBOX=1
+export MOZ_DISABLE_GMP_SANDBOX=1
+export MOZ_DISABLE_CONTENT_SANDBOX=1
 EOM
 
 # Create 'addusers' script
@@ -142,9 +142,9 @@ case $(dpkg --print-architecture) in
 esac
 
 chmod 755 /usr/local/lib/libdisableselinux.so
-echo "/usr/local/lib/libdisableselinux.so" > /etc/ld.so.preload
+echo /usr/local/lib/libdisableselinux.so >> /etc/ld.so.preload
 
-# Enable Interoperability if possible
+# Enable interoperability if possible
 if [ ! -e /var/debdroid/binfmt/corrosive-session ]; then
 	mkdir /var/debdroid/binfmt -p
 	echo 1 > /var/debdroid/binfmt/corrosive-session
@@ -154,7 +154,7 @@ fi
 echo "${GREEN}I: Performing Final Configuration${NOATTR}"
 dpkg-reconfigure tzdata || :
 
-# Multi-Launguage environment
+# Multi-launguage environment
 if ! dpkg-reconfigure locales; then
 	echo "${GREEN}I: The language environment isn't configured: falling back to C.UTF-8${NOATTR}"
 	echo "export LANG=C.UTF-8" >> /etc/profile.d/50-debdroid-gros-integration.sh

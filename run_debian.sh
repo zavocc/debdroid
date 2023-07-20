@@ -1,7 +1,5 @@
-#!/data/data/com.termux/files/usr/bin/env bash
-# A Sourcefile to launch debian container within DebDroid
+# A sourcefile to launch debian container within DebDroid
 # This is not a launch command, this is required by the debdroid launch script
-DEBDROID__DEBIAN_FS="/data/data/com.termux/files/debian"
 DEBDROID__DEBIAN_HOSTNAME="$(cat /data/data/com.termux/files/debian/etc/hostname)"
 DEBDROID__DEBIAN_USER_INFO="$(cat /data/data/com.termux/files/debian/var/debdroid/userinfo.rc)"
 DEBDROID__DEBIAN_MOUNTPOINTS_INFO="/data/data/com.termux/files/debian/var/debdroid/mountpoints.conf"
@@ -207,6 +205,7 @@ kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\5.4.0-debdroid\\$(un
 # Process Arguments
 prootargs="--link2symlink --kill-on-exit"
 prootargs+=" --root-id -L -H -p"
+
 # Check for Android Version
 case "$(getprop ro.build.version.release)" in
 	5*|6*) ;;
@@ -214,6 +213,7 @@ case "$(getprop ro.build.version.release)" in
 	prootargs+=" --sysvipc"
 	;;
 esac
+
 prootargs+=" --rootfs=${DEBDROID__DEBIAN_FS}"
 prootargs+=" --cwd=/root"
 prootargs+=" --bind=/dev --bind=/proc --bind=/sys"
@@ -224,7 +224,7 @@ source "${DEBDROID__DEBIAN_FS}/var/debdroid/mountpoints.conf"
 
 # Define Variables (Fallback)
 prootargs+=" /usr/bin/env -i"
-prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/loca/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
+prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
 prootargs+=" HOME=/root"
-prootargs+=" TERM=${TERM}"
+prootargs+=" TERM=${TERM:-xterm-256color}"
 prootargs+=" USER=root"
