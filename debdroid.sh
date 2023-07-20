@@ -155,7 +155,7 @@ perform_configuration(){
 }
 
 # Function to install debian
-install_debian(){}
+install_debian(){
 	local curl_download_link
 	local debian_name
 	local debian_suite
