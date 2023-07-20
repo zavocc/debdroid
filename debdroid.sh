@@ -15,7 +15,7 @@ DEBDROID__DEBIAN_FS="/data/data/com.termux/files/debian"
 
 # URL Link
 # Used for portability and can be used for branch testing
-DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid-ng/2.0"
+DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid/2.0"
 
 # Tempdir
 # Used to place temporary files and all downloaded cache will be stored and will be updated once it flushed

@@ -19,7 +19,7 @@ else
 fi
 
 # URL Link
-DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid-ng/2.0"
+DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid/2.0"
 
 # Function to handle signal trap
 sigtrap(){

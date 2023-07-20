@@ -16,7 +16,7 @@ fi
 touch /.setup_has_not_done
 
 # Github repo page to fetch files
-DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid-ng/2.0"
+DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid/2.0"
 
 # Suppress some Errors if trying to configure
 rm -rf /etc/ld.so.preload
