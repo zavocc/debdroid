@@ -234,7 +234,7 @@ install_debian(){
 	echo "${GREEN}I: The following distribution was requested: ${YELLOW}${debian_name}${NOATTR}"
 
 	echo "${GREEN}I: Downloading the Image file${NOATTR}"
-	curl --output "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" --location --fail "${CURL_DOWNLOAD_LINK}"
+	curl --output "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" --location --fail "${curl_download_link}"
 	if [ -e "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" ]; then
 		mv "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz"
 	else
