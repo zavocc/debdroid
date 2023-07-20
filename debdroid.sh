@@ -467,7 +467,7 @@ if [ $# -ge 1 ]; then
 			shift 1; show_help
 			;;
 		*)
-			echo "${RED}Unknown Option: ${argument}${NOATTR}"
+			echo "${RED}Unknown Option: $1${NOATTR}"
 			show_help
 			;;
 	esac
