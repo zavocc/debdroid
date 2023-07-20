@@ -206,8 +206,6 @@ install_debian(){
 		esac
 	done
 
-	[ -z ${debian_suite:-} ] || debian_suite="stable"
-
 	# Check if the rootfs exists
 	if [ -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
 		echo "${RED}E: The Debian container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${RED}?${NOATTR}" >&2
