@@ -175,7 +175,7 @@ cat > "${DEBDROID__DEBIAN_FS}/etc/profile.d/debdroid-corrosive.sh" <<- EOM
 # To disable launching Termux commands to the Debian OS, echo the value 0 in /var/debdroid/binfmt/corrosive-session
 
 if [ ! -e "/var/debdroid/.hushlogin" ]; then
-echo "${GREEN} Welcome to Debian!"
+echo "${GREEN}Welcome to Debian!"
 echo ""
 echo "To get started, grab apt-get and install your packages with ${YELLOW}apt install${GREEN} command"
 echo ""
@@ -186,7 +186,7 @@ echo "To Update your debian system in just a tap, a simple ${YELLOW}debdroid rec
 echo ""
 echo "You can also setup your debian needs with the command ${YELLOW}debianize${GREEN}, this script will automate the entire process of installing your needs"
 echo ""
-echo "All of your files are living outside the Termux's prefix directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container"
+echo "All of your files are living outside the Termux's prefix directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container${NOATTR}"
 touch /var/debdroid/.hushlogin
 fi
 

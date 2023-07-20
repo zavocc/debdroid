@@ -95,7 +95,7 @@ show_help(){
 	echo "${GREEN}You can install Debian Stable by typing ${YELLOW}debdroid install${GREEN} or ${YELLOW}debdroid install stable${GREEN}"
 	echo "You can list the recognized releases with ${YELLOW}debdroid install list${GREEN} command"
 	echo ""
-	echo "To perform reconfiguration (Interrupted Install, Updating the Container) you may enter ${YELLOW}debdroid reconfigure${GREEN}"
+	echo "To perform reconfiguration (Interrupted Install, Updating the container) you may enter ${YELLOW}debdroid reconfigure${GREEN}"
 	echo ""
 	echo "To launch your debian container, you may type ${YELLOW}debdroid launch${GREEN} or ${YELLOW}debdroid launch-asroot${GREEN}"
 	echo "See ${YELLOW}debdroid launch --help${GREEN} for details"
@@ -127,10 +127,10 @@ run_proot_cmd(){
 # Function to reconfigure debian
 perform_configuration(){
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
-		echo "${RED}E: The Debian Container is invalid, Aborting!!!${NOATTR}" >&2
+		echo "${RED}E: The Debian container is invalid, Aborting!!!${NOATTR}" >&2
 		exit 1
 	fi
-	printf "\e]2;DebDroid - Configuring the Debian Container...\a"
+	printf "\e]2;DebDroid - Configuring the Debian container...\a"
 	curl --silent --fail --location --output "${DEBDROID__DEBIAN_FS}/var/debdroid/debian_config.sh" "${DEBDROID__URL_REPO}/debian_config.sh"
 	chmod 755 "${DEBDROID__DEBIAN_FS}/var/debdroid/debian_config.sh"
 	# Add Proper /run/shm binding
@@ -191,7 +191,7 @@ install_debian(){
 				echo "${GREEN}Recognized Debian Releases:${YELLOW}"
 				echo "oldoldstable/buster *, oldstable/bullseye, stable/bookworm, trixie, testing, unstable/sid"
 				echo ""
-				echo "${GREEN}If the releases marked with * then it is EOL'd, yet still supported under DebDroid${NOATTR}"
+				echo "${GREEN}If the releases marked with * then it is EOL'd by the official Debian support lifecycle, yet still supported under DebDroid${NOATTR}"
 				return 0
 				;;
 			-h|--help)
@@ -207,7 +207,7 @@ install_debian(){
 				echo "${YELLOW} debdroid install --32${GREEN}"
 				echo "${YELLOW} debdroid install --32 --suite [suite]${GREEN}"
 				echo ""
-				echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
+				echo "To learn more about Debian, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
 				return 0
 				;;
 			*)
@@ -249,10 +249,10 @@ install_debian(){
 			;;
 	esac
 
-	printf "\e]2;DebDroid - Installing the Debian Container...\a"
+	printf "\e]2;DebDroid - Installing the Debian container...\a"
 	echo "${GREEN}I: The following distribution was requested: ${YELLOW}${debian_name}${NOATTR}"
 
-	echo "${GREEN}I: Downloading the Image file${NOATTR}"
+	echo "${GREEN}I: Downloading the image file${NOATTR}"
 	curl --output "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" --location --fail "${curl_download_link}"
 	if [ -e "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" ]; then
 		mv "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz"
@@ -261,7 +261,7 @@ install_debian(){
 		return 1
 	fi
 
-	echo "${GREEN}I: Extracting the Image file${NOATTR}"
+	echo "${GREEN}I: Extracting the image file${NOATTR}"
 	printf "\e]2;DebDroid - Extracting the Image file...\a"
 	mkdir -p "${DEBDROID__DEBIAN_FS}"
 	proot --link2symlink -0 tar --preserve-permissions --delay-directory-restore --warning=no-unknown-keyword -xf "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz" --exclude dev -C "${DEBDROID__DEBIAN_FS}" ||:
@@ -270,10 +270,10 @@ install_debian(){
 	mkdir "${DEBDROID__DEBIAN_FS}/var/debdroid/binds" -p
 	echo "${debian_name}" > "${DEBDROID__DEBIAN_FS}/etc/debian_chroot"
 	if perform_configuration; then
-		echo "${GREEN}I: The Debian Container Installed Successfully, you can run it by typing ${YELLOW}debdroid launch${NOATTR}"
+		echo "${GREEN}I: The Debian container Installed Successfully, you can run it by typing ${YELLOW}debdroid launch${NOATTR}"
 		return 0
 	else
-		echo "${RED}W: The Debian Container isn't successfully installed, should this happen? you can run the command ${YELLOW}debdroid reconfigure${GREEN} if necessary${NOATTR}"
+		echo "${RED}W: The Debian container isn't successfully installed, should this happen? you can run the command ${YELLOW}debdroid reconfigure${GREEN} if necessary${NOATTR}"
 		return 1
 	fi
 }
@@ -283,27 +283,27 @@ uninstall_debian(){
 	local userinput
 	local no_chmod
 
-	read -p "${RED}N: Do you want to delete the Debian Container? [y/N] ${NOATTR}" userinput
+	read -p "${RED}N: Do you want to delete the Debian container? [y/N] ${NOATTR}" userinput
 
 	if [ ! -e "${DEBDROID__DEBIAN_FS}" ]; then
-		echo "${YELLOW}I: Debian Container isn't installed, Continuing Anyway...${NOATTR}"
+		echo "${YELLOW}I: Debian container isn't installed, Continuing Anyway...${NOATTR}"
 		no_chmod=y
 	fi
 	
 	case "${userinput}" in
 		Y*|y*)
-			printf "\e]2;DebDroid - Uninstalling the Debian Container...\a"
-			echo "${YELLOW}I: Deleting the Container (debian)${NOATTR}"
+			printf "\e]2;DebDroid - Uninstalling the Debian container...\a"
+			echo "${YELLOW}I: Deleting the container (debian)${NOATTR}"
 			if [ ! "${no_chmod:-}" == "y" ]; then
 				chmod 777 "${DEBDROID__DEBIAN_FS}" -R
 			fi
 			
 			rm -rf "${DEBDROID__DEBIAN_FS}"
 			if [ ! -e "${DEBDROID__DEBIAN_FS}" ]; then
-				echo "${GREEN}I: The Debian Container Successfully Deleted${NOATTR}"
+				echo "${GREEN}I: The Debian container Successfully Deleted${NOATTR}"
 				exit 0
 			else
-				echo "${RED}E: The Debian Container wasn't deleted successfully${NOATTR}" >&2
+				echo "${RED}E: The Debian container wasn't deleted successfully${NOATTR}" >&2
 				exit 1
 			fi
 			;;
@@ -318,7 +318,7 @@ uninstall_debian(){
 	esac
 }
 
-# Function to run Debian Container (Actually, this is just a wrapper to make it portable)
+# Function to run Debian container (Actually, this is just a wrapper to make it portable)
 launch_debian(){
 	local extcmd
 	local prootargs
@@ -391,7 +391,7 @@ backup_debian_container(){
 	local args
 
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian" ]; then
-		echo "${RED}E: Cannot Backup the Debian Container: The Debian Container isn't Installed${NOATTR}" >&2
+		echo "${RED}E: Cannot Backup the Debian container: The Debian container isn't Installed${NOATTR}" >&2
 		exit 1
 	fi
 
@@ -404,12 +404,12 @@ backup_debian_container(){
 
 	echo "${GREEN}I: The Tarball will be saved in $(realpath -m ${args})${NOATTR}"
 	echo "${YELLOW}I: Backing up the container... this may take some time${NOATTR}"
-	printf "\e]2;DebDroid - Backing up Debian Container...\a"
+	printf "\e]2;DebDroid - Backing up Debian container...\a"
 	if tar --preserve-permissions -zcf "${args}" -C "${DEBDROID__DEBIAN_FS}" ./; then
-		echo "${GREEN}I: The Container successfully exported${NOATTR}"
+		echo "${GREEN}I: The container successfully exported${NOATTR}"
 		exit 0
 	else
-		echo "${RED}I: The Container isn't successfully exported${NOATTR}"
+		echo "${RED}I: The container isn't successfully exported${NOATTR}"
 		exit 1
 	fi
 }
@@ -446,14 +446,14 @@ restore_debian_container(){
 					;;
 			esac
 	
-	echo "${YELLOW}I: Restoring the Container...${NOATTR}"
-	printf "\e]2;DebDroid - Restoring Debian Container...\a"
+	echo "${YELLOW}I: Restoring the container...${NOATTR}"
+	printf "\e]2;DebDroid - Restoring Debian container...\a"
 	mkdir -p "${DEBDRROID__DEBIAN_FS}"
 	if tar --recursive-unlink --delay-directory-restore --preserve-permissions -zxf "$(realpath -m ${args})" -C "${DEBDRROID__DEBIAN_FS}"; then
-		echo "${GREEN}I: The Container successfully imported${NOATTR}"
+		echo "${GREEN}I: The container successfully imported${NOATTR}"
 		exit 0
 	else
-		echo "${RED}I: The Container isn't successfully imported${NOATTR}"
+		echo "${RED}I: The container isn't successfully imported${NOATTR}"
 		exit 1
 	fi
 }
@@ -470,7 +470,7 @@ if [ $# -ge 1 ]; then
 		reconfigure|configure)
 			shift 1;
 			if perform_configuration; then
-				echo "${GREEN}I: Done Configuring the Debian Container${NOATTR}"
+				echo "${GREEN}I: Done Configuring the Debian container${NOATTR}"
 				exit 0
 			else
 				echo "${RED}W: An error has occured during the reconfiguration${NOATTR}"
