@@ -27,7 +27,7 @@ rm -rf /usr/local/lib/libdisableselinux.so
 [ -f /etc/apt/sources.list ] || sources_list="/etc/apt/sources.list.d/debian.sources"
 
 if ! grep -qxF "main contrib non-free" "${sources_list:-/etc/apt/sources.list}"; then
-	sed -i "s/main/main contrib non-free/g" /etc/apt/sources.list
+	sed -i "s/main/main contrib non-free/g" "${sources_list:-/etc/apt/sources.list}"
 fi
 
 # Delete Docker Related files as if they're not essential and may cause problems
