@@ -26,7 +26,7 @@ rm -rf /usr/local/lib/libdisableselinux.so
 # Add 'contrib non-free' componenets
 [ -f /etc/apt/sources.list ] || sources_list="/etc/apt/sources.list.d/debian.sources"
 
-if ! grep -qxF "main contrib non-free" "${sources_list:-/etc/apt/sources.list}"; then
+if ! grep -q "main contrib non-free" "${sources_list:-/etc/apt/sources.list}"; then
 	sed -i "s/main/main contrib non-free/g" "${sources_list:-/etc/apt/sources.list}"
 fi
 
