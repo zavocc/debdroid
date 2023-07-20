@@ -55,34 +55,6 @@ echo "${GREEN}I: Populating ${YELLOW}command-not-found${GREEN} Database${NOATTR}
 update-command-not-found
 apt update
 
-# Setup Environment Variables
-echo "${GREEN}I: Setting up Environment Variables${NOATTR}"
-cat > /etc/profile.d/50-debdroid-gros-integration.sh <<- EOM
-#!/usr/bin/env bash
-
-if [ ! -e "/var/debdroid/.hushlogin" ]; then
-echo "${GREEN} Welcome to Debian!"
-echo ""
-echo "To get started, grab apt-get and install your packages with ${YELLOW}apt install${GREEN} command"
-echo ""
-echo "You can add one or more users with the command ${YELLOW}addusers${GREEN} this command will setup not only the user account but also it sets up sudo access for second account"
-echo "You can switch users by using ${YELLOW}su${GREEN} command"
-echo ""
-echo "To Update your debian system in just a tap, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
-echo ""
-echo "You can also setup your debian needs with the command ${YELLOW}debianize${GREEN}. this script will automate the entire process of installing your needs"
-echo ""
-echo "All of your files are living outside the Termux's Prefix Directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container"
-touch /var/debdroid/.hushlogin
-fi
-
-export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin
-export PULSE_SERVER=127.0.0.1
-export MOZ_FAKE_NO_SANDBOX=1
-export MOZ_DISABLE_GMP_SANDBOX=1
-export MOZ_DISABLE_CONTENT_SANDBOX=1
-EOM
-
 # Create 'addusers' script
 cat > /usr/local/bin/addusers <<- EOM
 #!/usr/bin/env bash
@@ -120,6 +92,7 @@ EOM
 
 chmod 755 /usr/local/bin/addusers
 
+# Download required files to launch debian
 curl --insecure --fail --silent --output /var/debdroid/run_debian "${DEBDROID__URL_REPO}/run_debian.sh"
 curl --insecure --fail --silent --output /var/debdroid/mountpoints.conf "${DEBDROID__URL_REPO}/mountpoints.conf"
 curl --insecure --fail --silent --output /usr/local/bin/debianize "${DEBDROID__URL_REPO}/debianize"

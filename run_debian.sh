@@ -172,7 +172,29 @@ mkdir "${DEBDROID__DEBIAN_FS}/var/debdroid/binfmt" -p
 cat > "${DEBDROID__DEBIAN_FS}/etc/profile.d/60-debdroid-gros-interoperability.sh" <<- EOM
 #!/bin/bash
 # This file is regenerated everytime you launch the session
-# To disable, echo the value 0 in /var/debdroid/binfmt/corrosive-session
+# To disable launching Termux commands to the Debian OS, echo the value 0 in /var/debdroid/binfmt/corrosive-session
+
+if [ ! -e "/var/debdroid/.hushlogin" ]; then
+echo "${GREEN} Welcome to Debian!"
+echo ""
+echo "To get started, grab apt-get and install your packages with ${YELLOW}apt install${GREEN} command"
+echo ""
+echo "You can add one or more users with the command ${YELLOW}addusers${GREEN} this command will setup not only the user account but also it sets up sudo access for second account"
+echo "You can switch users by using ${YELLOW}su${GREEN} command"
+echo ""
+echo "To Update your debian system in just a tap, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
+echo ""
+echo "You can also setup your debian needs with the command ${YELLOW}debianize${GREEN}. this script will automate the entire process of installing your needs"
+echo ""
+echo "All of your files are living outside the Termux's prefix directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container"
+touch /var/debdroid/.hushlogin
+fi
+
+export GALLIUM_DRIVER=${GALLIUM_DRIVER:-llvmpipe}
+export PULSE_SERVER=${PULSE_SERVER:-127.0.0.1}
+export MOZ_FAKE_NO_SANDBOX=1
+export MOZ_DISABLE_GMP_SANDBOX=1
+export MOZ_DISABLE_CONTENT_SANDBOX=1
 
 if [ "\$(cat /var/debdroid/binfmt/corrosive-session)" == "1" ]; then
 export PATH=\${PATH}:/data/data/com.termux/files/usr/bin
@@ -187,7 +209,6 @@ export ANDROID_RUNTIME_ROOT=${ANDROID_RUNTIME_ROOT:-}
 export EXTERNAL_STORAGE=${EXTERNAL_STORAGE:-}
 export COLORTERM=${COLORTERM:-}
 export PREFIX=${PREFIX:-/data/data/com.termux/files/usr}
-export GALLIUM_DRIVER=${GALLIUM_DRIVER:-llvmpipe}
 export TMPDIR=/tmp
 fi
 EOM
