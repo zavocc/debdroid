@@ -304,7 +304,7 @@ launch_debian(){
 				;;
 			*)
 				echo "${RED}E: Invalid option... quitting${NOATTR}"
-				exit 1;
+				return 1;
 				;;
 		esac
 	done
