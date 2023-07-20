@@ -1,6 +1,10 @@
 case $(uname -m) in
 	aarch64|arm64|armv8a|arm64-v8a)
-		CURL_DOWNLOAD_LINK="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/testing/rootfs.tar.xz"
+		if [ ${thirtytwobit:-} == true ]; then
+			CURL_DOWNLOAD_LINK="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm32v7/testing/rootfs.tar.xz"
+		else
+			CURL_DOWNLOAD_LINK="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/testing/rootfs.tar.xz"
+		fi
 		;;
 	armhf|arm|arm32|armv8l|armv7l)
 		CURL_DOWNLOAD_LINK="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm32v7/testing/rootfs.tar.xz"
@@ -9,7 +13,11 @@ case $(uname -m) in
 		CURL_DOWNLOAD_LINK="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-i386/testing/rootfs.tar.xz"
 		;;
 	amd64|x86_64|x64)
-		CURL_DOWNLOAD_LINK="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/testing/rootfs.tar.xz"
+		if [ ${thirtytwobit:-} == true ]; then
+			CURL_DOWNLOAD_LINK="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm32v7/testing/rootfs.tar.xz"
+		else
+			CURL_DOWNLOAD_LINK="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/testing/rootfs.tar.xz"
+		fi
 		;;
 esac
 

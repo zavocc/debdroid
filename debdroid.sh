@@ -165,25 +165,52 @@ perform_configuration(){
 # Function to install debian
 install_debian(){
 	local DEBIAN_SUITE
+	local thirtytwobit
 
-	# If Possible, List recognized releases
-	if [ "$1" == "--list" ] || [ "$1" == "list" ]; then
-		echo "${GREEN}Recognized Debian Releases:${YELLOW}"
-		echo "oldstable/stretch, stable/buster, bullseye, testing, unstable/sid"
-		echo ""
-		echo "${GREEN}If the releases marked with * then it is EOL'd, yet still supported under DebDroid${NOATTR}"
-		exit 0
-	fi
+	while [ $# -ge 1 ]; do
+		case "$1" in
+			*)
+				shift 1
+				break
+				;;
+			--32)
+				thirtytwobit=true
+				shift 1
+				;;
+			--list)
+				echo "${GREEN}Recognized Debian Releases:${YELLOW}"
+				echo "oldoldstable/buster *, oldstable/bullseye, stable/bookworm, trixie, testing, unstable/sid"
+				echo ""
+				echo "${GREEN}If the releases marked with * then it is EOL'd, yet still supported under DebDroid${NOATTR}"
+				return 0
+				;;
+			-h|--help)
+				echo "${GREEN}Installs debian"
+				echo ""
+				echo "The basic syntax follows as:"
+				echo "${YELLOW} debdroid install${GREEN}"
+				echo ""
+				echo "To install Debian other than stable, specify a suite (use --list argument to list possible suites)"
+				echo "${YELLOW} debdroid install [suite]${GREEN}"
+				echo ""
+				echo "To install Debian on 32-bit mode, add --32 argument"
+				echo "${YELLOW} debdroid install --32 [suite]${GREEN}"
+				echo ""
+				echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
+				exit;
+				;;
+		esac
+	done
 
 	DEBIAN_SUITE="$@"
 
 	# Check if the rootfs exists
-	if [ -e "${DEBDROID__DEBIAN_FS}" ]; then
+	if [ -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
 		echo "${RED}E: The Debian Container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${RED}?${NOATTR}"
 		exit 2
 	fi
 
-	echo "${GREEN}I: Retrieving Download Links needed for installation${NOATTR}"
+	echo "${GREEN}I: Retrieving download Links needed for installation${NOATTR}"
 	case "${DEBIAN_SUITE}" in
 		sid|unstable|debian-sid|debian-unstable)
 			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/sid)
@@ -191,31 +218,35 @@ install_debian(){
 		testing|debian-testing)
 			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/testing)
 			;;
-		bullseye|debian-bullseye)
+		trixie|debian-trixie)
+			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/trixie)
+			;;
+		bookworm|debian-bookworm|stable|debian-stable)
+			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/bookworm)
+			;;
+		bullseye|debian-bullseye|oldstable|debian-oldstable)
 			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/bullseye)
 			;;
-		buster|debian-buster|stable|debian-stable)
+		buster|debian-buster|oldoldstable|debian-oldoldstable)
 			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/buster)
 			;;
-		stretch|debian-stretch|oldstable|debian-oldstable)
-			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/stretch)
-			;;
 		*)
-			echo "${YELLOW}I: Unknown Distribution was requested, choosing stable${NOATTR}"
+			echo "${YELLOW}I: Unknown suite was requested, choosing stable${NOATTR}"
 			source <(curl -sSL ${DEBDROID__URL_REPO}/suite/dlmirrors/buster)
 			;;
 	esac
 
 	printf "\e]2;DebDroid - Installing the Debian Container...\a"
 	echo "${GREEN}I: The following distribution was requested: ${YELLOW}${DEBIAN_NAME}${NOATTR}"
+
 	echo "${GREEN}I: Downloading the Image file${NOATTR}"
 	curl --output "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" --location --fail "${CURL_DOWNLOAD_LINK}"
-		if [ -e "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" ]; then
-			mv "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz"
-		else
-			echo "${RED}E: An Error has occured during the installation: no such file or directory, please try again${NOATTR}"
-			exit 2
-		fi
+	if [ -e "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" ]; then
+		mv "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz.part" "${DEBDROID__TEMPDIR}/${DEBIAN_NAME}-rootfs.tar.xz"
+	else
+		echo "${RED}E: An Error has occured during the installation: no such file or directory, please try again${NOATTR}"
+		return 1
+	fi
 
 	echo "${GREEN}I: Extracting the Image file${NOATTR}"
 	printf "\e]2;DebDroid - Extracting the Image file...\a"
@@ -227,10 +258,10 @@ install_debian(){
 	echo "${DEBIAN_NAME}" > "${DEBDROID__DEBIAN_FS}/etc/debian_chroot"
 	if perform_configuration; then
 		echo "${GREEN}I: The Debian Container Installed Successfully, you can run it by typing ${YELLOW}debdroid launch${NOATTR}"
-		exit 0
+		return 0
 	else
 		echo "${RED}W: The Debian Container isn't successfully installed, should this happen? you can run the command ${YELLOW}debdroid reconfigure${GREEN} if necessary${NOATTR}"
-		exit 2
+		return 1
 	fi
 }
 
@@ -248,17 +279,18 @@ uninstall_debian(){
 		Y*|y*)
 			printf "\e]2;DebDroid - Uninstalling the Debian Container...\a"
 			echo "${YELLOW}I: Deleting the Container (debian)${NOATTR}"
-				if [ ! "${NO_CHMOD}" == "y" ]; then
-					chmod 777 "${DEBDROID__DEBIAN_FS}" -R ||:
-				fi
+			if [ ! "${NO_CHMOD}" == "y" ]; then
+				chmod 777 "${DEBDROID__DEBIAN_FS}" -R
+			fi
+			
 			rm -rf "${DEBDROID__DEBIAN_FS}"
-				if [ ! -e "${DEBDROID__DEBIAN_FS}" ]; then
-					echo "${GREEN}I: The Debian Container Successfully Deleted${NOATTR}"
-					exit 0
-				else
-					echo "${RED}E: The Debian Container isn't deleted successfully${NOATTR}"
-					exit 2
-				fi
+			if [ ! -e "${DEBDROID__DEBIAN_FS}" ]; then
+				echo "${GREEN}I: The Debian Container Successfully Deleted${NOATTR}"
+				exit 0
+			else
+				echo "${RED}E: The Debian Container wasn't deleted successfully${NOATTR}"
+				exit 2
+			fi
 			;;
 		N*|n*)
 			echo "${GREEN}N: Aborting....${NOATTR}"
@@ -276,7 +308,7 @@ launch_debian(){
 	local extcmd
 	local prootargs
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/libdebdroid.so" ]; then
-		echo "${RED}E: The Debian Container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
+		echo "${RED}E: The Debian container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}"
 		exit 2
 	fi
 
@@ -311,7 +343,7 @@ launch_debian(){
 
 	# Check for an ongoing setup
 	if [ -e "${DEBDROID__DEBIAN_FS}/.setup_has_not_done" ]; then
-		echo "${RED}N: An Ongoing Setup is running, please finish the configuration first before continuing${NOATTR}"
+		echo "${RED}N: An ongoing setup is running, please finish the configuration first before continuing${NOATTR}"
 		exit 2
 	fi
 
