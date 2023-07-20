@@ -24,7 +24,7 @@ EOM
 
 # /proc/version
 cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fversion" <<- EOM
-Linux version 6.2.0-debdroid (termux@android) (gcc version 8.6.4 (GCC)) #1 SMP Tue Jun 23 12:58:10 UTC 2020
+Linux version 6.2.0-debdroid (termux@android) (gcc version 8.6.4 (GCC)) #1 SMP Tue Jan 01 12:00:00 UTC 2023
 EOM
 
 # /proc/vmstat
@@ -221,7 +221,7 @@ cat > "${DEBDROID__DEBIAN_FS}/etc/hosts" <<- EOM
 EOM
 
 # Define kompat_source for overriding uname
-kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\5.4.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\"
+kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\6.2.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\"
 
 # Process Arguments
 prootargs="--link2symlink --kill-on-exit"
