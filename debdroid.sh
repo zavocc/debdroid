@@ -53,15 +53,6 @@ else
 	NOATTR=""
 fi
 
-# Don't run as root
-if [ "$(id -u)" == 0 ]; then
-	echo "${RED}E: running this script is discouraged and therefore not being used by root user${NOATTR}"
-	exit 1
-fi
-
-# Create temporary directory (don't use mktemp as to be used for update delay caching)
-mkdir -p "${DEBDROID__TEMPDIR}"
-
 # Function to handle signal trap
 sigtrap(){
 	echo "${RED}E: The script encountered an unexpected error, quitting as requested!${NOATTR}" >&2
@@ -71,18 +62,27 @@ sigtrap(){
 trap 'sigtrap' HUP INT KILL QUIT TERM
 
 # Check if dependencies are installed
-for deps in curl proot tar; do
+for deps in chmod curl id mkdir paste proot rm tar; do
 	if [ ! -x "$(command -v $deps)"]; then
 		echo "${RED}E: Command ${YELLOW}${deps}${RED} doesn't exist, please install it${NOATTR}."
 		exit 2
 	fi
 done
 
+# Don't run as root
+if [ "$(id -u)" == 0 ]; then
+	echo "${RED}E: running this script is discouraged and therefore not being used by root user${NOATTR}"
+	exit 1
+fi
+
+# Create temporary directory (don't use mktemp as to be used for update delay caching)
+mkdir -p "${DEBDROID__TEMPDIR}"
+
 check_update(){
 	if curl https://google.com --fail --silent --insecure >/dev/null; then
 		if [ ! "$(curl --silent --fail --location --insecure ${DEBDROID__URL_REPO}/version.txt | head -n 1)" == "${DEBDROID__SCRIPT_VER}" ]; then
 			echo "${YELLOW}I: A new version of this script is available, you may install a new version over this script${NOATTR}"
-			touch "${DEBDROID__TEMPDIR}/update-cache-lock"
+			: > "${DEBDROID__TEMPDIR}/update-cache-lock"
 		fi
 	else
 		echo "${YELLOW}N: Cannot Perform Update: Network is down. Skipping....."
@@ -173,7 +173,7 @@ perform_configuration(){
 		done < <(paste <(id -Gn | tr ' ' '\n') <(id -G | tr ' ' '\n'))
 
 		# Finish adding groups
-		touch "${DEBDROID__DEBIAN_FS}/.proot.debdroid/.group-setupdone"
+		: > "${DEBDROID__DEBIAN_FS}/.proot.debdroid/.group-setupdone"
 	fi
 
 	# Run Configuration Step

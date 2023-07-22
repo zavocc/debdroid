@@ -14,7 +14,7 @@ else
 fi
 
 # Needed to Indicate if the configuration is still ongoing
-touch /.setup_has_not_done
+: >/.setup_has_not_done
 
 # Github repo page to fetch files
 DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid/2.0"
