@@ -396,7 +396,7 @@ backup_debian_container(){
 		exit 1
 	fi
 
-	args="$@"
+	args="$1"
 
 	if [ -z "${args}" ]; then
 		echo "${RED}E: Please specify a filename to output the tarball${NOATTR}" >&2
@@ -419,7 +419,7 @@ restore_debian_container(){
 	local args
 	local userinput
 
-	args="$@"
+	args="$1"
 
 	if [ -z "${args}" ]; then
 		echo "${RED}E: Please specify a backup file for restoring the container${NOATTR}" >&2
@@ -448,7 +448,7 @@ restore_debian_container(){
 	
 	echo "${YELLOW}I: Restoring the container...${NOATTR}"
 	mkdir -p "${DEBDROID__DEBIAN_FS}"
-	if tar --recursive-unlink --delay-directory-restore --preserve-permissions -zxf "$(realpath -m ${args})" -C "${DEBDRROID__DEBIAN_FS}"; then
+	if tar --recursive-unlink --delay-directory-restore --preserve-permissions -zxf "$(realpath -m ${args})" -C "${DEBDROID__DEBIAN_FS}"; then
 		echo "${GREEN}I: The container successfully imported${NOATTR}"
 		exit 0
 	else
