@@ -71,7 +71,7 @@ sigtrap(){
 trap 'sigtrap' HUP INT KILL QUIT TERM
 
 # Check if dependencies are installed
-for deps in curl proot; do
+for deps in curl proot tar; do
 	if [ ! -x "$(command -v $deps)"]; then
 		echo "${RED}E: Command ${YELLOW}${deps}${RED} doesn't exist, please install it${NOATTR}."
 		exit 2
