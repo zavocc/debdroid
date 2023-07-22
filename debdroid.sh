@@ -378,9 +378,9 @@ launch_debian(){
 	fi
 
 	if [ ! -z "${extcmd}" ]; then
-		proot -k "${kompat_source}" ${prootargs} su -l "${DEBDROID__DEBIAN_USER_INFO}" -c "${extcmd}"
+		exec proot -k "${kompat_source}" $prootargs su -l "${DEBDROID__DEBIAN_USER_INFO}"
 	else
-		proot -k "${kompat_source}" ${prootargs} su -l "${DEBDROID__DEBIAN_USER_INFO}"
+		exec proot -k "${kompat_source}" $prootargs su -l "${DEBDROID__DEBIAN_USER_INFO}" -c "${extcmd}"
 	fi
 }
 
