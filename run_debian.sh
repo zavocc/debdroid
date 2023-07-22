@@ -1,8 +1,8 @@
 # A sourcefile to launch debian container within DebDroid
 # This is not a launch command, this is required by the debdroid launch script
 DEBDROID__DEBIAN_HOSTNAME="$(cat /data/data/com.termux/files/debian/etc/hostname)"
-DEBDROID__DEBIAN_USER_INFO="$(cat /data/data/com.termux/files/debian/var/debdroid/userinfo.rc)"
-DEBDROID__DEBIAN_MOUNTPOINTS_INFO="/data/data/com.termux/files/debian/var/debdroid/mountpoints.sh"
+DEBDROID__DEBIAN_USER_INFO="$(cat /data/data/com.termux/files/debian/.proot.debdroid/userinfo.rc)"
+DEBDROID__DEBIAN_MOUNTPOINTS_INFO="/data/data/com.termux/files/debian/.proot.debdroid/mountpoints.sh"
 
 # Unset LD_PRELOAD which it redefines termux-exec() hook
 unset LD_PRELOAD
@@ -10,7 +10,7 @@ unset LD_PRELOAD
 # Generate procfiles
 gen_proc_files(){
 # /proc/stat
-cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fstat" <<- EOM
+cat > "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds/fstat" <<- EOM
 cpu  4058 0 3089 2779550 170 0 480 0 0 0
 cpu0  4058 0 3089 2779550 170 0 480 0 0 0
 intr 283344 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -23,12 +23,12 @@ softirq 405867 0 111579 0 72119 7205 0 14982 113430 0 86552
 EOM
 
 # /proc/version
-cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fversion" <<- EOM
+cat > "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds/fversion" <<- EOM
 Linux version 6.2.0-debdroid (termux@android) (gcc version 8.6.4 (GCC)) #1 SMP Tue Jan 01 12:00:00 UTC 2023
 EOM
 
 # /proc/vmstat
-cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fvmstat" <<- EOM
+cat > "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds/fvmstat" <<- EOM
 nr_free_pages 713737
 nr_zone_inactive_anon 2
 nr_zone_active_anon 17697
@@ -151,30 +151,30 @@ swap_ra_hit 0
 EOM
 
 # /proc/loadavg
-cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/floadavg" <<- EOM
+cat > "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds/floadavg" <<- EOM
 0.02 0.03 0.00 1/107 281
 EOM
 
 # /proc/uptime
-cat > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fuptime" <<- EOM
+cat > "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds/fuptime" <<- EOM
 9694.45 28998.24
 EOM
 
 # /proc/sys/kernel/cap_last_cap (needed for dbus)
-echo 0 > "${DEBDROID__DEBIAN_FS}/var/debdroid/binds/fcap_last_cap"
+echo 0 > "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds/fcap_last_cap"
 }
 
 # Load procfiles
 gen_proc_files
 
 # Synchronize host environment (needed for executing programs)
-mkdir "${DEBDROID__DEBIAN_FS}/var/debdroid/binfmt" -p
+mkdir "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binfmt" -p
 cat > "${DEBDROID__DEBIAN_FS}/etc/profile.d/debdroid-corrosive.sh" <<- EOM
 #!/usr/bin/env bash
 # This file is regenerated everytime you launch the session
-# To disable launching Termux commands to the Debian OS, echo the value 0 in /var/debdroid/binfmt/corrosive-session
+# To disable launching Termux commands to the Debian OS, echo the value 0 in /.proot.debdroid/binfmt/corrosive-session
 
-if [ ! -e "/var/debdroid/.hushlogin" ]; then
+if [ ! -e "/.proot.debdroid/.hushlogin" ]; then
 echo "${GREEN}Welcome to Debian!"
 echo ""
 echo "To get started, grab apt-get and install your packages with ${YELLOW}apt install${GREEN} command"
@@ -185,7 +185,7 @@ echo ""
 echo "To Update your debian system in just a tap, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
 echo ""
 echo "All of your files are living outside the Termux's prefix directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container${NOATTR}"
-touch /var/debdroid/.hushlogin
+touch /.proot.debdroid/.hushlogin
 fi
 
 export GALLIUM_DRIVER=${GALLIUM_DRIVER:-llvmpipe}
@@ -194,7 +194,7 @@ export MOZ_DISABLE_GMP_SANDBOX=1
 export MOZ_DISABLE_CONTENT_SANDBOX=1
 export PULSE_SERVER=${PULSE_SERVER:-127.0.0.1}
 
-if [ "\$(cat /var/debdroid/binfmt/corrosive-session)" == "1" ]; then
+if [ "\$(cat /.proot.debdroid/binfmt/corrosive-session)" == "1" ]; then
 export PATH=\${PATH}:/data/data/com.termux/files/usr/bin
 export ANDROID_ART_ROOT=${ANDROID_ART_ROOT:-}
 export ANDROID_DATA=${ANDROID_DATA:-}
@@ -241,7 +241,7 @@ prootargs+=" --rootfs=${DEBDROID__DEBIAN_FS}"
 prootargs+=" --cwd=/root"
 
 # Source Mountpoint configuration File
-source "${DEBDROID__DEBIAN_FS}/var/debdroid/mountpoints.sh"
+source "${DEBDROID__DEBIAN_FS}/.proot.debdroid/mountpoints.sh"
 
 # Default variables
 prootargs+=" /usr/bin/env -i"

@@ -130,13 +130,13 @@ perform_configuration(){
 		exit 1
 	fi
 	printf "\e]2;DebDroid - Configuring the Debian container...\a"
-	curl --silent --fail --location --output "${DEBDROID__DEBIAN_FS}/var/debdroid/debian_config.sh" "${DEBDROID__URL_REPO}/debian_config.sh"
-	chmod 755 "${DEBDROID__DEBIAN_FS}/var/debdroid/debian_config.sh"
+	curl --silent --fail --location --output "${DEBDROID__DEBIAN_FS}/.proot.debdroid/debian_config.sh" "${DEBDROID__URL_REPO}/debian_config.sh"
+	chmod 755 "${DEBDROID__DEBIAN_FS}/.proot.debdroid/debian_config.sh"
 	# Add Proper /run/shm binding
 	mkdir -p "${DEBDROID__DEBIAN_FS}/run/shm"
 
 	# Setup Android Groups if necessary
-	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/.group-setupdone" ]; then
+	if [ ! -e "${DEBDROID__DEBIAN_FS}/.proot.debdroid/.group-setupdone" ]; then
 	
 		# Imported code from proot-distro
 		chmod u+rw "${DEBDROID__DEBIAN_FS}/etc/passwd" \
@@ -158,11 +158,11 @@ perform_configuration(){
 		done < <(paste <(id -Gn | tr ' ' '\n') <(id -G | tr ' ' '\n'))
 
 		# Finish adding groups
-		touch "${DEBDROID__DEBIAN_FS}/var/debdroid/.group-setupdone"
+		touch "${DEBDROID__DEBIAN_FS}/.proot.debdroid/.group-setupdone"
 	fi
 
 	# Run Configuration Step
-	run_proot_cmd "/var/debdroid/debian_config.sh"
+	run_proot_cmd "/.proot.debdroid/debian_config.sh"
 }
 
 # Function to install debian
@@ -266,7 +266,7 @@ install_debian(){
 	proot --link2symlink -0 tar --preserve-permissions --delay-directory-restore --warning=no-unknown-keyword -xf "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz" --exclude dev -C "${DEBDROID__DEBIAN_FS}" ||:
 
 	echo "${GREEN}I: Configuring the base system, this may take some time${NOATTR}"
-	mkdir "${DEBDROID__DEBIAN_FS}/var/debdroid/binds" -p
+	mkdir "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds" -p
 	echo "${debian_name}" > "${DEBDROID__DEBIAN_FS}/etc/debian_chroot"
 	if perform_configuration; then
 		echo "${GREEN}I: The Debian container Installed Successfully, you can run it by typing ${YELLOW}debdroid launch${NOATTR}"
@@ -326,7 +326,7 @@ launch_debian(){
 	local DEBDROID__DEBIAN_MOUNTPOINTS_INFO
 	local DEBDROID__DEBIAN_USER_INFO
 
-	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian" ]; then
+	if [ ! -e "${DEBDROID__DEBIAN_FS}/.proot.debdroid/run_debian" ]; then
 		echo "${RED}E: The Debian container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}" >&2
 		exit 1
 	fi
@@ -367,7 +367,7 @@ launch_debian(){
 	fi
 
 	# Source the file
-	source "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian"
+	source "${DEBDROID__DEBIAN_FS}/.proot.debdroid/run_debian"
 
 	# Define External Command
 	extcmd="$@"
@@ -389,7 +389,7 @@ launch_debian(){
 backup_debian_container(){
 	local args
 
-	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian" ]; then
+	if [ ! -e "${DEBDROID__DEBIAN_FS}/.proot.debdroid/run_debian" ]; then
 		echo "${RED}E: Cannot Backup the Debian container: The Debian container isn't Installed${NOATTR}" >&2
 		exit 1
 	fi

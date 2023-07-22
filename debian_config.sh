@@ -68,7 +68,7 @@ cat > /usr/local/bin/addusers <<- EOM
 # And can be granted with sudo access automatically
 #
 # For Changing Users, user must value a username within echo from file:
-# /var/debdroid/userinfo.rc
+# /.proot.debdroid/userinfo.rc
 ########################################################################
 ARGUMENT="\$1"
 
@@ -98,8 +98,13 @@ EOM
 chmod 755 /usr/local/bin/addusers
 
 # Download required files to launch debian
+<<<<<<< HEAD
+curl --insecure --fail --silent --output /.proot.debdroid/run_debian "${DEBDROID__URL_REPO}/run_debian.sh"
+curl --insecure --fail --silent --output /.proot.debdroid/mountpoints.sh "${DEBDROID__URL_REPO}/mountpoints.sh"
+=======
 curl --insecure --fail --silent --output /var/debdroid/run_debian "${DEBDROID__URL_REPO}/run_debian.sh"
 curl --insecure --fail --silent --output /var/debdroid/mountpoints.sh "${DEBDROID__URL_REPO}/mountpoints.sh"
+>>>>>>> bbb5682ce5e05f32492bcd2bbbabc2c17cc81e30
 
 # Preload libdisableselinux.so library to avoid messing up Debian from Android Security Features
 case $(dpkg --print-architecture) in
@@ -121,9 +126,9 @@ chmod 755 /usr/local/lib/libdisableselinux.so
 echo /usr/local/lib/libdisableselinux.so >> /etc/ld.so.preload
 
 # Enable interoperability if possible
-if [ ! -e /var/debdroid/binfmt/corrosive-session ]; then
-	mkdir /var/debdroid/binfmt -p
-	echo 1 > /var/debdroid/binfmt/corrosive-session
+if [ ! -e /.proot.debdroid/binfmt/corrosive-session ]; then
+	mkdir /.proot.debdroid/binfmt -p
+	echo 1 > /.proot.debdroid/binfmt/corrosive-session
 fi
 
 # Perform Final Configuration
@@ -150,7 +155,7 @@ else
 	echo "termux-debian" > /etc/hostname
 fi
 
-if [ ! -e /var/debdroid/userinfo.rc ]; then
+if [ ! -e /.proot.debdroid/userinfo.rc ]; then
 	env_username=$(
 		dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
 			--nocancel --inputbox "Enter your desired username for your default user account" 9 40 \
@@ -158,16 +163,16 @@ if [ ! -e /var/debdroid/userinfo.rc ]; then
 	)
 
 	if [ ! -z "${env_username}" ]; then
-		echo "${env_username}" > /var/debdroid/userinfo.rc
+		echo "${env_username}" > /.proot.debdroid/userinfo.rc
 		useradd -s /bin/bash -m "${env_username}"
 	else
 		echo "${RED}N: No username is specified, falling back to defaults${NOATTR}"
 		sleep 5
-		echo "user" > /var/debdroid/userinfo.rc
+		echo "user" > /.proot.debdroid/userinfo.rc
 		useradd -s /bin/bash -m "user"
 	fi
 
-	echo "$(cat /var/debdroid/userinfo.rc)   ALL=(ALL:ALL)   NOPASSWD:ALL" > /etc/sudoers.d/debdroid-user
+	echo "$(cat /.proot.debdroid/userinfo.rc)   ALL=(ALL:ALL)   NOPASSWD:ALL" > /etc/sudoers.d/debdroid-user
 
 	env_password=$(
 		dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
@@ -176,11 +181,11 @@ if [ ! -e /var/debdroid/userinfo.rc ]; then
 	)
 
 	if [ ! -z "${env_password}" ]; then
-		echo "$(cat /var/debdroid/userinfo.rc)":"${env_password}" | chpasswd
+		echo "$(cat /.proot.debdroid/userinfo.rc)":"${env_password}" | chpasswd
 	else
 		echo "${RED}N: No password is specified, the default password is ${YELLOW}passw0rd${NOATTR}"
 		sleep 5
-		echo "$(cat /var/debdroid/userinfo.rc)":"passw0rd" | chpasswd
+		echo "$(cat /.proot.debdroid/userinfo.rc)":"passw0rd" | chpasswd
 	fi
 else
 	echo "${YELLOW}I: The User Account is already been set up... Skipping${NOATTR}"
