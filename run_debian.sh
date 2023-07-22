@@ -1,7 +1,7 @@
 # A sourcefile to launch debian container within DebDroid
 # This is not a launch command, this is required by the debdroid launch script
-[ -f "${DEBDROID__DEBIAN_FS}/etc/hostname" ] && DEBDROID__DEBIAN_HOSTNAME="$(cat ${DEBDROID__DEBIAN_FS}/etc/hostname)" || DEBDROID__DEBIAN_HOSTNAME="termux_debian"
-[ -f "${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc" ] && DEBDROID__DEBIAN_USER_INFO="$(cat ${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc)" || DEBDROID__DEBIAN_USER_INFO="root"
+[ -f "${DEBDROID__DEBIAN_FS}/etc/hostname" ] && DEBDROID__DEBIAN_HOSTNAME="$(head -n 1 ${DEBDROID__DEBIAN_FS}/etc/hostname)" || DEBDROID__DEBIAN_HOSTNAME="termux_debian"
+[ -f "${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc" ] && DEBDROID__DEBIAN_USER_INFO="$(head -n 1 ${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc)" || DEBDROID__DEBIAN_USER_INFO="root"
 
 # Generate procfiles
 gen_proc_files(){
