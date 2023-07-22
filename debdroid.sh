@@ -63,7 +63,7 @@ trap 'sigtrap' HUP INT KILL QUIT TERM
 
 # Check if dependencies are installed
 for deps in chmod curl id mkdir paste proot rm tar; do
-	if [ ! -x "$(command -v $deps)"]; then
+	if [ ! -x "$(command -v $deps)" ]; then
 		echo "${RED}E: Command ${YELLOW}${deps}${RED} doesn't exist, please install it${NOATTR}."
 		exit 2
 	fi
