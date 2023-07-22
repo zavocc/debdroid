@@ -11,10 +11,10 @@ DebDroid is an Debian Installer for the Android OS, this method of installing De
 	-- Linus Torvalds
 
 # About DebDroid
-DebDroid will install Debian Container within termux, creates a fresh debian prefix for the location of the container, usually it will be placed in: \
-`/data/data/com.termux/files/debian`
+DebDroid will install Debian container within termux, creates a fresh Debian prefix for the location of the container, usually it will be placed in: \
+`/data/data/com.termux/files/Debian`
 
-It lives outside the `$PREFIX` directory so if you decide to erase your broken `$PREFIX` directory, then your debian container will remain intact.
+It lives outside the `$PREFIX` directory so if you decide to erase your broken `$PREFIX` directory, then your Debian container will remain intact.
 
 This script also checks for updates so you can update it anytime by downloading it, this checks updates every time you open fresh Debian container.
 
@@ -46,7 +46,7 @@ debdroid install --32 --suite sid
 
 A list of supported releases can be listed by typing `debdroid install --list`
 
-During Installation, it will update and upgrade the Debian System if necessary and installs required packages \
+During Installation, it will update and upgrade the Debian system if necessary and installs required packages \
 it will prompt you to enter your required information, this is necessary to capture user input, otherwise it will fallback to the following default credentials:
 * User: `user`
 * Password: `passw0rd`
@@ -65,7 +65,7 @@ Or to enter root shell:
 debdroid launch --asroot
 ```
 
-If you want to enter debian other than shell, you can pass commands by doing:
+If you want to enter Debian other than shell, you can pass commands by doing:
 ```
 debdroid launch -- [command]
 ```
@@ -93,9 +93,9 @@ Although if you want to do it in Termux Way, you need to enter this commands in 
 If possible, you need to restart the container
 
 ## Running Termux Commands inside Debian
-It's also possible to run host commands in the guest, and this can be used to run programs which are not available to the debian repositories, this implementation is like from the feature of [WSL](https://docs.microsoft.com/en-us/windows/wsl/interop)
+It's also possible to run host commands in the guest, and this can be used to run programs which are not available to the Debian repositories, this implementation is like from the feature of [WSL](https://docs.microsoft.com/en-us/windows/wsl/interop)
 
-![interoperability](./images/termux-cmds-debian.png)
+![interoperability](./images/termux-cmds-Debian.png)
 
 In some cases this may conflict with some dependencies or programs that is optimized for the usage with Termux and may cause some problems like compiling programs and having different libc linker, due to the way on [how they're set up between them](https://wiki.termux.com/wiki/Differences_from_Linux), or may impose security risks, if you don't want to happen, you can disable it by typing:
 ```
@@ -109,12 +109,12 @@ echo 1 > /.proot.debdroid/binfmt/corrosive-session
 ```
 
 # Deleting Debian Container
-If you don't want to use debian anymore, you can do
+If you don't want to use Debian anymore, you can do
 ```
 debdroid purge
 ```
 
-Keep in mind that if you do `termux-reset` then your debian container will not be deleted, although the next time you do that will do a dependency install if possible
+Keep in mind that if you do `termux-reset` then your Debian container will not be deleted, although the next time you do that will do a dependency install if possible
 
 # Updating Debian Containers
 Sometimes, an update can be useful like newer bugfixes. To do that, a simple `debdroid reconfigure` will do the trick, but this also refreshes your Debian system
@@ -125,4 +125,4 @@ You can bug reports by creating an [issue](https://github.com/WMCB-Tech/debdroid
 # Reference Links
 * [PRoot](https://proot-me.github.io/)
 * [Termux](https://termux.com)
-* [Debian Wiki](https://wiki.debian.org)
+* [Debian Wiki](https://wiki.Debian.org)
