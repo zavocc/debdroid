@@ -297,7 +297,7 @@ uninstall_debian(){
 	read -p "${RED}N: Do you want to delete the Debian container? [y/N] ${NOATTR}" userinput
 
 	if [ ! -e "${DEBDROID__DEBIAN_FS}" ]; then
-		echo "${YELLOW}I: Debian container isn't installed, Continuing Anyway...${NOATTR}"
+		echo "${YELLOW}I: Debian container isn't installed, continuing anyway...${NOATTR}"
 		no_chmod=y
 	fi
 	
@@ -308,8 +308,7 @@ uninstall_debian(){
 				chmod 777 "${DEBDROID__DEBIAN_FS}" -R
 			fi
 			
-			rm -rf "${DEBDROID__DEBIAN_FS}"
-			if [ ! -e "${DEBDROID__DEBIAN_FS}" ]; then
+			if rm -rf "${DEBDROID__DEBIAN_FS}" >/dev/null 2>&1; then
 				echo "${GREEN}I: The Debian container Successfully Deleted${NOATTR}"
 				exit 0
 			else

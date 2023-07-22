@@ -243,7 +243,7 @@ source "${DEBDROID__DEBIAN_FS}/.proot.debdroid/mountpoints.sh"
 # Default variables
 prootargs+=" /usr/bin/env -i"
 prootargs+=" HOME=/root"
-prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
 prootargs+=" LANG=C.UTF-8"
+prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
 prootargs+=" TERM=${TERM:-xterm-256color}"
 prootargs+=" USER=root"
