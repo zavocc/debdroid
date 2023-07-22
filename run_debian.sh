@@ -3,9 +3,6 @@
 [ -f "${DEBDROID__DEBIAN_FS}/etc/hostname" ] && DEBDROID__DEBIAN_HOSTNAME="$(cat ${DEBDROID__DEBIAN_FS}/etc/hostname)" || DEBDROID__DEBIAN_HOSTNAME="termux_debian"
 [ -f "${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc" ] && DEBDROID__DEBIAN_USER_INFO="$(cat ${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc)" || DEBDROID__DEBIAN_USER_INFO="root"
 
-# Unset LD_PRELOAD which it redefines termux-exec() hook
-unset LD_PRELOAD
-
 # Generate procfiles
 gen_proc_files(){
 # /proc/stat
@@ -181,7 +178,7 @@ echo ""
 echo "You can add one or more users with the command ${YELLOW}addusers${GREEN} this command will setup not only the user account but also it sets up sudo access for second account"
 echo "You can switch users by using ${YELLOW}su${GREEN} command"
 echo ""
-echo "To Update your debian system in just a tap, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
+echo "To update your debian system in just a tap, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
 echo ""
 echo "All of your files are living outside the Termux's prefix directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container${NOATTR}"
 touch /.proot.debdroid/.hushlogin
@@ -233,6 +230,7 @@ case "$(getprop ro.build.version.release)" in
 	5*|6*) ;;
 	*)
 	prootargs+=" --sysvipc"
+	prootargs+=" --ashmem-memfd"
 	;;
 esac
 

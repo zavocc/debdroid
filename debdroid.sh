@@ -9,6 +9,10 @@
 # All Rights Reserved (2020, 2021-2022, 2023) made by @zavocc
 #############################################
 set -e -u
+
+# Unset LD_PRELOAD which causes to redirect Termux paths to standard FHS locations
+unset LD_PRELOAD
+
 # Default Debian Location
 # This will be placed outside the 'usr' directory when 'termux-reset' is invoked, then all the preferences will be saved
 DEBDROID__DEBIAN_FS="/data/data/com.termux/files/debian"
@@ -44,13 +48,13 @@ if [ "$(id -u)" == 0 ]; then
 	exit 1
 fi
 
-# Create Temporary Directory (We don't use mktemp as to be used for update delay caching)
+# Create temporary directory (don't use mktemp as to be used for update delay caching)
 mkdir -p "${DEBDROID__TEMPDIR}"
 
 check_update(){
 	if curl https://google.com --fail --silent --insecure >/dev/null; then
 		if [ ! "$(curl --silent --fail --location ${DEBDROID__URL_REPO}/version.txt)" == "${DEBDROID__SCRIPT_VER}" ]; then
-			echo "${YELLOW}I: A New Version of this script is available, you may install a new version over this script${NOATTR}"
+			echo "${YELLOW}I: A new version of this script is available, you may install a new version over this script${NOATTR}"
 			touch "${DEBDROID__TEMPDIR}/update-cache-lock"
 		fi
 	else
@@ -65,7 +69,7 @@ fi
 
 # Function to handle signal trap
 sigtrap(){
-	echo "${RED}W: The Script generated error code 127, Quitting as requested!${NOATTR}"
+	echo "${RED}E: The script encountered an unexpected error, quitting as requested!${NOATTR}" >&2
 	exit 127
 }
 
@@ -82,7 +86,7 @@ fi
 show_help(){
 	echo "${GREEN}DebDroid: Debian Installer for Android OS"
 	echo ""
-	echo "This Script will allow you to install Debian on your Device like Chromebooks, Phone, Tablets and TV with Termux in just a few keystrokes"
+	echo "This script will allow you to install Debian on your Device like Chromebooks, Phones, Tablets and TV with Termux in just a few keystrokes"
 	echo ""
 	echo "Here are the commands to operate within the debian container:"
 	echo "${YELLOW} install"
@@ -92,12 +96,12 @@ show_help(){
 	echo " backup | export"
 	echo " restore | import"
 	echo ""
-	echo "${GREEN}You can install Debian Stable by typing ${YELLOW}debdroid install${GREEN} or ${YELLOW}debdroid install stable${GREEN}"
+	echo "${GREEN}You can install Debian stable by typing ${YELLOW}debdroid install${GREEN} or testing one with ${YELLOW}debdroid install --suite testing${GREEN}"
 	echo "You can list the recognized releases with ${YELLOW}debdroid install list${GREEN} command"
 	echo ""
 	echo "To perform reconfiguration (Interrupted Install, Updating the container) you may enter ${YELLOW}debdroid reconfigure${GREEN}"
 	echo ""
-	echo "To launch your debian container, you may type ${YELLOW}debdroid launch${GREEN} or ${YELLOW}debdroid launch-asroot${GREEN}"
+	echo "To launch your debian container, you may type ${YELLOW}debdroid launch${GREEN} or ${YELLOW}debdroid launch --asroot${GREEN}"
 	echo "See ${YELLOW}debdroid launch --help${GREEN} for details"
 	echo ""
 	echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
@@ -105,7 +109,6 @@ show_help(){
 
 # Function to enter rootfs
 run_proot_cmd(){
-	unset LD_PRELOAD
 	proot --link2symlink --kill-on-exit \
 		-0 -p -L -H --kernel-release="6.2.0-debdroid" \
 		--rootfs="${DEBDROID__DEBIAN_FS}" \
@@ -115,11 +118,11 @@ run_proot_cmd(){
 		--bind="${DEBDROID__DEBIAN_FS}/run/shm:/dev/shm" \
 		--cwd=/root \
 		/usr/bin/env -i \
+			HOME=/root \
+			LANG=C.UTF-8 \
 			PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin \
 			TERM=${TERM:-xterm-256color} \
-			HOME=/root \
 			USER=root \
-			LANG=C.UTF-8 \
 			"$@"
 }
 
@@ -129,7 +132,6 @@ perform_configuration(){
 		echo "${RED}E: The Debian container is invalid, Aborting!!!${NOATTR}" >&2
 		exit 1
 	fi
-	printf "\e]2;DebDroid - Configuring the Debian container...\a"
 	curl --silent --fail --location --output "${DEBDROID__DEBIAN_FS}/.proot.debdroid/debian_config.sh" "${DEBDROID__URL_REPO}/debian_config.sh"
 	chmod 755 "${DEBDROID__DEBIAN_FS}/.proot.debdroid/debian_config.sh"
 	# Add Proper /run/shm binding
@@ -248,7 +250,6 @@ install_debian(){
 			;;
 	esac
 
-	printf "\e]2;DebDroid - Installing the Debian container...\a"
 	echo "${GREEN}I: The following distribution was requested: ${YELLOW}${debian_name}${NOATTR}"
 
 	echo "${GREEN}I: Downloading the image file${NOATTR}"
@@ -256,12 +257,11 @@ install_debian(){
 	if [ -e "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" ]; then
 		mv "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz.part" "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz"
 	else
-		echo "${RED}E: An Error has occured during the installation: no such file or directory, please try again${NOATTR}" >&2
+		echo "${RED}E: An error has occured during the installation: No such file or directory, please try again${NOATTR}" >&2
 		return 1
 	fi
 
 	echo "${GREEN}I: Extracting the image file${NOATTR}"
-	printf "\e]2;DebDroid - Extracting the Image file...\a"
 	mkdir -p "${DEBDROID__DEBIAN_FS}"
 	proot --link2symlink -0 tar --preserve-permissions --delay-directory-restore --warning=no-unknown-keyword -xf "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz" --exclude dev -C "${DEBDROID__DEBIAN_FS}" ||:
 
@@ -269,10 +269,10 @@ install_debian(){
 	mkdir "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds" -p
 	echo "${debian_name}" > "${DEBDROID__DEBIAN_FS}/etc/debian_chroot"
 	if perform_configuration; then
-		echo "${GREEN}I: The Debian container Installed Successfully, you can run it by typing ${YELLOW}debdroid launch${NOATTR}"
+		echo "${GREEN}I: The Debian container installed Successfully, you can run it by typing ${YELLOW}debdroid launch${NOATTR}"
 		return 0
 	else
-		echo "${RED}W: The Debian container isn't successfully installed, should this happen? you can run the command ${YELLOW}debdroid reconfigure${GREEN} if necessary${NOATTR}"
+		echo "${RED}E: The Debian container isn't successfully installed, should this happen? You can run the command ${YELLOW}debdroid reconfigure${GREEN} if necessary${NOATTR}"
 		return 1
 	fi
 }
@@ -291,7 +291,6 @@ uninstall_debian(){
 	
 	case "${userinput}" in
 		Y*|y*)
-			printf "\e]2;DebDroid - Uninstalling the Debian container...\a"
 			echo "${YELLOW}I: Deleting the container (debian)${NOATTR}"
 			if [ ! "${no_chmod:-}" == "y" ]; then
 				chmod 777 "${DEBDROID__DEBIAN_FS}" -R
@@ -350,6 +349,9 @@ launch_debian(){
 				echo "To run commands other than shell, you can specify external command by doing:"
 				echo "${YELLOW} debdroid launch -- [command]${GREEN}"
 				echo ""
+				echo "To enter root shell, pass the ${YELLOW}--asroot${GREEN} argument"
+				echo "${YELLOW} debdroid launch --asroot${GREEN}"
+				echo "${YELLOW} debdroid launch --asroot -- [command]${GREEN}"
 				echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
 				exit;
 				;;
@@ -390,7 +392,7 @@ backup_debian_container(){
 	local args
 
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/.proot.debdroid/run_debian" ]; then
-		echo "${RED}E: Cannot Backup the Debian container: The Debian container isn't Installed${NOATTR}" >&2
+		echo "${RED}E: Cannot backup the Debian container: The Debian container isn't installed${NOATTR}" >&2
 		exit 1
 	fi
 
@@ -401,9 +403,8 @@ backup_debian_container(){
 		exit 1
 	fi
 
-	echo "${GREEN}I: The Tarball will be saved in $(realpath -m ${args})${NOATTR}"
+	echo "${GREEN}I: The backup file will be saved in $(realpath -m ${args})${NOATTR}"
 	echo "${YELLOW}I: Backing up the container... this may take some time${NOATTR}"
-	printf "\e]2;DebDroid - Backing up Debian container...\a"
 	if tar --preserve-permissions -zcf "${args}" -C "${DEBDROID__DEBIAN_FS}" ./; then
 		echo "${GREEN}I: The container successfully exported${NOATTR}"
 		exit 0
@@ -421,18 +422,18 @@ restore_debian_container(){
 	args="$@"
 
 	if [ -z "${args}" ]; then
-		echo "${RED}E: Please specify a tarball for restoring the container${NOATTR}" >&2
+		echo "${RED}E: Please specify a backup file for restoring the container${NOATTR}" >&2
 		exit 1
 	fi
 	
 	# Check if the tarball exists
 	if [ ! -e "$(realpath -m ${args})" ]; then
-		echo "${RED}E: The Tarball that you're trying to import dosen't exist${NOATTR}" >&2
+		echo "${RED}E: The backup file that you're trying to import dosen't exist${NOATTR}" >&2
 		exit 1
 	fi
 	
 	# User Input
-		read -p "${GREEN}I: Do you want to restore the container? all of the existing state will be lost [y/N]? ${NOATTR}" userinput
+		read -p "${GREEN}I: Do you want to restore the container? All of the existing state will be lost [y/N]? ${NOATTR}" userinput
 			case "${userinput}" in
 				Y*|y*) ;;
 				N*|n*)
@@ -446,7 +447,6 @@ restore_debian_container(){
 			esac
 	
 	echo "${YELLOW}I: Restoring the container...${NOATTR}"
-	printf "\e]2;DebDroid - Restoring Debian container...\a"
 	mkdir -p "${DEBDROID__DEBIAN_FS}"
 	if tar --recursive-unlink --delay-directory-restore --preserve-permissions -zxf "$(realpath -m ${args})" -C "${DEBDRROID__DEBIAN_FS}"; then
 		echo "${GREEN}I: The container successfully imported${NOATTR}"
@@ -469,7 +469,7 @@ if [ $# -ge 1 ]; then
 		reconfigure|configure)
 			shift 1;
 			if perform_configuration; then
-				echo "${GREEN}I: Done Configuring the Debian container${NOATTR}"
+				echo "${GREEN}I: Done configuring the Debian container${NOATTR}"
 				exit 0
 			else
 				echo "${RED}W: An error has occured during the reconfiguration${NOATTR}"

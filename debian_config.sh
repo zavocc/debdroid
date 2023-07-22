@@ -23,11 +23,11 @@ DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid/2.0"
 rm -rf /etc/ld.so.preload
 rm -rf /usr/local/lib/libdisableselinux.so
 
-# Add 'contrib non-free' componenets
+# Add 'contrib' component
 [ -f /etc/apt/sources.list ] || sources_list="/etc/apt/sources.list.d/debian.sources"
 
-if ! grep -q "main contrib non-free" "${sources_list:-/etc/apt/sources.list}"; then
-	sed -i "s/main/main contrib non-free/g" "${sources_list:-/etc/apt/sources.list}"
+if ! grep -q "main contrib" "${sources_list:-/etc/apt/sources.list}"; then
+	sed -i "s/main/main contrib/g" "${sources_list:-/etc/apt/sources.list}"
 fi
 
 # Delete Docker Related files as if they're not essential and may cause problems
@@ -41,22 +41,22 @@ nameserver 8.8.4.4
 EOM
 
 # Perform Installation
-echo "${GREEN}I: Updating Packages if necessary, this may take several minutes, you also need to have a strong network connection and have a sufficient battery power to avoid interruption${NOATTR}"
+echo "${GREEN}I: Updating packages if necessary, this may take several minutes, you also need to have a strong network connection and have a sufficient battery power to avoid interruption${NOATTR}"
 apt update
 apt upgrade -yy
 echo "${GREEN}I: Installing some packages${NOATTR}"
 apt install nano sudo tzdata procps curl dialog apt-utils command-not-found lsb-release locales -yy --no-install-recommends
-echo "${GREEN}I: Perfoming Necessary fixes${NOATTR}"
+echo "${GREEN}I: Perfoming necessary fixes${NOATTR}"
 dpkg --configure -a ||:
 apt install -f -y ||:
-echo "${GREEN}I: Replacing System Binaries with a stub${NOATTR}"
+echo "${GREEN}I: Replacing system binaries with a stub${NOATTR}"
 ln -fs /bin/true /usr/local/bin/udevadm
-ln -fs /bin/true /usr/bin/dpkg-statoverride
+ln -fs /bin/true /usr/local/bin/dpkg-statoverride
 echo "${GREEN}I: Trying to reconfigure it once again: fixes dpkg errors${NOATTR}"
 dpkg --configure -a
 
 # Update command-not-found database
-echo "${GREEN}I: Populating ${YELLOW}command-not-found${GREEN} Database${NOATTR}"
+echo "${GREEN}I: Populating ${YELLOW}command-not-found${GREEN} database${NOATTR}"
 update-command-not-found
 apt update
 
@@ -101,7 +101,7 @@ chmod 755 /usr/local/bin/addusers
 curl --insecure --fail --silent --output /.proot.debdroid/run_debian "${DEBDROID__URL_REPO}/run_debian.sh"
 curl --insecure --fail --silent --output /.proot.debdroid/mountpoints.sh "${DEBDROID__URL_REPO}/mountpoints.sh"
 
-# Preload libdisableselinux.so library to avoid messing up Debian from Android Security Features
+# Preload libdisableselinux.so library to avoid messing up Debian from Android security features
 case $(dpkg --print-architecture) in
 	arm64|aarch64)
 		curl --insecure --fail --silent --output /usr/local/lib/libdisableselinux.so "${DEBDROID__URL_REPO}/libs/arm64/libdisableselinux.so"
@@ -126,7 +126,7 @@ if [ ! -e /.proot.debdroid/binfmt/corrosive-session ]; then
 	echo 1 > /.proot.debdroid/binfmt/corrosive-session
 fi
 
-# Perform Final Configuration
+# Perform final configuration
 echo "${GREEN}I: Performing Final Configuration${NOATTR}"
 dpkg-reconfigure tzdata || :
 
@@ -134,6 +134,7 @@ dpkg-reconfigure tzdata || :
 if ! dpkg-reconfigure locales; then
 	echo "${GREEN}I: The language environment isn't configured: falling back to C.UTF-8${NOATTR}"
 	echo "LANG=C.UTF-8" >> /etc/default/locale
+	sleep 3
 fi
 
 # Implementation of hostname, this feature uniquely identifies your container, see https://github.com/termux/proot/issues/80 issue for more details
@@ -183,7 +184,7 @@ if [ ! -e /.proot.debdroid/userinfo.rc ]; then
 		echo "$(cat /.proot.debdroid/userinfo.rc)":"passw0rd" | chpasswd
 	fi
 else
-	echo "${YELLOW}I: The User Account is already been set up... Skipping${NOATTR}"
+	echo "${YELLOW}I: The user account is already been set up... Skipping${NOATTR}"
 fi
 
 rm /.setup_has_not_done
