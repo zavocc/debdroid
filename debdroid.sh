@@ -100,8 +100,6 @@ show_help(){
 	echo "To launch your debian container, you may type ${YELLOW}debdroid launch${GREEN} or ${YELLOW}debdroid launch-asroot${GREEN}"
 	echo "See ${YELLOW}debdroid launch --help${GREEN} for details"
 	echo ""
-	echo "You can customize your Debian Needs with command ${YELLOW}debianize${GREEN}. This will allow you to install your desired workstation packages automatically in just a few keystrokes"
-	echo ""
 	echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
 }
 

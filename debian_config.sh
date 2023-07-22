@@ -100,8 +100,6 @@ chmod 755 /usr/local/bin/addusers
 # Download required files to launch debian
 curl --insecure --fail --silent --output /var/debdroid/run_debian "${DEBDROID__URL_REPO}/run_debian.sh"
 curl --insecure --fail --silent --output /var/debdroid/mountpoints.sh "${DEBDROID__URL_REPO}/mountpoints.sh"
-curl --insecure --fail --silent --output /usr/local/bin/debianize "${DEBDROID__URL_REPO}/debianize"
-chmod 755 /usr/local/bin/debianize
 
 # Preload libdisableselinux.so library to avoid messing up Debian from Android Security Features
 case $(dpkg --print-architecture) in

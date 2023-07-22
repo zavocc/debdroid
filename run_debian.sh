@@ -184,8 +184,6 @@ echo "You can switch users by using ${YELLOW}su${GREEN} command"
 echo ""
 echo "To Update your debian system in just a tap, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
 echo ""
-echo "You can also setup your debian needs with the command ${YELLOW}debianize${GREEN}, this script will automate the entire process of installing your needs"
-echo ""
 echo "All of your files are living outside the Termux's prefix directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container${NOATTR}"
 touch /var/debdroid/.hushlogin
 fi
