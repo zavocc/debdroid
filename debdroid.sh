@@ -447,7 +447,7 @@ restore_debian_container(){
 	
 	echo "${YELLOW}I: Restoring the container...${NOATTR}"
 	printf "\e]2;DebDroid - Restoring Debian container...\a"
-	mkdir -p "${DEBDRROID__DEBIAN_FS}"
+	mkdir -p "${DEBDROID__DEBIAN_FS}"
 	if tar --recursive-unlink --delay-directory-restore --preserve-permissions -zxf "$(realpath -m ${args})" -C "${DEBDRROID__DEBIAN_FS}"; then
 		echo "${GREEN}I: The container successfully imported${NOATTR}"
 		exit 0
