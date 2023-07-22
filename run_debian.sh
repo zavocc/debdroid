@@ -224,8 +224,12 @@ EOM
 kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\6.2.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\"
 
 # Process Arguments
-prootargs="--link2symlink --kill-on-exit"
-prootargs+=" --root-id -L -H -p"
+prootargs="--link2symlink"
+prootargs+=" --kill-on-exit"
+prootargs+=" --root-id"
+prootargs+=" -L"
+prootargs+=" -H"
+prootargs+=" -p"
 
 # Check for Android Version
 case "$(getprop ro.build.version.release)" in
@@ -237,10 +241,8 @@ esac
 
 prootargs+=" --rootfs=${DEBDROID__DEBIAN_FS}"
 prootargs+=" --cwd=/root"
-prootargs+=" --bind=/dev --bind=/proc --bind=/sys"
-prootargs+=" --bind=${DEBDROID__DEBIAN_FS}/run/shm:/dev/shm"
 
-# Source Mountpoint Configuration File
+# Source Mountpoint configuration File
 source "${DEBDROID__DEBIAN_FS}/var/debdroid/mountpoints.sh"
 
 # Default variables

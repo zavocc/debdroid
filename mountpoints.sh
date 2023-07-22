@@ -5,13 +5,20 @@
 # or
 # prootargs+=" --bind source"
 #
-# Android Partitions should not be disabled if interoperability is enabled
+# Android partitions should not be disabled if interoperability is enabled
 # You can disable it by typing
 # echo 0 > /var/debdroid/binfmt/corrosive-session
 ##########################################################
 
 ##########################################################
-# Android Mountpoints (Needed for executing host programs)
+# Core filesystem mountpoints
+prootargs+=" --bind=/dev"
+prootargs+=" --bind=/proc"
+prootargs+=" --bind=/sys"
+##########################################################
+
+##########################################################
+# Android mountpoints (Needed for executing host programs)
 # Check each Android directories if present
 for android_core_partitions in /apex /data /linkerconfig/ld.config.txt /odm /oem \
 	/product /system /system_ext /vendor /property_contexts /plat_property_contexts /storage; do
@@ -41,8 +48,11 @@ prootargs+=" --bind=/proc/self/fd/2:/dev/stderr"
 ##########################################################
 
 ##########################################################
-# Miscellanious Mountpoints
+# Miscellanious mountpoints
 prootargs+=" --bind=/dev/urandom:/dev/random"
 prootargs+=" --bind=${PREFIX:-/data/data/com.termux/files/usr}/tmp:/tmp"
 prootargs+=" --bind=${HOME:-/data/data/com.termux/files/home}:/home/termux_home"
+
+# /dev/shm
+prootargs+=" --bind=${DEBDROID__DEBIAN_FS}/run/shm:/dev/shm"
 ##########################################################
