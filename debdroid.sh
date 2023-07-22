@@ -408,7 +408,7 @@ backup_debian_container(){
 		exit 1
 	fi
 
-	args="$1"
+	args="$@"
 
 	if [ -z "${args}" ]; then
 		echo "${RED}E: Please specify a filename to output the tarball${NOATTR}" >&2
@@ -431,7 +431,7 @@ restore_debian_container(){
 	local args
 	local userinput
 
-	args="$1"
+	args="$@"
 
 	if [ -z "${args}" ]; then
 		echo "${RED}E: Please specify a backup file for restoring the container${NOATTR}" >&2
