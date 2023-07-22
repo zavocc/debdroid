@@ -117,7 +117,7 @@ debdroid purge
 Keep in mind that if you do `termux-reset` then your debian container will not be deleted, although the next time you do that will do a dependency install if possible
 
 # Updating Debian Containers
-Sometimes, an update can be useful like newer bugfixes. To do that, a simple `debdroid reconfigure` will do the trick, but this also refreshes your Debian System
+Sometimes, an update can be useful like newer bugfixes. To do that, a simple `debdroid reconfigure` will do the trick, but this also refreshes your Debian system
 
 # Feature Requests and Bug Reports
 You can bug reports by creating an [issue](https://github.com/WMCB-Tech/debdroid-ng/issues)
