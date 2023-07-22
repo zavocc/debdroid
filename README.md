@@ -95,7 +95,7 @@ If possible, you need to restart the container
 ## Running Termux Commands inside Debian
 It's also possible to run host commands in the guest, and this can be used to run programs which are not available to the Debian repositories, this implementation is like from the feature of [WSL](https://docs.microsoft.com/en-us/windows/wsl/interop)
 
-![interoperability](./images/termux-cmds-Debian.png)
+![interoperability](./images/termux-cmds-debian.png)
 
 In some cases this may conflict with some dependencies or programs that is optimized for the usage with Termux and may cause some problems like compiling programs and having different libc linker, due to the way on [how they're set up between them](https://wiki.termux.com/wiki/Differences_from_Linux), or may impose security risks, if you don't want to happen, you can disable it by typing:
 ```
