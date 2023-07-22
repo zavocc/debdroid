@@ -98,13 +98,8 @@ EOM
 chmod 755 /usr/local/bin/addusers
 
 # Download required files to launch debian
-<<<<<<< HEAD
-curl --insecure --fail --silent --output /.proot.debdroid/run_debian "${DEBDROID__URL_REPO}/run_debian.sh"
-curl --insecure --fail --silent --output /.proot.debdroid/mountpoints.sh "${DEBDROID__URL_REPO}/mountpoints.sh"
-=======
 curl --insecure --fail --silent --output /var/debdroid/run_debian "${DEBDROID__URL_REPO}/run_debian.sh"
 curl --insecure --fail --silent --output /var/debdroid/mountpoints.sh "${DEBDROID__URL_REPO}/mountpoints.sh"
->>>>>>> bbb5682ce5e05f32492bcd2bbbabc2c17cc81e30
 
 # Preload libdisableselinux.so library to avoid messing up Debian from Android Security Features
 case $(dpkg --print-architecture) in
