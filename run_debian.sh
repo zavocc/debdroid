@@ -191,23 +191,23 @@ touch /var/debdroid/.hushlogin
 fi
 
 export GALLIUM_DRIVER=${GALLIUM_DRIVER:-llvmpipe}
-export PULSE_SERVER=${PULSE_SERVER:-127.0.0.1}
 export MOZ_FAKE_NO_SANDBOX=1
 export MOZ_DISABLE_GMP_SANDBOX=1
 export MOZ_DISABLE_CONTENT_SANDBOX=1
+export PULSE_SERVER=${PULSE_SERVER:-127.0.0.1}
 
 if [ "\$(cat /var/debdroid/binfmt/corrosive-session)" == "1" ]; then
 export PATH=\${PATH}:/data/data/com.termux/files/usr/bin
-export BOOTCLASSPATH=${BOOTCLASSPATH:-}
-export DEX2OATBOOTCLASSPATH=${DEX2OATBOOTCLASSPATH:-}
 export ANDROID_ART_ROOT=${ANDROID_ART_ROOT:-}
-export ANDROID_TZDATA_ROOT=${ANDROID_TZDATA_ROOT:-}
-export ANDROID_ROOT=${ANDROID_ROOT:-}
 export ANDROID_DATA=${ANDROID_DATA:-}
 export ANDROID_I18N_ROOT=${ANDROID_I18N_ROOT:-}
+export ANDROID_ROOT=${ANDROID_ROOT:-}
 export ANDROID_RUNTIME_ROOT=${ANDROID_RUNTIME_ROOT:-}
-export EXTERNAL_STORAGE=${EXTERNAL_STORAGE:-}
+export ANDROID_TZDATA_ROOT=${ANDROID_TZDATA_ROOT:-}
+export BOOTCLASSPATH=${BOOTCLASSPATH:-}
+export DEX2OATBOOTCLASSPATH=${DEX2OATBOOTCLASSPATH:-}
 export COLORTERM=${COLORTERM:-truecolor}
+export EXTERNAL_STORAGE=${EXTERNAL_STORAGE:-}
 export PREFIX=${PREFIX:-/data/data/com.termux/files/usr}
 export TMPDIR=/tmp
 fi
@@ -220,10 +220,10 @@ cat > "${DEBDROID__DEBIAN_FS}/etc/hosts" <<- EOM
 127.0.1.1   ${DEBDROID__DEBIAN_HOSTNAME}.localdomain  ${DEBDROID__DEBIAN_HOSTNAME}
 EOM
 
-# Define kompat_source for overriding uname
+# Define kompat_source for overriding uname and compatibility with applications
 kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\6.2.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\"
 
-# Process Arguments
+# PRoot arguments
 prootargs="--link2symlink"
 prootargs+=" --kill-on-exit"
 prootargs+=" --root-id"
@@ -247,8 +247,8 @@ source "${DEBDROID__DEBIAN_FS}/var/debdroid/mountpoints.sh"
 
 # Default variables
 prootargs+=" /usr/bin/env -i"
-prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
 prootargs+=" HOME=/root"
+prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
+prootargs+=" LANG=C.UTF-8"
 prootargs+=" TERM=${TERM:-xterm-256color}"
 prootargs+=" USER=root"
-prootargs+=" LANG=C.UTF-8"

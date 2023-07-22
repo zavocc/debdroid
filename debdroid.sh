@@ -281,8 +281,8 @@ install_debian(){
 
 # Function to Delete Debian
 uninstall_debian(){
-	local userinput
 	local no_chmod
+	local userinput
 
 	read -p "${RED}N: Do you want to delete the Debian container? [y/N] ${NOATTR}" userinput
 
@@ -322,11 +322,11 @@ uninstall_debian(){
 # Function to run Debian container (Actually, this is just a wrapper to make it portable)
 launch_debian(){
 	local extcmd
-	local prootargs
 	local kompat_source
+	local prootargs
 	local DEBDROID__DEBIAN_HOSTNAME
-	local DEBDROID__DEBIAN_USER_INFO
 	local DEBDROID__DEBIAN_MOUNTPOINTS_INFO
+	local DEBDROID__DEBIAN_USER_INFO
 
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/var/debdroid/run_debian" ]; then
 		echo "${RED}E: The Debian container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}" >&2
