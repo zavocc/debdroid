@@ -41,7 +41,7 @@ DEBDROID__TEMPDIR="${TMPDIR:-/data/data/com.termux/files/usr/tmp}/.debdroid-cach
 DEBDROID__SCRIPT_VER="4.0"
 
 # Colored Environment Variables
-if [ -e "$(command -v tput)" ]; then
+if [ -x "$(command -v tput)" ]; then
 	RED="$(tput setaf 1)$(tput bold)"
 	GREEN="$(tput setaf 2)$(tput bold)"
 	YELLOW="$(tput setaf 3)$(tput bold)"
@@ -53,7 +53,6 @@ else
 	NOATTR=""
 fi
 
-
 # Don't run as root
 if [ "$(id -u)" == 0 ]; then
 	echo "${RED}E: running this script is discouraged and therefore not being used by root user${NOATTR}"
@@ -62,6 +61,22 @@ fi
 
 # Create temporary directory (don't use mktemp as to be used for update delay caching)
 mkdir -p "${DEBDROID__TEMPDIR}"
+
+# Function to handle signal trap
+sigtrap(){
+	echo "${RED}E: The script encountered an unexpected error, quitting as requested!${NOATTR}" >&2
+	exit 127
+}
+
+trap 'sigtrap' HUP INT KILL QUIT TERM
+
+# Check if dependencies are installed
+for deps in curl proot; do
+	if [ ! -x "$(command -v $deps)"]; then
+		echo "${RED}E: Command ${YELLOW}${deps}${RED} doesn't exist, please install it${NOATTR}."
+		exit 2
+	fi
+done
 
 check_update(){
 	if curl https://google.com --fail --silent --insecure >/dev/null; then
@@ -79,20 +94,6 @@ if [ ! -e "${DEBDROID__TEMPDIR}/update-cache-lock" ]; then
 	check_update
 fi
 
-# Function to handle signal trap
-sigtrap(){
-	echo "${RED}E: The script encountered an unexpected error, quitting as requested!${NOATTR}" >&2
-	exit 127
-}
-
-trap 'sigtrap' HUP INT KILL QUIT TERM
-
-# Check if dependencies are installed
-if ! [ -e "$(command -v proot)" ] && [ -e "$(command -v curl)" ]; then
-	echo "${GREEN}I: Installing ${YELLOW}proot, curl${GREEN} if necessary${NOATTR}"
-	pkg update
-	pkg install proot curl -yy
-fi
 
 # Function to show help
 show_help(){
