@@ -1,4 +1,4 @@
-# A sourcefile to launch debian container within DebDroid
+# A sourcefile to launch Debian container within DebDroid
 # This is not a launch command, this is required by the debdroid launch script
 [ -f "${DEBDROID__DEBIAN_FS}/etc/hostname" ] && DEBDROID__DEBIAN_HOSTNAME="$(head -n 1 ${DEBDROID__DEBIAN_FS}/etc/hostname)" || DEBDROID__DEBIAN_HOSTNAME="termux_debian"
 [ -f "${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc" ] && DEBDROID__DEBIAN_USER_INFO="$(head -n 1 ${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc)" || DEBDROID__DEBIAN_USER_INFO="root"
@@ -178,9 +178,9 @@ echo ""
 echo "You can add one or more users with the command ${YELLOW}addusers${GREEN} this command will setup not only the user account but also it sets up sudo access for second account"
 echo "You can switch users by using ${YELLOW}su${GREEN} command"
 echo ""
-echo "To update your debian system in just a tap, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
+echo "To update/reconfigure your Debian system, a simple ${YELLOW}debdroid reconfigure${GREEN} to ensure your container isn't outdated"
 echo ""
-echo "All of your files are living outside the Termux's prefix directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your debian container${NOATTR}"
+echo "All of your files are living outside the Termux's prefix directory, so a simple ${YELLOW}termux-reset${GREEN} command will not erase your Debian container${NOATTR}"
 touch /.proot.debdroid/.hushlogin
 fi
 

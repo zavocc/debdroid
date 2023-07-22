@@ -100,7 +100,7 @@ show_help(){
 	echo ""
 	echo "This script will allow you to install Debian on your Device like Chromebooks, Phones, Tablets and TV with Termux in just a few keystrokes"
 	echo ""
-	echo "Here are the commands to operate within the debian container:"
+	echo "Here are the commands to operate within the Debian container:"
 	echo "${YELLOW} install [--suite] [--32]"
 	echo " purge"
 	echo " reconfigure | configure"
@@ -113,7 +113,7 @@ show_help(){
 	echo ""
 	echo "To perform reconfiguration (Interrupted Install, Updating the container) you may enter ${YELLOW}debdroid reconfigure${GREEN}"
 	echo ""
-	echo "To launch your debian container, you may type ${YELLOW}debdroid launch${GREEN} or ${YELLOW}debdroid launch --asroot${GREEN}"
+	echo "To launch your Debian container, you may type ${YELLOW}debdroid launch${GREEN} or ${YELLOW}debdroid launch --asroot${GREEN}"
 	echo "See ${YELLOW}debdroid launch --help${GREEN} for details"
 	echo ""
 	echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
@@ -138,7 +138,7 @@ run_proot_cmd(){
 			"$@"
 }
 
-# Function to reconfigure debian
+# Function to reconfigure Debian
 perform_configuration(){
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
 		echo "${RED}E: The Debian container is invalid, Aborting!!!${NOATTR}" >&2
@@ -179,7 +179,7 @@ perform_configuration(){
 	run_proot_cmd "/.proot.debdroid/debian_config.sh"
 }
 
-# Function to install debian
+# Function to install Debian
 install_debian(){
 	local curl_download_link
 	local debian_name
@@ -208,7 +208,7 @@ install_debian(){
 				return 0
 				;;
 			-h|--help)
-				echo "${GREEN}Installs debian"
+				echo "${GREEN}Installs Debian container"
 				echo ""
 				echo "The basic syntax follows as:"
 				echo "${YELLOW} debdroid install${GREEN}"
@@ -289,7 +289,7 @@ install_debian(){
 	fi
 }
 
-# Function to Delete Debian
+# Function to delete Debian
 uninstall_debian(){
 	local no_chmod
 	local userinput
@@ -303,7 +303,7 @@ uninstall_debian(){
 	
 	case "${userinput}" in
 		Y*|y*)
-			echo "${YELLOW}I: Deleting the container (debian)${NOATTR}"
+			echo "${YELLOW}I: Deleting the container${NOATTR}"
 			if [ ! "${no_chmod:-}" == "y" ]; then
 				chmod 777 "${DEBDROID__DEBIAN_FS}" -R
 			fi
@@ -399,7 +399,7 @@ launch_debian(){
 }
 
 
-# Function to Backup the container
+# Function to backup the container
 backup_debian_container(){
 	local args
 
@@ -426,7 +426,7 @@ backup_debian_container(){
 	fi
 }
 
-# Function to Restore the container
+# Function to restore the container
 restore_debian_container(){
 	local args
 	local userinput
