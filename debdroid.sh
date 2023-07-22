@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-# This progra
-#
 # All Rights Reserved (2020, 2021-2022, 2023) made by @zavocc (also known as marcusz/WMCB Tech)
 #############################################
 set -e -u
