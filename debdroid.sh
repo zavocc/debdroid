@@ -445,18 +445,18 @@ restore_debian_container(){
 	fi
 	
 	# User Input
-		read -p "${GREEN}I: Do you want to restore the container? All of the existing state will be lost [y/N]? ${NOATTR}" userinput
-			case "${userinput}" in
-				Y*|y*) ;;
-				N*|n*)
-					echo "${RED}I: Aborting...${NOATTR}"
-					exit 1
-					;;
-				*)
-					echo "${RED}I: Aborting...${NOATTR}"
-					exit 1
-					;;
-			esac
+	read -p "${GREEN}I: Do you want to restore the container? All of the existing state will be lost [y/N]? ${NOATTR}" userinput
+		case "${userinput}" in
+			Y*|y*) ;;
+			N*|n*)
+				echo "${RED}I: Aborting...${NOATTR}"
+				exit 1
+				;;
+			*)
+				echo "${RED}I: Aborting...${NOATTR}"
+				exit 1
+				;;
+		esac
 	
 	echo "${YELLOW}I: Restoring the container...${NOATTR}"
 	mkdir -p "${DEBDROID__DEBIAN_FS}"
