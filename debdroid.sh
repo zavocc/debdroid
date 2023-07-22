@@ -1,12 +1,24 @@
 #!/data/data/com.termux/files/usr/bin/env bash
 #############################################
 # DebDroid 4.0 2020, 2021-2022, 2023
-# This script will allow you to install Debian on your Device with just a few taps
-# This script is also portable, all links, repos will be read on a single file
-# So to make it easier to fork and to create debdroid-based projects
+# This script will allow you to install Debian on your device with just a few taps
 #
-# Also you will need to comply the GPLv3 license as some components use that
-# All Rights Reserved (2020, 2021-2022, 2023) made by @zavocc
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# This progra
+#
+# All Rights Reserved (2020, 2021-2022, 2023) made by @zavocc (also known as marcusz/WMCB Tech)
 #############################################
 set -e -u
 
@@ -23,7 +35,7 @@ DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid/2.0"
 
 # Tempdir
 # Used to place temporary files and all downloaded cache will be stored and will be updated once it flushed
-DEBDROID__TEMPDIR="${TMPDIR}/.debdroid-cachedir"
+DEBDROID__TEMPDIR="${TMPDIR:-/data/data/com.termux/files/usr/tmp}/.debdroid-cachedir"
 
 # Script Version
 DEBDROID__SCRIPT_VER="4.0"
@@ -53,7 +65,7 @@ mkdir -p "${DEBDROID__TEMPDIR}"
 
 check_update(){
 	if curl https://google.com --fail --silent --insecure >/dev/null; then
-		if [ ! "$(curl --silent --fail --location ${DEBDROID__URL_REPO}/version.txt)" == "${DEBDROID__SCRIPT_VER}" ]; then
+		if [ ! "$(curl --silent --fail --location --insecure ${DEBDROID__URL_REPO}/version.txt | head -n 1)" == "${DEBDROID__SCRIPT_VER}" ]; then
 			echo "${YELLOW}I: A new version of this script is available, you may install a new version over this script${NOATTR}"
 			touch "${DEBDROID__TEMPDIR}/update-cache-lock"
 		fi
