@@ -1,8 +1,7 @@
 # A sourcefile to launch debian container within DebDroid
 # This is not a launch command, this is required by the debdroid launch script
-DEBDROID__DEBIAN_HOSTNAME="$(cat /data/data/com.termux/files/debian/etc/hostname)"
-DEBDROID__DEBIAN_USER_INFO="$(cat /data/data/com.termux/files/debian/.proot.debdroid/userinfo.rc)"
-DEBDROID__DEBIAN_MOUNTPOINTS_INFO="/data/data/com.termux/files/debian/.proot.debdroid/mountpoints.sh"
+[ -f "${DEBDROID__DEBIAN_FS}/etc/hostname" ] && DEBDROID__DEBIAN_HOSTNAME="$(cat ${DEBDROID__DEBIAN_FS}/etc/hostname)" || DEBDROID__DEBIAN_HOSTNAME="termux_debian"
+[ -f "${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc" ] && DEBDROID__DEBIAN_USER_INFO="$(cat ${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc)" || DEBDROID__DEBIAN_USER_INFO="root"
 
 # Unset LD_PRELOAD which it redefines termux-exec() hook
 unset LD_PRELOAD
