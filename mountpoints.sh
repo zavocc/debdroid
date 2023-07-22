@@ -1,9 +1,9 @@
 ### Mountpoints for DebDroid
 ##########################################################
 # To mount your custom mounts, the syntax should follows:
-# prootargs+=" --bind source:destination"
+# prootargs+=" --bind=source:destination"
 # or
-# prootargs+=" --bind source"
+# prootargs+=" --bind=source"
 #
 # Android partitions should not be disabled if interoperability is enabled
 # You can disable it by typing
