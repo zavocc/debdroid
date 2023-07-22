@@ -89,10 +89,10 @@ show_help(){
 	echo "This script will allow you to install Debian on your Device like Chromebooks, Phones, Tablets and TV with Termux in just a few keystrokes"
 	echo ""
 	echo "Here are the commands to operate within the debian container:"
-	echo "${YELLOW} install"
+	echo "${YELLOW} install [--suite] [--32]"
 	echo " purge"
-	echo " reconfigure"
-	echo " launch"
+	echo " reconfigure | configure"
+	echo " launch [--asroot] [--]"
 	echo " backup | export"
 	echo " restore | import"
 	echo ""
@@ -121,7 +121,7 @@ run_proot_cmd(){
 			HOME=/root \
 			LANG=C.UTF-8 \
 			PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin \
-			TERM=${TERM:-xterm-256color} \
+			TERM="${TERM:-xterm-256color}" \
 			USER=root \
 			"$@"
 }
@@ -379,7 +379,7 @@ launch_debian(){
 		DEBDROID__DEBIAN_USER_INFO="root"
 	fi
 
-	if [ ! -z "${extcmd}" ]; then
+	if [ -z "${extcmd}" ]; then
 		exec proot -k "${kompat_source}" $prootargs su -l "${DEBDROID__DEBIAN_USER_INFO}"
 	else
 		exec proot -k "${kompat_source}" $prootargs su -l "${DEBDROID__DEBIAN_USER_INFO}" -c "${extcmd}"
