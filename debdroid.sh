@@ -82,15 +82,15 @@ check_update(){
 	if curl https://google.com --fail --silent --insecure >/dev/null; then
 		if [ ! "$(curl --silent --fail --location --insecure ${DEBDROID__URL_REPO}/version.txt | head -n 1)" == "${DEBDROID__SCRIPT_VER}" ]; then
 			echo "${YELLOW}I: A new version of this script is available, you may install a new version over this script${NOATTR}"
-			: > "${DEBDROID__TEMPDIR}/update-cache-lock"
+			: > "${DEBDROID__TEMPDIR}/.update-cache-lock"
 		fi
 	else
-		echo "${YELLOW}N: Cannot Perform Update: Network is down. Skipping....."
+		echo "${YELLOW}N: Cannot perform update: Network is down. Skipping....."
 	fi
 }
 
 # Check for Updates but check if network connection is present
-if [ ! -e "${DEBDROID__TEMPDIR}/update-cache-lock" ]; then
+if [ ! -e "${DEBDROID__TEMPDIR}/.update-cache-lock" ]; then
 	check_update
 fi
 
