@@ -217,33 +217,44 @@ EOM
 # Define kompat_source for overriding uname and compatibility with applications
 kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\6.2.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\"
 
+############################################
 # PRoot arguments
-prootargs="--link2symlink"
-prootargs+=" --kill-on-exit"
-prootargs+=" --root-id"
-prootargs+=" -L"
-prootargs+=" -H"
-prootargs+=" -p"
+############################################
+
+# Default entrypoint to launch Debian shell
+# PRoot arguments are arranged right-to-left down-to-up order because of "set" positional argument placement accumulating arguments with "$@" reference which resets when set command is ran again without it
+# The use of set to assign positional arguments and later use it has benefits, it can properly handle strings and word splitting without the use of eval
+#
+# If using variable concatenation, it doesn't properly handle quotes and word splitting.
+# This was used in PRoot-Distro. Big help to properly re-write mountpoints configuration file to bind any files with spaces. Thank you @sylirre and Termux developers!
+set -- "USER=root"
+set -- "TERM=${TERM:-xterm-256color}" "$@"
+set -- "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin" "$@"
+set -- "LANG=C.UTF-8" "$@"
+set -- "HOME=/root" "$@"
+set -- "/usr/bin/env -i" "$@"
+
+# Mounts file
+source "${DEBDROID__DEBIAN_FS}/.proot.debdroid/mountpoints.sh"
+for m in "${mount[@]}"; do
+	set -- "--bind=${m}" "$@"
+done
 
 # Check for Android Version
 case "$(getprop ro.build.version.release)" in
 	5*|6*) ;;
 	*)
-	prootargs+=" --sysvipc"
-	prootargs+=" --ashmem-memfd"
+	set -- "--sysvipc" "$@"
+	set -- "--ashmem-memfd" "$@"
 	;;
 esac
 
-prootargs+=" --rootfs=${DEBDROID__DEBIAN_FS}"
-prootargs+=" --cwd=/root"
-
-# Source Mountpoint configuration File
-source "${DEBDROID__DEBIAN_FS}/.proot.debdroid/mountpoints.sh"
-
-# Default variables
-prootargs+=" /usr/bin/env -i"
-prootargs+=" HOME=/root"
-prootargs+=" LANG=C.UTF-8"
-prootargs+=" PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin"
-prootargs+=" TERM=${TERM:-xterm-256color}"
-prootargs+=" USER=root"
+set -- "--link2symlink" "$@"
+set -- "--kill-on-exit" "$@"
+set -- "--root-id" "$@"
+set -- "-L" "$@"
+set -- "-H" "$@"
+set -- "-p" "$@"
+set -- "-k" "${kompat_source}" "$@"
+set -- "--cwd=/root" "$@"
+set -- "--rootfs=${DEBDROID__DEBIAN_FS}" "$@"

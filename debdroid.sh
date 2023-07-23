@@ -330,6 +330,7 @@ uninstall_debian(){
 launch_debian(){
 	local extcmd
 	local kompat_source
+	local mount
 	local prootargs
 	local DEBDROID__DEBIAN_HOSTNAME
 	local DEBDROID__DEBIAN_MOUNTPOINTS_INFO
@@ -343,12 +344,12 @@ launch_debian(){
 	 while [ $# -ge 1 ]; do
 		case "$1" in
 			--)
-				shift 1;
-				break;
+				shift 1
+				break
 				;;
 			--asroot)
-				rootmode=true;
-				shift 1;
+				rootmode=true
+				shift 1
 				;;
 			-h|--help)
 				echo "${GREEN}This command will launch Debian System as regular user"
@@ -363,11 +364,11 @@ launch_debian(){
 				echo "${YELLOW} debdroid launch --asroot${GREEN}"
 				echo "${YELLOW} debdroid launch --asroot -- [command]${GREEN}"
 				echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
-				exit;
+				exit
 				;;
 			*)
 				echo "${RED}E: Invalid option... quitting${NOATTR}" >&2
-				return 1;
+				return 1
 				;;
 		esac
 	done
@@ -378,11 +379,11 @@ launch_debian(){
 		exit 1
 	fi
 
+	# Define External command
+	extcmd="$@"
+
 	# Source the file
 	source "${DEBDROID__DEBIAN_FS}/.proot.debdroid/run_debian"
-
-	# Define External Command
-	extcmd="$@"
 
 	# Launch PRoot
 	if [ "${rootmode:-}" == true ]; then
@@ -390,9 +391,9 @@ launch_debian(){
 	fi
 
 	if [ -z "${extcmd}" ]; then
-		exec proot -k "${kompat_source}" $prootargs su -l "${DEBDROID__DEBIAN_USER_INFO}"
+		exec proot "$@" su -l "${DEBDROID__DEBIAN_USER_INFO}"
 	else
-		exec proot -k "${kompat_source}" $prootargs su -l "${DEBDROID__DEBIAN_USER_INFO}" -c "${extcmd}"
+		exec proot "$@" "${kompat_source}" $prootargs su -l "${DEBDROID__DEBIAN_USER_INFO}" -c "${extcmd}"
 	fi
 }
 
