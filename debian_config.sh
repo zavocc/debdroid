@@ -79,7 +79,7 @@ fi
 
 # Check for zero argument
 if [ -z "\$ARGUMENT" ]; then
-echo "${RED}Please specify a user to add! this script only takes few arguments${NOATTR}"
+echo "${RED}Please specify a user to add! This script only takes few arguments${NOATTR}"
 exit 1
 fi
 
@@ -132,9 +132,12 @@ dpkg-reconfigure tzdata || :
 
 # Multi-launguage environment
 if ! dpkg-reconfigure locales; then
-	echo "${GREEN}I: The language environment isn't configured: falling back to C.UTF-8${NOATTR}"
-	echo "LANG=C.UTF-8" >> /etc/default/locale
-	sleep 3
+	# check if existing LANG variable exists since this could have been set when doing reconfiguration
+	if [ -z "${LANG:-}" ]; then
+		echo "${GREEN}I: The language environment isn't configured: falling back to C.UTF-8${NOATTR}"
+		echo "LANG=C.UTF-8" >> /etc/default/locale
+		sleep 3
+	fi
 fi
 
 # Implementation of hostname, this feature uniquely identifies your container, see https://github.com/termux/proot/issues/80 issue for more details

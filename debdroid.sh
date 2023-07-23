@@ -145,10 +145,10 @@ perform_configuration(){
 	fi
 	curl --silent --fail --location --output "${DEBDROID__DEBIAN_FS}/.proot.debdroid/debian_config.sh" "${DEBDROID__URL_REPO}/debian_config.sh"
 	chmod 755 "${DEBDROID__DEBIAN_FS}/.proot.debdroid/debian_config.sh"
-	# Add Proper /run/shm binding
+	# Add proper /run/shm binding
 	mkdir -p "${DEBDROID__DEBIAN_FS}/run/shm"
 
-	# Setup Android Groups if necessary
+	# Setup Android groups if necessary
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/.proot.debdroid/.group-setupdone" ]; then
 	
 		# Imported code from proot-distro
@@ -174,7 +174,7 @@ perform_configuration(){
 		: > "${DEBDROID__DEBIAN_FS}/.proot.debdroid/.group-setupdone"
 	fi
 
-	# Run Configuration Step
+	# Run configuration step
 	run_proot_cmd "/.proot.debdroid/debian_config.sh"
 }
 
@@ -308,7 +308,7 @@ uninstall_debian(){
 			fi
 			
 			if rm -rf "${DEBDROID__DEBIAN_FS}" >/dev/null 2>&1; then
-				echo "${GREEN}I: The Debian container Successfully Deleted${NOATTR}"
+				echo "${GREEN}I: The Debian container successfully deleted${NOATTR}"
 				exit 0
 			else
 				echo "${RED}E: The Debian container wasn't deleted successfully${NOATTR}" >&2

@@ -215,7 +215,7 @@ cat > "${DEBDROID__DEBIAN_FS}/etc/hosts" <<- EOM
 EOM
 
 # Define kompat_source for overriding uname and compatibility with applications
-kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\6.2.0-debdroid\\$(uname -v)\\$(uname -m)\\localdomain\\-1\\"
+kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\6.2.0-debdroid\\#1 SMP Tue Jan 01 12:00:00 UTC 2023\\$(uname -m)\\localdomain\\-1\\"
 
 ############################################
 # PRoot arguments
@@ -232,7 +232,7 @@ set -- "TERM=${TERM:-xterm-256color}" "$@"
 set -- "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin" "$@"
 set -- "LANG=C.UTF-8" "$@"
 set -- "HOME=/root" "$@"
-set -- "/usr/bin/env -i" "$@"
+set -- "/usr/bin/env" "-i" "$@"
 
 # Mounts file
 source "${DEBDROID__DEBIAN_FS}/.proot.debdroid/mountpoints.sh"
