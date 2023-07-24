@@ -83,7 +83,7 @@ check_update(){
 			: > "${DEBDROID__TEMPDIR}/.update-cache-lock"
 		fi
 	else
-		echo "${YELLOW}N: Cannot perform update: Network is down. Skipping....."
+		echo "${YELLOW}N: Cannot perform update checking: Network is down. Skipping....."
 	fi
 }
 

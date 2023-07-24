@@ -5,14 +5,14 @@ DebDroid - Debian for Android OS! \
 ![debdroid](./images/neofetch.png)
 
 # What is DebDroid?
-DebDroid is an Debian Installer for the Android OS, this method of installing Debian on Android does not require root access and you can run your favorite Linux Applications Easily
+DebDroid is an Debian Installer for the Android OS, this method of installing Debian on Android does not require root access and you can run your favorite Linux applications easily
 
 > There's innovation in Linux. There are some really good technical features that I'm proud of. There are capabilities in Linux that aren't in other operating systems \
 	-- Linus Torvalds
 
 # About DebDroid
 DebDroid will install Debian container within termux, creates a fresh Debian prefix for the location of the container, usually it will be placed in: \
-`/data/data/com.termux/files/Debian`
+`/data/data/com.termux/files/debian`
 
 It lives outside the `$PREFIX` directory so if you decide to erase your broken `$PREFIX` directory, then your Debian container will remain intact.
 
@@ -85,12 +85,15 @@ and restart to switch to new user account, although you may use `adduser` or `us
 ## Initializing Sounds
 You can initialize sounds and transmit it via Termux's Pulseaudio, to enable sounds you may open xsdl app and keep it running, no need to configure `PULSE_SERVER` inside the guest
 
-Although if you want to do it in Termux Way, you need to enter this commands in termux
+Although if you want to do it in Termux way, you need to enter this commands in termux
 ```
 ~ $ pulseaudio --start --exit-idle-time=-1
 ~ $ pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1
 ```
 If possible, you need to restart the container
+
+## OpenGL acceleration
+DebDroid will have `GALLIUM_DRIVER` environment variable synchronized from the host to use the same rendering mode in Debian. If the `GALLIUM_DRIVER` is not exported to Termux to specific value, it will use `llvmpipe` to it's default OpenGL rendering. Setting `export GALLIUM_DRIVER=virpipe` in Termux would automatically use that inside Debian guest.
 
 ## Running Termux Commands inside Debian
 It's also possible to run host commands in the guest, and this can be used to run programs which are not available to the Debian repositories, this implementation is like from the feature of [WSL](https://docs.microsoft.com/en-us/windows/wsl/interop)
