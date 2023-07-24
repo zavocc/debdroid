@@ -62,14 +62,14 @@ trap 'sigtrap' HUP INT KILL QUIT TERM
 # Check if dependencies are installed
 for deps in chmod curl id mkdir paste proot rm tar; do
 	if [ ! -x "$(command -v $deps)" ]; then
-		echo "${RED}E: Command ${YELLOW}${deps}${RED} doesn't exist, please install it${NOATTR}."
+		echo "${RED}E: Command ${YELLOW}${deps}${RED} doesn't exist, please install it${NOATTR}." >&2
 		exit 2
 	fi
 done
 
 # Don't run as root
 if [ "$(id -u)" == 0 ]; then
-	echo "${RED}E: running this script is discouraged and therefore not being used by root user${NOATTR}"
+	echo "${RED}E: running this script is discouraged and therefore not being used by root user${NOATTR}" >&2
 	exit 1
 fi
 
@@ -420,7 +420,7 @@ backup_debian_container(){
 		echo "${GREEN}I: The container successfully exported${NOATTR}"
 		exit 0
 	else
-		echo "${RED}I: The container isn't successfully exported${NOATTR}"
+		echo "${RED}I: The container isn't successfully exported${NOATTR}" >&2
 		exit 1
 	fi
 }
@@ -463,7 +463,7 @@ restore_debian_container(){
 		echo "${GREEN}I: The container successfully imported${NOATTR}"
 		exit 0
 	else
-		echo "${RED}I: The container isn't successfully imported${NOATTR}"
+		echo "${RED}I: The container isn't successfully imported${NOATTR}" >&2
 		exit 1
 	fi
 }
