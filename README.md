@@ -16,12 +16,12 @@ DebDroid will install Debian container within termux, creates a fresh Debian pre
 
 It lives outside the `$PREFIX` directory so if you decide to erase your broken `$PREFIX` directory, then your Debian container will remain intact.
 
-This script also checks for updates so you can update it anytime by downloading it, this checks updates every time you open fresh Debian container.
+This script also checks for updates so you can update it anytime by downloading it, this checks updates every time you open Debian container.
 
 # Installation
 You can install DebDroid by entering:
 ```
-curl --location https://git.io/Jt68D > debdroid
+curl --location https://github.com/zavocc/debdroid/raw/master/debdroid.sh > debdroid
 mv debdroid $PREFIX/bin
 chmod +x $PREFIX/bin/debdroid
 ```
@@ -117,7 +117,7 @@ If you don't want to use Debian anymore, you can do
 debdroid purge
 ```
 
-Keep in mind that if you do `termux-reset` then your Debian container will not be deleted, although the next time you do that will do a dependency install if possible
+Keep in mind that if you do `termux-reset` then your Debian container will not be deleted.
 
 # Updating Debian Containers
 Sometimes, an update can be useful like newer bugfixes. To do that, a simple `debdroid reconfigure` will do the trick, but this also refreshes your Debian system
