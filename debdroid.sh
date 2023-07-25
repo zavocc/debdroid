@@ -60,7 +60,7 @@ sigtrap(){
 trap 'sigtrap' HUP INT KILL QUIT TERM
 
 # Check if dependencies are installed
-for deps in chmod curl head id ls mkdir mv paste proot rm tar; do
+for deps in chmod curl head id ls mkdir mv paste proot rm tar tr; do
 	if [ ! -x "$(command -v $deps)" ]; then
 		echo "${RED}E: Command ${YELLOW}${deps}${RED} doesn't exist, please install it${NOATTR}." >&2
 		exit 2
@@ -140,14 +140,16 @@ run_proot_cmd(){
 # Function to reconfigure Debian
 perform_configuration(){
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
-		echo "${RED}E: The Debian container is invalid, Aborting!!!${NOATTR}" >&2
+		echo "${RED}E: The Debian container is invalid or wasn't installed. Aborting!!!${NOATTR}" >&2
 		exit 1
 	fi
+
+	# Create runtime directory
+	mkdir "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds" -p
+
 	curl --silent --fail --location --output "${DEBDROID__DEBIAN_FS}/.proot.debdroid/debian_config.sh" "${DEBDROID__URL_REPO}/debian_config.sh"
 	chmod 755 "${DEBDROID__DEBIAN_FS}/.proot.debdroid/debian_config.sh"
 
-	# Fake virtual filesystems binding dirs
-	mkdir "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds" -p
 	# Add proper /run/shm binding
 	mkdir -p "${DEBDROID__DEBIAN_FS}/run/shm"
 
