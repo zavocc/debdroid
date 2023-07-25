@@ -299,14 +299,14 @@ uninstall_debian(){
 		echo "${YELLOW}I: Debian container isn't installed, continuing anyway...${NOATTR}"
 		no_chmod=y
 	fi
-	
+
 	case "${userinput}" in
 		Y*|y*)
 			echo "${YELLOW}I: Deleting the container${NOATTR}"
 			if [ ! "${no_chmod:-}" == "y" ]; then
 				chmod 777 "${DEBDROID__DEBIAN_FS}" -R
 			fi
-			
+
 			if rm -rf "${DEBDROID__DEBIAN_FS}" >/dev/null 2>&1; then
 				echo "${GREEN}I: The Debian container successfully deleted${NOATTR}"
 				exit 0
@@ -352,7 +352,7 @@ launch_debian(){
 				shift 1
 				;;
 			-h|--help)
-				echo "${GREEN}This command will launch Debian System as regular user"
+				echo "${GREEN}This command will launch Debian system"
 				echo ""
 				echo "The basic syntax follows as:"
 				echo "${YELLOW} debdroid launch${GREEN}"
@@ -364,10 +364,10 @@ launch_debian(){
 				echo "${YELLOW} debdroid launch --asroot${GREEN}"
 				echo "${YELLOW} debdroid launch --asroot -- [command]${GREEN}"
 				echo "To learn more about operating Debian system, see the Debian Wiki ${YELLOW}https://wiki.debian.org${GREEN} and ${YELLOW}https://wiki.debian.org/DontBreakDebian${NOATTR}"
-				exit
+				return 0
 				;;
 			*)
-				echo "${RED}E: Invalid option... quitting${NOATTR}" >&2
+				echo "${RED}E: Invalid option $1, run ${YELLOW}debdroid launch --help${RED} to show supported options, or run without arguments${NOATTR}" >&2
 				return 1
 				;;
 		esac
