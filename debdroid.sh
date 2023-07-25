@@ -131,7 +131,7 @@ run_proot_cmd(){
 		/usr/bin/env -i \
 			HOME=/root \
 			LANG=C.UTF-8 \
-			PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin \
+			PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
 			TERM="${TERM:-xterm-256color}" \
 			USER=root \
 			"$@"
@@ -145,6 +145,9 @@ perform_configuration(){
 	fi
 	curl --silent --fail --location --output "${DEBDROID__DEBIAN_FS}/.proot.debdroid/debian_config.sh" "${DEBDROID__URL_REPO}/debian_config.sh"
 	chmod 755 "${DEBDROID__DEBIAN_FS}/.proot.debdroid/debian_config.sh"
+
+	# Fake virtual filesystems binding dirs
+	mkdir "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds" -p
 	# Add proper /run/shm binding
 	mkdir -p "${DEBDROID__DEBIAN_FS}/run/shm"
 
@@ -277,7 +280,6 @@ install_debian(){
 	proot --link2symlink -0 tar --preserve-permissions --delay-directory-restore --warning=no-unknown-keyword -xf "${DEBDROID__TEMPDIR}/${debian_name}-rootfs.tar.xz" --exclude dev -C "${DEBDROID__DEBIAN_FS}" ||:
 
 	echo "${GREEN}I: Configuring the base system, this may take some time${NOATTR}"
-	mkdir "${DEBDROID__DEBIAN_FS}/.proot.debdroid/binds" -p
 	echo "${debian_name}" > "${DEBDROID__DEBIAN_FS}/etc/debian_chroot"
 	if perform_configuration; then
 		echo "${GREEN}I: The Debian container installed Successfully, you can run it by typing ${YELLOW}debdroid launch${NOATTR}"
