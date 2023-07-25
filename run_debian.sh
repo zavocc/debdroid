@@ -229,7 +229,7 @@ kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\6.2.0-debdroid\\#1 S
 # This was used in PRoot-Distro. Big help to properly re-write mountpoints configuration file to bind any files with spaces. Thank you @sylirre and Termux developers!
 set -- "USER=root"
 set -- "TERM=${TERM:-xterm-256color}" "$@"
-set -- "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/bin:/usr/sbin:/usr/games:/bin:/sbin" "$@"
+set -- "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games" "$@"
 set -- "LANG=C.UTF-8" "$@"
 set -- "HOME=/root" "$@"
 set -- "/usr/bin/env" "-i" "$@"

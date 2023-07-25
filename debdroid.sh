@@ -230,7 +230,7 @@ install_debian(){
 	done
 
 	# Check if the rootfs exists
-	if [ ! -z "$(ls -A "${DEBDROID__DEBIAN_FS}")" ]; then
+	if [ ! -z "$(ls -A "${DEBDROID__DEBIAN_FS}" 2>/dev/null)" ]; then
 		echo "${RED}E: The Debian container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${RED}?${NOATTR}" >&2
 		exit 1
 	fi
