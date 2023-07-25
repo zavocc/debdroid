@@ -375,7 +375,7 @@ launch_debian(){
 
 	# Check for an ongoing setup
 	if [ -e "${DEBDROID__DEBIAN_FS}/.setup_has_not_done" ]; then
-		echo "${RED}N: An ongoing setup is running, please finish the configuration first before continuing${NOATTR}"
+		echo "${RED}N: An ongoing setup is running, please finish the configuration first before continuing${NOATTR}" >&2
 		exit 1
 	fi
 
@@ -414,7 +414,7 @@ backup_debian_container(){
 		exit 1
 	fi
 
-	echo "${GREEN}I: The backup file will be saved in $(realpath -m ${args})${NOATTR}"
+	echo "${GREEN}I: The backup file will be saved in $(realpath -m "${args}")${NOATTR}"
 	echo "${YELLOW}I: Backing up the container... this may take some time${NOATTR}"
 	if tar --preserve-permissions -zcf "${args}" -C "${DEBDROID__DEBIAN_FS}" ./; then
 		echo "${GREEN}I: The container successfully exported${NOATTR}"
