@@ -171,7 +171,7 @@ if [ ! -e /.proot.debdroid/userinfo.rc ]; then
 		useradd -s /bin/bash -m "user"
 	fi
 
-	echo "$(cat /.proot.debdroid/userinfo.rc)   ALL=(ALL:ALL)   NOPASSWD:ALL" > /etc/sudoers.d/debdroid-user
+	echo "$(head -n 1 /.proot.debdroid/userinfo.rc)   ALL=(ALL:ALL)   NOPASSWD:ALL" > /etc/sudoers.d/debdroid-user
 
 	env_password=$(
 		dialog --title "Finish Debian Setup" --backtitle "DebDroid Configuration" \
@@ -180,11 +180,11 @@ if [ ! -e /.proot.debdroid/userinfo.rc ]; then
 	)
 
 	if [ ! -z "${env_password}" ]; then
-		echo "$(cat /.proot.debdroid/userinfo.rc)":"${env_password}" | chpasswd
+		echo "$(head -n 1 /.proot.debdroid/userinfo.rc)":"${env_password}" | chpasswd
 	else
 		echo "${RED}N: No password is specified, the default password is ${YELLOW}passw0rd${NOATTR}"
 		sleep 5
-		echo "$(cat /.proot.debdroid/userinfo.rc)":"passw0rd" | chpasswd
+		echo "$(head -n 1 /.proot.debdroid/userinfo.rc)":"passw0rd" | chpasswd
 	fi
 else
 	echo "${YELLOW}I: The user account is already been set up... Skipping${NOATTR}"
