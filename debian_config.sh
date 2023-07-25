@@ -133,7 +133,7 @@ dpkg-reconfigure tzdata || :
 # Multi-launguage environment
 if ! dpkg-reconfigure locales; then
 	# check if existing LANG variable exists since this could have been set when doing reconfiguration
-	if [ -z "${LANG:-}" ]; then
+	if ! grep "^LANG" /etc/default/locale 1>/dev/null; then
 		echo "${GREEN}I: The language environment isn't configured: falling back to C.UTF-8${NOATTR}"
 		echo "LANG=C.UTF-8" >> /etc/default/locale
 		sleep 3
