@@ -438,7 +438,7 @@ restore_debian_container(){
 	fi
 	
 	# Check if the tarball exists
-	if [ ! -e "$(realpath -m ${args})" ]; then
+	if [ ! -e "$(realpath -m "${args}")" ]; then
 		echo "${RED}E: The backup file that you're trying to import dosen't exist${NOATTR}" >&2
 		exit 1
 	fi
@@ -459,7 +459,7 @@ restore_debian_container(){
 	
 	echo "${YELLOW}I: Restoring the container...${NOATTR}"
 	mkdir -p "${DEBDROID__DEBIAN_FS}"
-	if tar --recursive-unlink --delay-directory-restore --preserve-permissions -zxf "$(realpath -m ${args})" -C "${DEBDROID__DEBIAN_FS}"; then
+	if tar --recursive-unlink --delay-directory-restore --preserve-permissions -zxf "$(realpath -m "${args}")" -C "${DEBDROID__DEBIAN_FS}"; then
 		echo "${GREEN}I: The container successfully imported${NOATTR}"
 		exit 0
 	else
