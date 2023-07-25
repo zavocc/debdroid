@@ -60,7 +60,7 @@ sigtrap(){
 trap 'sigtrap' HUP INT KILL QUIT TERM
 
 # Check if dependencies are installed
-for deps in chmod curl id mkdir paste proot rm tar; do
+for deps in chmod curl id ls mkdir paste proot rm tar; do
 	if [ ! -x "$(command -v $deps)" ]; then
 		echo "${RED}E: Command ${YELLOW}${deps}${RED} doesn't exist, please install it${NOATTR}." >&2
 		exit 2
@@ -230,7 +230,7 @@ install_debian(){
 	done
 
 	# Check if the rootfs exists
-	if [ -e "${DEBDROID__DEBIAN_FS}/usr/bin/apt" ]; then
+	if [ ! -z "$(ls -A ${DEBDROID__DEBIAN_FS})" ]; then
 		echo "${RED}E: The Debian container is installed, perhaps you should be using ${YELLOW}debdroid reconfigure${RED}?${NOATTR}" >&2
 		exit 1
 	fi
@@ -337,7 +337,7 @@ launch_debian(){
 	local DEBDROID__DEBIAN_USER_INFO
 
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/.proot.debdroid/run_debian" ]; then
-		echo "${RED}E: The Debian container isn't Installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}" >&2
+		echo "${RED}E: The Debian container isn't installed, if you already installed it but seeing this message, try running ${YELLOW}debdroid reconfigure${NOATTR}" >&2
 		exit 1
 	fi
 
