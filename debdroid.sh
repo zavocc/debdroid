@@ -130,7 +130,6 @@ run_proot_cmd(){
 		--cwd=/root \
 		/usr/bin/env -i \
 			HOME=/root \
-			LANG=C.UTF-8 \
 			PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
 			TERM="${TERM:-xterm-256color}" \
 			USER=root \
@@ -155,7 +154,7 @@ perform_configuration(){
 
 	# Setup Android groups if necessary
 	if [ ! -e "${DEBDROID__DEBIAN_FS}/.proot.debdroid/.group-setupdone" ]; then
-	
+
 		# Imported code from proot-distro
 		chmod u+rw "${DEBDROID__DEBIAN_FS}/etc/passwd" \
 			"${DEBDROID__DEBIAN_FS}/etc/shadow" \
