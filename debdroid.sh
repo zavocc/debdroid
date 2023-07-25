@@ -395,9 +395,7 @@ launch_debian(){
 	source "${DEBDROID__DEBIAN_FS}/.proot.debdroid/run_debian"
 
 	# Launch PRoot
-	if [ "${rootmode:-}" == true ]; then
-		DEBDROID__DEBIAN_USER_INFO="root"
-	fi
+	[ "${rootmode:-}" == true ] && DEBDROID__DEBIAN_USER_INFO="root"
 
 	if [ -z "${extcmd[*]:-}" ]; then
 		exec proot "$@" su -l "${DEBDROID__DEBIAN_USER_INFO}"
