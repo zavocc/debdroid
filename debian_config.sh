@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e -u
 # Colored Environment Variables
-if [ -e "$(command -v tput)" ]; then
+if [ -x "$(command -v tput)" ]; then
 	RED="$(tput setaf 1)$(tput bold)"
 	GREEN="$(tput setaf 2)$(tput bold)"
 	YELLOW="$(tput setaf 3)$(tput bold)"
