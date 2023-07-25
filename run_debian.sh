@@ -190,7 +190,7 @@ export MOZ_DISABLE_GMP_SANDBOX=1
 export MOZ_DISABLE_CONTENT_SANDBOX=1
 export PULSE_SERVER=${PULSE_SERVER:-127.0.0.1}
 
-if [ "\$(cat /.proot.debdroid/binfmt/corrosive-session)" == "1" ]; then
+if [ "\$(head -n 1 /.proot.debdroid/binfmt/corrosive-session 2>/dev/null)" == "1" ]; then
 export PATH=\${PATH}:/data/data/com.termux/files/usr/bin
 export ANDROID_ART_ROOT=${ANDROID_ART_ROOT:-}
 export ANDROID_DATA=${ANDROID_DATA:-}

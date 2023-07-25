@@ -212,7 +212,7 @@ install_debian(){
 				echo "The basic syntax follows as:"
 				echo "${YELLOW} debdroid install${GREEN}"
 				echo ""
-				echo "To install Debian other than stable, specify a suite (use --list argument to list possible suites)"
+				echo "To install Debian other than stable, specify a suite (use ${YELLOW}--list${GREEN} argument to list possible suites)"
 				echo "${YELLOW} debdroid install --suite [suite]${GREEN}"
 				echo ""
 				echo "To install Debian on 32-bit mode, add --32 argument"

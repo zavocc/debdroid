@@ -13,13 +13,13 @@ else
 	NOATTR=""
 fi
 
-# Needed to Indicate if the configuration is still ongoing
+# Needed to indicate if the configuration is still ongoing
 : >/.setup_has_not_done
 
 # Github repo page to fetch files
 DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid/2.0"
 
-# Suppress some Errors if trying to configure
+# Suppress some errors if trying to configure
 rm -rf /etc/ld.so.preload
 rm -rf /usr/local/lib/libdisableselinux.so
 
@@ -33,14 +33,14 @@ fi
 # Delete Docker Related files as if they're not essential and may cause problems
 rm -rf /etc/apt/apt.conf.d/docker-*
 
-# Fill the nameservers needed for networking
+# Fill the nameservers with Google's DNS needed for networking
 rm /etc/resolv.conf
 cat > /etc/resolv.conf <<- EOM
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOM
 
-# Perform Installation
+# Perform installation
 echo "${GREEN}I: Updating packages if necessary, this may take several minutes, you also need to have a strong network connection and have a sufficient battery power to avoid interruption${NOATTR}"
 apt update
 apt upgrade -yy
