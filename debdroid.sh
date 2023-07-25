@@ -330,9 +330,9 @@ uninstall_debian(){
 	esac
 }
 
-# Function to run Debian container (Actually, this is just a wrapper to make it portable)
+# Function to run Debian container
 launch_debian(){
-	local extcmd
+	local -a extcmd
 	local kompat_source
 	local mount
 	local prootargs
@@ -383,8 +383,13 @@ launch_debian(){
 		exit 1
 	fi
 
-	# Define External command
-	extcmd="$@"
+	# Define external command
+	# Wrapping in quotes for this example command to work:
+	# debdroid launch -- bash -c "apt moo"
+	# Equivalent would be: debdroid launch -- bash -c "'apt moo'"
+	for c in "$@"; do
+		extcmd+=("'$c'")
+	done
 
 	# Source the file
 	source "${DEBDROID__DEBIAN_FS}/.proot.debdroid/run_debian"
@@ -394,10 +399,10 @@ launch_debian(){
 		DEBDROID__DEBIAN_USER_INFO="root"
 	fi
 
-	if [ -z "${extcmd}" ]; then
+	if [ -z "${extcmd[*]:-}" ]; then
 		exec proot "$@" su -l "${DEBDROID__DEBIAN_USER_INFO}"
 	else
-		exec proot "$@" su -l "${DEBDROID__DEBIAN_USER_INFO}" -c "${extcmd}"
+		exec proot "$@" su -l "${DEBDROID__DEBIAN_USER_INFO}" -c "${extcmd[*]}"
 	fi
 }
 
