@@ -195,14 +195,11 @@ install_debian(){
 			--suite)
 				if [ $# -ge 2 ]; then
 					debian_suite="$2"
-					shift 2
-				else
 					shift 1
 				fi
 				;;
 			--32)
 				thirtytwobit=true
-				shift 1
 				;;
 			--list)
 				echo "${GREEN}Recognized Debian Releases:${YELLOW}"
@@ -232,6 +229,7 @@ install_debian(){
 				return 1
 				;;
 		esac
+		shift
 	done
 
 	# Check if the rootfs exists
@@ -353,7 +351,6 @@ launch_debian(){
 				;;
 			--asroot)
 				rootmode=true
-				shift 1
 				;;
 			-h|--help)
 				echo "${GREEN}This command will launch Debian system"
@@ -375,6 +372,7 @@ launch_debian(){
 				return 1
 				;;
 		esac
+		shift
 	done
 
 	# Check for an ongoing setup
