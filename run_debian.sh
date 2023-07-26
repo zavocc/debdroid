@@ -227,7 +227,7 @@ kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\6.2.0-debdroid\\#1 S
 #
 # If using variable concatenation, it doesn't properly handle quotes and word splitting.
 # This was used in PRoot-Distro. Big help to properly re-write mountpoints configuration file to bind any files with spaces. Thank you @sylirre and Termux developers!
-set -- "USER=root"
+set -- "USER=root" "$@"
 set -- "TERM=${TERM:-xterm-256color}" "$@"
 set -- "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games" "$@"
 set -- "LANG=C.UTF-8" "$@"

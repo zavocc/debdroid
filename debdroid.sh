@@ -383,25 +383,27 @@ launch_debian(){
 		exit 1
 	fi
 
+	# Launch PRoot
+	[ "${rootmode:-}" == true ] && DEBDROID__DEBIAN_USER_INFO="root"
+
 	# Define external command
 	# Wrapping in quotes for this example command to work:
 	# debdroid launch -- bash -c "apt moo"
 	# Equivalent would be: debdroid launch -- bash -c "'apt moo'"
-	for c in "$@"; do
-		extcmd+=("'$c'")
-	done
+	if [ $# -ge 1 ]; then
+		for c in "$@"; do
+			extcmd+=("'$c'")
+		done
+
+		set -- "su" "-l" "${DEBDROID__DEBIAN_USER_INFO}" "-c" "${extcmd[*]}"
+	else
+		set -- "su" "-l" "${DEBDROID__DEBIAN_USER_INFO}"
+	fi
 
 	# Source the file
 	source "${DEBDROID__DEBIAN_FS}/.proot.debdroid/run_debian"
-
-	# Launch PRoot
-	[ "${rootmode:-}" == true ] && DEBDROID__DEBIAN_USER_INFO="root"
-
-	if [ -z "${extcmd[*]:-}" ]; then
-		exec proot "$@" su -l "${DEBDROID__DEBIAN_USER_INFO}"
-	else
-		exec proot "$@" su -l "${DEBDROID__DEBIAN_USER_INFO}" -c "${extcmd[*]}"
-	fi
+	
+	exec proot "$@"
 }
 
 
