@@ -1,5 +1,5 @@
 # A sourcefile to launch Debian container within DebDroid
-# This is not a launch command, this is required by the debdroid launch script
+# This is not a standalone launch script, this is required by the debdroid launch script
 [ -f "${DEBDROID__DEBIAN_FS}/etc/hostname" ] && DEBDROID__DEBIAN_HOSTNAME="$(head -n 1 "${DEBDROID__DEBIAN_FS}/etc/hostname")" || DEBDROID__DEBIAN_HOSTNAME="termux_debian"
 
 if [ "${rootmode:-}" == true ]; then

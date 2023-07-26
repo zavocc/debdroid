@@ -28,8 +28,9 @@ unset LD_PRELOAD
 DEBDROID__DEBIAN_FS="/data/data/com.termux/files/debian"
 
 # URL Link
-# Used for portability and can be used for branch testing
-DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid/2.0"
+# Used for branch testing. To test, run a webserver with webserver directory root pointing to root of this directory
+# Or curl file:/// URI
+DEBDROID__URL_REPO="https://raw.githubusercontent.com/zavocc/debdroid/master"
 
 # Tempdir
 # Used to place temporary files and all downloaded cache will be stored and will be updated once it flushed
@@ -427,13 +428,13 @@ restore_debian_container(){
 		echo "${RED}E: Please specify a backup file for restoring the container${NOATTR}" >&2
 		exit 1
 	fi
-	
+
 	# Check if the tarball exists
 	if [ ! -e "$(realpath -m "${args}")" ]; then
 		echo "${RED}E: The backup file that you're trying to import dosen't exist${NOATTR}" >&2
 		exit 1
 	fi
-	
+
 	# User Input
 	read -p "${GREEN}I: Do you want to restore the container? All of the existing state will be lost [y/N]? ${NOATTR}" userinput
 		case "${userinput}" in
@@ -447,7 +448,7 @@ restore_debian_container(){
 				exit 1
 				;;
 		esac
-	
+
 	echo "${YELLOW}I: Restoring the container...${NOATTR}"
 	mkdir -p "${DEBDROID__DEBIAN_FS}"
 	if tar --recursive-unlink --delay-directory-restore --preserve-permissions -zxf "$(realpath -m "${args}")" -C "${DEBDROID__DEBIAN_FS}"; then
