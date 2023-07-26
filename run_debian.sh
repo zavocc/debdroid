@@ -1,7 +1,17 @@
 # A sourcefile to launch Debian container within DebDroid
 # This is not a launch command, this is required by the debdroid launch script
 [ -f "${DEBDROID__DEBIAN_FS}/etc/hostname" ] && DEBDROID__DEBIAN_HOSTNAME="$(head -n 1 "${DEBDROID__DEBIAN_FS}/etc/hostname")" || DEBDROID__DEBIAN_HOSTNAME="termux_debian"
-[ -f "${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc" ] && DEBDROID__DEBIAN_USER_INFO="$(head -n 1 "${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc")" || DEBDROID__DEBIAN_USER_INFO="root"
+
+if [ "${rootmode:-}" == true ]; then
+	DEBDROID__DEBIAN_USER_INFO="root"
+else
+	# Check if userinfo file exists, else fallback to root
+	if [ -f "${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc" ]; then
+		DEBDROID__DEBIAN_USER_INFO="$(head -n 1 "${DEBDROID__DEBIAN_FS}/.proot.debdroid/userinfo.rc")"
+	else
+		DEBDROID__DEBIAN_USER_INFO="root"
+	fi
+fi
 
 # Generate procfiles
 gen_proc_files(){
@@ -227,6 +237,21 @@ kompat_source="\\$(uname -s)\\${DEBDROID__DEBIAN_HOSTNAME}\\6.2.0-debdroid\\#1 S
 #
 # If using variable concatenation, it doesn't properly handle quotes and word splitting.
 # This was used in PRoot-Distro. Big help to properly re-write mountpoints configuration file to bind any files with spaces. Thank you @sylirre and Termux developers!
+
+# Define external command
+# Wrapping in quotes for this example command to work:
+# debdroid launch -- bash -c "apt moo"
+# Equivalent would be: debdroid launch -- bash -c "'apt moo'"
+if [ $# -ge 1 ]; then
+	for c in "$@"; do
+		extcmd+=("'$c'")
+	done
+
+	set -- "su" "-l" "${DEBDROID__DEBIAN_USER_INFO}" "-c" "${extcmd[*]}"
+else
+	set -- "su" "-l" "${DEBDROID__DEBIAN_USER_INFO}"
+fi
+
 set -- "USER=root" "$@"
 set -- "TERM=${TERM:-xterm-256color}" "$@"
 set -- "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games" "$@"
