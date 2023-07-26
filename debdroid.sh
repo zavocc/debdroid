@@ -466,7 +466,7 @@ if [ $# -ge 1 ]; then
 			shift 1; install_debian "$@"
 			;;
 		uninstall|purge)
-			shift 1; uninstall_debian "$@"
+			shift 1; uninstall_debian
 			;;
 		reconfigure|configure)
 			shift 1;
@@ -492,10 +492,9 @@ if [ $# -ge 1 ]; then
 			;;
 		*)
 			echo "${RED}Unknown Option: $1${NOATTR}"
-			show_help
+			show_help; exit 1
 			;;
 	esac
 else
 	show_help
-	exit
 fi
