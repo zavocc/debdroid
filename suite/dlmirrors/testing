@@ -1,22 +1,22 @@
 case $(uname -m) in
 	aarch64|arm64|armv8a|arm64-v8a)
 		if [ "${thirtytwobit:-}" == true ]; then
-			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm32v7/testing/rootfs.tar.xz"
+			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/refs/heads/dist-arm32v7/testing/oci/blobs/rootfs.tar.gz"
 		else
-			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/testing/rootfs.tar.xz"
+			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/refs/heads/dist-arm64v8/testing/oci/blobs/rootfs.tar.gz"
 		fi
 		;;
 	armhf|arm|arm32|armv8l|armv7l)
-		curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm32v7/testing/rootfs.tar.xz"
+		curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/refs/heads/dist-arm32v7/testing/oci/blobs/rootfs.tar.gz"
 		;;
 	i386|i686|x86)
-		curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-i386/testing/rootfs.tar.xz"
+		curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/refs/heads/dist-i386/testing/oci/blobs/rootfs.tar.gz"
 		;;
 	amd64|x86_64|x64)
 		if [ "${thirtytwobit:-}" == true ]; then
-			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm32v7/testing/rootfs.tar.xz"
+			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/refs/heads/dist-arm32v7/testing/oci/blobs/rootfs.tar.gz"
 		else
-			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/testing/rootfs.tar.xz"
+			curl_download_link="https://github.com/debuerreotype/docker-debian-artifacts/raw/refs/heads/dist-amd64/testing/oci/blobs/rootfs.tar.gz"
 		fi
 		;;
 esac
